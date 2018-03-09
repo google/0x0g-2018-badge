@@ -1,0 +1,12 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP 74HC4050
+D 74HC4050 high-speed CMOS hex high-to-low level shifter
+$ENDCMP
+#
+$CMP 74HC595
+D 8-bit Serial-in Parallel/Serial-out Shift Register
+F http://www.onsemi.com/pub_link/Collateral/MC74HC595A-D.PDF
+$ENDCMP
+#
+#End Doc Library

@@ -1,0 +1,123 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP CC1101
+D CC1101 Low-Power Sub-1 GHz RF Transceiver
+K RFID DASH7 6LoWPAN
+F http://www.ti.com/lit/ds/symlink/cc1101.pdf
+$ENDCMP
+#
+$CMP CC3000
+D TI CC3000 Module - Wi-Fi 802.11b/g Network Processor
+K wifi wireless
+F http://www.ti.com/lit/gpn/cc3000
+$ENDCMP
+#
+$CMP CC_ISP
+D CC Debugger ISP Header
+K ISP cc debugger
+F http://www.ti.com/lit/ug/swru197e/swru197e.pdf
+$ENDCMP
+#
+$CMP DRV8834_SOP
+D Dual Bridge 1.5A - 2.2A Peak Stepper Driver with Step/Dir Input
+K stepper hbridge h-bridge step direction
+F http://www.ti.com/lit/ds/symlink/drv8834.pdf
+$ENDCMP
+#
+$CMP LM2623_VSSOP
+D LM2623 General Purpose, Gated Oscillator Based, DC/DC Boost Converter
+K regulator
+F www.ti.com/lit/ds/symlink/lm2623.pdf
+$ENDCMP
+#
+$CMP TL071
+D TL071 Low-noise JFET-input op-amp
+K operational amplifier 
+F http://www.ti.com/lit/ds/symlink/tl071.pdf
+$ENDCMP
+#
+$CMP TL971
+D TL971 rail-to-rail very low noise op-amp
+K operational amplifier 
+F http://www.ti.com/lit/ds/symlink/tl971.pdf
+$ENDCMP
+#
+$CMP TL972
+D TL972 dual rail-to-rail very low noise op-amp
+K operational amplifier 
+F http://www.ti.com/lit/ds/symlink/tl971.pdf
+$ENDCMP
+#
+$CMP TLC5940_SOP
+D TI TLC5940 16-channel LED Driver with Dot-correction and Greyscale PWM Brightness control
+K LED Driver 16 PWM
+F http://www.ti.com/lit/ds/symlink/tlc5940.pdf
+$ENDCMP
+#
+$CMP TLC5951_QFN
+D TLC5951 Constant-current sink 24-LED PWM driver
+F http://www.ti.com/lit/ds/sbvs127b/sbvs127b.pdf
+$ENDCMP
+#
+$CMP TLC5971_SOP
+D TLC5971 12-Channel, 16-Bit, Enhanced Spectrum, PWM, RGB, LED Driver with 3.3V Voltage Regulator
+F http://www.ti.com/lit/ds/symlink/tlc5971.pdf
+$ENDCMP
+#
+$CMP TLC5973
+D TLC5973 3-Channel, 12-Bit, PWM Constant-Current LED Driver with Single-Wire Interface
+F http://www.ti.com/lit/ds/symlink/tlc59731.pdf
+$ENDCMP
+#
+$CMP TLC59731
+D TLC59731 3-Channel, 8-Bit, PWM LED Driver with Single-Wire Interface
+K constant current sink TLC
+F http://www.ti.com/lit/ds/symlink/tlc59731.pdf
+$ENDCMP
+#
+$CMP TLV713XX_SOT
+D TLV713 Capacitor-Free, 150-mA, Low-Dropout Regulator
+K LDO
+F http://www.ti.com/lit/ds/symlink/tlv71333p.pdf
+$ENDCMP
+#
+$CMP TMP006
+D TMP006 IR Thermopile Sensor in Chip-Scale Package
+K temp temperature infrared
+F http://www.ti.com/lit/ds/symlink/tmp006.pdf
+$ENDCMP
+#
+$CMP TPA301
+D TPA301  350mW mono audio amp
+K op amp
+F http://www.ti.com/lit/ds/slos208e/slos208e.pdf
+$ENDCMP
+#
+$CMP TPA301_ep
+D TPA301  350mW mono audio amp
+K op amp
+F http://www.ti.com/lit/ds/slos208e/slos208e.pdf
+$ENDCMP
+#
+$CMP TPD4S012
+D TPD4S012 ESD Solution for USB
+F http://www.ti.com/lit/ds/symlink/tpd4s012.pdf
+$ENDCMP
+#
+$CMP TPS22910
+D TPS22910 Ultra-small Low-resistance Active-low Load Switch
+F http://www.ti.com/lit/ds/symlink/tps22910a.pdf
+$ENDCMP
+#
+$CMP TPS22930
+D TPS22930 Ultra-small Low-resistance Load Switch
+F http://www.ti.com/lit/ds/symlink/tps22930a.pdf
+$ENDCMP
+#
+$CMP TPS6102X
+D TPS6102x Synchronous Boost Converter
+K LiPo Buck Voltage
+F https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=2&cad=rja&ved=0CDUQFjAB&url=http%3A%2F%2Fwww.ti.com%2Flit%2Fds%2Fsymlink%2Ftps61029.pdf&ei=CXY4UufREqWqyQGKloG4Bw&usg=AFQjCNGCdXaADUo7lC82fyLXVkqoxFps4w&sig2=ALmgnA9FEQTkDKG-jdQ4xw&bvm=bv.52164340,d.aWc
+$ENDCMP
+#
+#End Doc Library

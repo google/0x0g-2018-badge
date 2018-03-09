@@ -1,0 +1,26 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP DS3234
+D DS3234 SPI Bus Real-time Clock with Integrated Crystal
+K RTC
+F http://datasheets.maximintegrated.com/en/ds/DS3234.pdf
+$ENDCMP
+#
+$CMP MAX1555
+D MAX1555 1-Cell Lithium USB Battery Charger
+K LiPoly Charger USB
+F http://www.sparkfun.com/datasheets/Components/MAX1551-MAX1555-1.pdf
+$ENDCMP
+#
+$CMP MAX31855
+D MAX31855 Cold-Junction Compensated Thermocouple-to-Digital Converter
+F http://datasheets.maximintegrated.com/en/ds/MAX31855.pdf
+$ENDCMP
+#
+$CMP MAX3232
+D MAX3232 TTL to RS232 Converter
+K RS232
+F http://datasheets.maximintegrated.com/en/ds/MAX3222-MAX3241.pdf
+$ENDCMP
+#
+#End Doc Library

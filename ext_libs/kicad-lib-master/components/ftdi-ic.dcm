@@ -1,0 +1,7 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP FT230X_SOP
+D FTDI USB to USART Converter
+$ENDCMP
+#
+#End Doc Library

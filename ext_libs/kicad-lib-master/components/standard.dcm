@@ -1,0 +1,126 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP ANTENNA
+D Antenna
+$ENDCMP
+#
+$CMP C
+D Non-polarized Capacitor
+K cap capacitor
+$ENDCMP
+#
+$CMP CRYSTAL
+D Crystal
+K chrystal xtal oscillator
+$ENDCMP
+#
+$CMP C_POL
+D Polaraized capacitor
+K cap
+$ENDCMP
+#
+$CMP D
+D Diode
+$ENDCMP
+#
+$CMP DCIN
+D DC Power Supply Input
+K DC VDC voltage
+$ENDCMP
+#
+$CMP D_SCHOTTKY
+D Schottky diode
+$ENDCMP
+#
+$CMP FB
+D Ferrite bead
+$ENDCMP
+#
+$CMP FUSE
+D Fuse
+$ENDCMP
+#
+$CMP JUMPER_2-PIN
+D 2-pin jumper
+$ENDCMP
+#
+$CMP JUMPER_2-PIN-CLOSED
+D Jumper that is closed by default
+$ENDCMP
+#
+$CMP JUMPER_3-PIN
+D 3-pin jumper
+$ENDCMP
+#
+$CMP JUMPER_3-PIN-CLOSED
+D 3-pin jumper
+$ENDCMP
+#
+$CMP L
+D Resistor
+K R Resistor
+$ENDCMP
+#
+$CMP LED
+D Light Emitting Diode
+K LED
+$ENDCMP
+#
+$CMP POT
+D Potentiometer
+K pot trimpot variable resistor
+$ENDCMP
+#
+$CMP PTC
+D PTC Resettable Fuse
+K PTC fuse reset
+$ENDCMP
+#
+$CMP R
+D Resistor
+K R Resistor
+$ENDCMP
+#
+$CMP R-ARRAY_X8-BUSSED
+D 8 Resistor Bussed Array
+K resistor array bussed
+$ENDCMP
+#
+$CMP SCHOTTKY_DUAL-CC
+D Dual Common-Cathode Schottky Diode
+$ENDCMP
+#
+$CMP SPDT
+D Single Pole Double Throw Switch
+K SPDT
+$ENDCMP
+#
+$CMP SPEAKER
+D Speaker
+$ENDCMP
+#
+$CMP SPST
+D Single Pole Single Throw Pushbutton
+K SPST button
+F http://www.sparkfun.com/datasheets/Components/Buttons/SMD-Button.pdf
+$ENDCMP
+#
+$CMP SPST_X8
+D 8-position SPST switch
+K DIP switch SPST
+$ENDCMP
+#
+$CMP TEST
+D Test point
+$ENDCMP
+#
+$CMP VCC_REG
+D 3-pin Voltage Regulator
+K voltage VCC regulator
+$ENDCMP
+#
+$CMP VDR
+D Varistor
+$ENDCMP
+#
+#End Doc Library

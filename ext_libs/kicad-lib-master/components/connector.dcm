@@ -1,0 +1,115 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP 10PIN_JACK
+D 10 pin female jack
+K header 10 debug
+$ENDCMP
+#
+$CMP 10PIN_PLUG
+D 10 pin male plug
+K header 10 debug
+$ENDCMP
+#
+$CMP 12PIN_HEADER
+D 12 pin connection
+K header 12 debug
+$ENDCMP
+#
+$CMP 2PIN_FEMALE
+D 2 pin female connection
+K header 2 debug
+$ENDCMP
+#
+$CMP 2PIN_MALE
+D 2 pin male connector
+K header 2 debug
+$ENDCMP
+#
+$CMP 37PIN_FEMALE
+D 37-pin female connection
+$ENDCMP
+#
+$CMP 37PIN_HEADER
+D 12 pin connection
+K header 12 debug
+$ENDCMP
+#
+$CMP 37PIN_MALE
+D 37-pin male connector
+$ENDCMP
+#
+$CMP 3PIN_FEMALE
+D 3 pin female connector
+K header debug
+$ENDCMP
+#
+$CMP 3PIN_MALE
+D 3 pin male connector
+K header 3 debug
+$ENDCMP
+#
+$CMP 4PIN_FEMALE
+D 4 pin female connection
+K header 4 debug
+$ENDCMP
+#
+$CMP 4PIN_HEADER
+D 4 pin connection
+K header 4 debug
+$ENDCMP
+#
+$CMP 5PIN_FEMALE
+D 5 pin female connection
+K header 5 debug
+$ENDCMP
+#
+$CMP 5PIN_MALE
+D 5 pin male connection
+K header 5 debug
+$ENDCMP
+#
+$CMP 6PIN_FEMALE
+D 6 pin female connection
+K header 6 debug
+$ENDCMP
+#
+$CMP 6PIN_HEADER
+D 6 pin connection
+K header 6 debug
+$ENDCMP
+#
+$CMP 8P8C_CUSTOM
+D 8P8C (RJ-45) jack for custom applications
+K 8P8C RJ45 J-45 ethernet cat5 cat6
+$ENDCMP
+#
+$CMP COAX-JACK
+D Coaxial jack
+K SMA UF.L UFL antenna
+$ENDCMP
+#
+$CMP DC-BARREL-JACK
+D DC barrel jack
+K voltage wall wart
+$ENDCMP
+#
+$CMP LIPO
+D Lithium Polymer Battery Jack
+K lipo li lithium-ion batter rechargable
+$ENDCMP
+#
+$CMP MICROUSB
+D MicroUSB port
+K USB MicroUSB
+F http://www.sparkfun.com/datasheets/Prototyping/Micro-USB.pdf
+$ENDCMP
+#
+$CMP SD-CARD
+D SD/MMC card socket
+$ENDCMP
+#
+$CMP THERMOCOUPLE
+D Thermocouple Jack
+$ENDCMP
+#
+#End Doc Library

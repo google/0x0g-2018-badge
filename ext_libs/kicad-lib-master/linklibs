@@ -1,0 +1,15 @@
+#! /bin/bash
+# mc
+# 2/27/2014
+#
+# this script links my kicad footprint table file and environment variable definition script into the proper places
+# (for linux)
+
+# edit these parameters according to your system
+TABLEDIR="$HOME"
+SCRIPTDIR="/etc/profile.d"
+
+# this'll do the rest
+THISDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ln -svi $THISDIR/fp-lib-table $TABLEDIR/fp-lib-table
+sudo ln -svi $THISDIR/kicad.sh $SCRIPTDIR/kicad.sh
