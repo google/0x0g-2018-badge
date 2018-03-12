@@ -486,7 +486,7 @@ P 4100 2650
 F 0 "C2" H 4110 2720 50  0000 L CNN
 F 1 "4.7uF" H 4110 2570 50  0000 L CNN
 F 2 "Capacitors_SMD:C_0805" H 4100 2650 50  0001 C CNN
-F 3 "" H 4100 2650 50  0001 C CNN
+F 3 "https://www.digikey.com/product-detail/en/tdk-corporation/C2012X7R0J475K085AB/445-14523-1-ND/3956189" H 4100 2650 50  0001 C CNN
 	1    4100 2650
 	1    0    0    -1  
 $EndComp
