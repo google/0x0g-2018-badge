@@ -3,7 +3,7 @@
   (general
     (links 47)
     (no_connects 0)
-    (area 123.157857 73.565 179.737143 119.575)
+    (area 122.816333 73.565 183.746191 119.575)
     (thickness 1.6)
     (drawings 6)
     (tracks 134)
@@ -15,7 +15,7 @@
   (page A4)
   (title_block
     (title "0x0G Badge electricals prototype")
-    (date 2018-03-09)
+    (date 2018-03-12)
     (rev r1)
     (company "Google LLC")
   )
