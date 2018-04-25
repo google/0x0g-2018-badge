@@ -196,7 +196,7 @@ U 1 1 5A9DB78B
 P 5100 3850
 F 0 "U2" H 4700 4150 50  0000 L CNN
 F 1 "TSSP58038" H 4700 3550 50  0000 L CNN
-F 2 "Opto-Devices:IRReceiver_Vishay_MOLD-3pin" H 5050 3475 50  0001 C CNN
+F 2 "0gbadge-2018:tssp58038_flat" H 5050 3475 50  0001 C CNN
 F 3 "http://www.vishay.com/docs/82479/tssp58038.pdf" H 5750 4150 50  0001 C CNN
 F 4 "https://www.digikey.com/product-detail/en/vishay-semiconductor-opto-division/TSSP58038/TSSP58038-ND/4695717" H 5100 3850 60  0001 C CNN "Digikey"
 	1    5100 3850
