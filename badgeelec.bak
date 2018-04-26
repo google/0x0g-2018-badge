@@ -462,8 +462,6 @@ Text Label 4100 3400 0    60   ~ 0
 RA3
 Text Label 7650 1600 2    60   ~ 0
 RA0
-Text Label 7650 2800 2    60   ~ 0
-RA1
 Text Label 9800 1600 2    60   ~ 0
 RA2
 Text Label 9800 2800 2    60   ~ 0
@@ -578,7 +576,7 @@ F 3 "" H 6150 4400 50  0001 C CNN
 	1    6150 4400
 	1    0    0    -1  
 $EndComp
-NoConn ~ 4100 4000
+NoConn ~ 4100 3200
 NoConn ~ 4100 4100
 NoConn ~ 4100 4200
 $Comp
@@ -873,4 +871,6 @@ $EndComp
 Text Notes 8550 850  0    60   ~ 0
 Lower number designator = LEFT (except D3)
 NoConn ~ 4100 3800
+Text Label 7650 2800 2    60   ~ 0
+RB3
 $EndSCHEMATC
