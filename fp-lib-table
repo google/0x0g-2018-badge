@@ -1,4 +1,5 @@
 (fp_lib_table
   (lib (name 0gbadge-2018)(type KiCad)(uri "$(KIPRJMOD)")(options "")(descr ""))
   (lib (name graphics)(type KiCad)(uri "$(KIPRJMOD)/graphics")(options "")(descr ""))
+  (lib (name ext_libs)(type KiCad)(uri "$(KIPRJMOD)/ext_libs")(options "")(descr ""))
 )
