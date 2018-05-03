@@ -873,4 +873,6 @@ Lower number designator = LEFT (except D3)
 NoConn ~ 4100 3800
 Text Label 7650 2800 2    60   ~ 0
 RB3
+Text Notes 4650 2150 0    60   ~ 0
+Optional, probably not present
 $EndSCHEMATC
