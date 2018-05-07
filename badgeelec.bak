@@ -36,14 +36,14 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
-Title "LED prototype"
-Date "2018-04-09"
-Rev "2"
+Title "0x0G electronic badge"
+Date "2018-05-07"
+Rev "4"
 Comp "Google LLC"
-Comment1 "0xG prototype to test programming, IR, ICSP."
-Comment2 "External Crystal added, increased pullup value to 33k for ~MCLR"
-Comment3 "Added PWR_CONN for external power"
-Comment4 "Fix incorrect polarity on battery holder"
+Comment1 "Removed components that will not be on final board"
+Comment2 ""
+Comment3 ""
+Comment4 ""
 $EndDescr
 $Comp
 L PIC16F84A-XX/SO U1
@@ -95,7 +95,7 @@ L R R1
 U 1 1 5A99BE2E
 P 7800 1600
 F 0 "R1" V 7880 1600 50  0000 C CNN
-F 1 "220" V 7800 1600 50  0000 C CNN
+F 1 "1k" V 7800 1600 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 7730 1600 50  0001 C CNN
 F 3 "" H 7800 1600 50  0001 C CNN
 	1    7800 1600
@@ -230,7 +230,7 @@ U 1 1 5A9F1402
 P 4850 1250
 F 0 "J1" H 4850 1550 50  0000 C CNN
 F 1 "PROG_CONN" H 4850 950 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x05_Pitch2.54mm" H 4850 1250 50  0001 C CNN
+F 2 "ext_libs:SMD_PROG_5" H 4850 1250 50  0001 C CNN
 F 3 "" H 4850 1250 50  0001 C CNN
 	1    4850 1250
 	1    0    0    -1  
@@ -297,7 +297,7 @@ L R R3
 U 1 1 5A9F1F81
 P 7800 2800
 F 0 "R3" V 7880 2800 50  0000 C CNN
-F 1 "150" V 7800 2800 50  0000 C CNN
+F 1 "220" V 7800 2800 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 7730 2800 50  0001 C CNN
 F 3 "" H 7800 2800 50  0001 C CNN
 	1    7800 2800
@@ -354,7 +354,7 @@ L R R2
 U 1 1 5A9F286A
 P 9950 1600
 F 0 "R2" V 10030 1600 50  0000 C CNN
-F 1 "220" V 9950 1600 50  0000 C CNN
+F 1 "430" V 9950 1600 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 9880 1600 50  0001 C CNN
 F 3 "" H 9950 1600 50  0001 C CNN
 	1    9950 1600
@@ -411,7 +411,7 @@ L R R4
 U 1 1 5A9F2890
 P 9950 2800
 F 0 "R4" V 10030 2800 50  0000 C CNN
-F 1 "150" V 9950 2800 50  0000 C CNN
+F 1 "220" V 9950 2800 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 9880 2800 50  0001 C CNN
 F 3 "" H 9950 2800 50  0001 C CNN
 	1    9950 2800
@@ -514,39 +514,14 @@ F 3 "" H 2950 1050 50  0001 C CNN
 	1    2950 1050
 	1    0    0    -1  
 $EndComp
-Text Label 3050 1800 0    60   ~ 0
+Text Label 2950 1800 0    60   ~ 0
 ~MCLR
-$Comp
-L C_Small C3
-U 1 1 5A9F4900
-P 2800 1900
-F 0 "C3" H 2810 1970 50  0000 L CNN
-F 1 "10nF" H 2810 1820 50  0000 L CNN
-F 2 "Capacitors_SMD:C_0805" H 2800 1900 50  0001 C CNN
-F 3 "" H 2800 1900 50  0001 C CNN
-F 4 "https://www.digikey.com/product-detail/en/samsung-electro-mechanics/CL21B102KBCNNNC/1276-2425-1-ND/3890511" H 2800 1900 60  0001 C CNN "Digikey"
-	1    2800 1900
-	1    0    0    -1  
-$EndComp
-$Comp
-L GND #PWR020
-U 1 1 5A9F4B3B
-P 2800 2000
-F 0 "#PWR020" H 2800 1750 50  0001 C CNN
-F 1 "GND" H 2800 1850 50  0000 C CNN
-F 2 "" H 2800 2000 50  0001 C CNN
-F 3 "" H 2800 2000 50  0001 C CNN
-	1    2800 2000
-	1    0    0    -1  
-$EndComp
-Text Notes 2850 2100 0    60   ~ 0
-Optional
 $Comp
 L R R8
 U 1 1 5A9F61AD
 P 6150 3950
 F 0 "R8" H 6250 3950 50  0000 C CNN
-F 1 "200R" V 6150 3950 50  0000 C CNN
+F 1 "220" V 6150 3950 50  0000 C CNN
 F 2 "Resistors_SMD:R_0805_HandSoldering" V 6080 3950 50  0001 C CNN
 F 3 "" H 6150 3950 50  0001 C CNN
 	1    6150 3950
@@ -579,28 +554,6 @@ $EndComp
 NoConn ~ 4100 3200
 NoConn ~ 4100 4100
 NoConn ~ 4100 4200
-$Comp
-L GND #PWR022
-U 1 1 5A9F7413
-P 2400 2000
-F 0 "#PWR022" H 2400 1750 50  0001 C CNN
-F 1 "GND" H 2400 1850 50  0000 C CNN
-F 2 "" H 2400 2000 50  0001 C CNN
-F 3 "" H 2400 2000 50  0001 C CNN
-	1    2400 2000
-	1    0    0    -1  
-$EndComp
-$Comp
-L SPST S1
-U 1 1 5AA2DBC2
-P 2550 1800
-F 0 "S1" H 2540 1885 60  0000 C CNN
-F 1 "PTS645SM43SMTR92" H 1925 1750 60  0000 C CNN
-F 2 "Buttons_Switches_SMD:SW_SPST_PTS645" H 2550 1800 60  0001 C CNN
-F 3 "https://www.ckswitches.com/media/1471/pts645.pdf" H 2550 1800 60  0001 C CNN
-	1    2550 1800
-	1    0    0    -1  
-$EndComp
 $Bitmap
 Pos 11125 7050
 Scale 1.000000
@@ -658,8 +611,6 @@ B0 99 62 7C 99 3E 59 19 C7 C4 B9 A1 CF 52 66 08 5B CB 0D 17 AD E5 86 4B 99 B2 71
 6E A3 12 8B 22 AC 00 00 00 00 49 45 4E 44 AE 42 60 82 
 EndData
 $EndBitmap
-Text Notes 6250 4650 0    60   ~ 0
-IR204\nNominal voltage: 1.2V\nPeak: 1A\nPeak WL: 940nm
 Wire Wire Line
 	3400 4950 3400 4700
 Wire Wire Line
@@ -731,20 +682,18 @@ Wire Wire Line
 Wire Wire Line
 	10100 2450 10100 2800
 Wire Wire Line
-	3400 2550 4100 2550
+	3400 2550 3700 2550
+Wire Wire Line
+	3700 2550 4100 2550
 Connection ~ 3700 2550
 Wire Wire Line
 	2950 1350 2950 1800
 Wire Wire Line
-	2700 1800 3050 1800
-Connection ~ 2950 1800
-Connection ~ 2800 1800
-Wire Wire Line
-	2400 2000 2400 1800
-Wire Wire Line
 	3700 2750 3700 2800
 Wire Wire Line
-	3700 2800 4525 2800
+	3700 2800 4100 2800
+Wire Wire Line
+	4100 2800 4525 2800
 Wire Wire Line
 	4100 2750 4100 2800
 Connection ~ 4100 2800
@@ -833,46 +782,9 @@ F 3 "" H 1950 4250 50  0001 C CNN
 	1    1950 4250
 	1    0    0    -1  
 $EndComp
-Text Notes 6375 3900 0    60   ~ 12
-NOTE:\nNot likely to be populated / used\nfor attendee boards
-$Comp
-L CONN_01X02 J2
-U 1 1 5ACBF681
-P 4850 1875
-F 0 "J2" H 4850 2025 50  0000 C CNN
-F 1 "PWR_CONN" H 4850 1725 50  0000 C CNN
-F 2 "Pin_Headers:Pin_Header_Straight_1x02_Pitch2.54mm" H 4850 1875 50  0001 C CNN
-F 3 "" H 4850 1875 50  0001 C CNN
-	1    4850 1875
-	1    0    0    -1  
-$EndComp
-$Comp
-L GND #PWR026
-U 1 1 5ACBF8C3
-P 4650 1825
-F 0 "#PWR026" H 4650 1575 50  0001 C CNN
-F 1 "GND" V 4650 1625 50  0000 C CNN
-F 2 "" H 4650 1825 50  0001 C CNN
-F 3 "" H 4650 1825 50  0001 C CNN
-	1    4650 1825
-	0    1    1    0   
-$EndComp
-$Comp
-L VDD #PWR027
-U 1 1 5ACBF925
-P 4650 1925
-F 0 "#PWR027" H 4650 1775 50  0001 C CNN
-F 1 "VDD" V 4650 2125 50  0000 C CNN
-F 2 "" H 4650 1925 50  0001 C CNN
-F 3 "" H 4650 1925 50  0001 C CNN
-	1    4650 1925
-	0    -1   -1   0   
-$EndComp
 Text Notes 8550 850  0    60   ~ 0
 Lower number designator = LEFT (except D3)
 NoConn ~ 4100 3800
 Text Label 7650 2800 2    60   ~ 0
 RB3
-Text Notes 4650 2150 0    60   ~ 0
-Optional, probably not present
 $EndSCHEMATC
