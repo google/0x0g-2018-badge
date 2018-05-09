@@ -1,0 +1,186 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L CONN_02X06 J1
+U 1 1 5AF24A88
+P 2900 1350
+F 0 "J1" H 2900 1700 50  0000 C CNN
+F 1 "CONN_02X06" H 2900 1000 50  0000 C CNN
+F 2 "Pin_Headers:Pin_Header_Straight_2x06_Pitch2.54mm" H 2900 150 50  0001 C CNN
+F 3 "" H 2900 150 50  0001 C CNN
+	1    2900 1350
+	0    -1   -1   0   
+$EndComp
+NoConn ~ 2750 1600
+NoConn ~ 2850 1600
+NoConn ~ 2950 1600
+NoConn ~ 2650 1100
+NoConn ~ 2750 1100
+NoConn ~ 2950 1100
+NoConn ~ 3050 1100
+$Comp
+L GND #PWR01
+U 1 1 5AF24B40
+P 3050 1700
+F 0 "#PWR01" H 3050 1450 50  0001 C CNN
+F 1 "GND" H 3050 1550 50  0000 C CNN
+F 2 "" H 3050 1700 50  0001 C CNN
+F 3 "" H 3050 1700 50  0001 C CNN
+	1    3050 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR02
+U 1 1 5AF24B56
+P 2850 1000
+F 0 "#PWR02" H 2850 750 50  0001 C CNN
+F 1 "GND" H 2850 850 50  0000 C CNN
+F 2 "" H 2850 1000 50  0001 C CNN
+F 3 "" H 2850 1000 50  0001 C CNN
+	1    2850 1000
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3050 1700 3050 1600
+Wire Wire Line
+	2850 1100 2850 1000
+$Comp
+L +3V3 #PWR03
+U 1 1 5AF24B73
+P 2450 1600
+F 0 "#PWR03" H 2450 1450 50  0001 C CNN
+F 1 "+3V3" H 2450 1740 50  0000 C CNN
+F 2 "" H 2450 1600 50  0001 C CNN
+F 3 "" H 2450 1600 50  0001 C CNN
+	1    2450 1600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2450 1600 2650 1600
+$Comp
+L TSSP58038 U1
+U 1 1 5AF24BE6
+P 2900 2250
+F 0 "U1" H 2500 2550 50  0000 L CNN
+F 1 "TSSP58038" H 2500 1950 50  0000 L CNN
+F 2 "Opto-Devices:IRReceiver_Vishay_MINICAST-3pin" H 2850 1875 50  0001 C CNN
+F 3 "" H 3550 2550 50  0000 C CNN
+	1    2900 2250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3150 1600 3650 1600
+Wire Wire Line
+	3650 1600 3650 2250
+Wire Wire Line
+	3650 2250 3300 2250
+$Comp
+L GND #PWR04
+U 1 1 5AF24C8D
+P 3300 2600
+F 0 "#PWR04" H 3300 2350 50  0001 C CNN
+F 1 "GND" H 3300 2450 50  0000 C CNN
+F 2 "" H 3300 2600 50  0001 C CNN
+F 3 "" H 3300 2600 50  0001 C CNN
+	1    3300 2600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 2600 3300 2450
+$Comp
+L +3V3 #PWR05
+U 1 1 5AF24CAF
+P 3300 1850
+F 0 "#PWR05" H 3300 1700 50  0001 C CNN
+F 1 "+3V3" H 3300 1990 50  0000 C CNN
+F 2 "" H 3300 1850 50  0001 C CNN
+F 3 "" H 3300 1850 50  0001 C CNN
+	1    3300 1850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3300 2050 3300 1850
+$Comp
+L R_Small R1
+U 1 1 5AF24CD2
+P 3550 1000
+F 0 "R1" H 3580 1020 50  0000 L CNN
+F 1 "220" H 3580 960 50  0000 L CNN
+F 2 "Resistors_SMD:R_0805_HandSoldering" H 3550 1000 50  0001 C CNN
+F 3 "" H 3550 1000 50  0001 C CNN
+	1    3550 1000
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	3450 1000 3150 1000
+Wire Wire Line
+	3150 1000 3150 1100
+$Comp
+L LED D1
+U 1 1 5AF24D11
+P 3900 1000
+F 0 "D1" H 3900 1100 50  0000 C CNN
+F 1 "LED" H 3900 900 50  0000 C CNN
+F 2 "LEDs:LED_D3.0mm" H 3900 1000 50  0001 C CNN
+F 3 "" H 3900 1000 50  0001 C CNN
+	1    3900 1000
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3750 1000 3650 1000
+$Comp
+L GND #PWR06
+U 1 1 5AF24D4A
+P 4050 1200
+F 0 "#PWR06" H 4050 950 50  0001 C CNN
+F 1 "GND" H 4050 1050 50  0000 C CNN
+F 2 "" H 4050 1200 50  0001 C CNN
+F 3 "" H 4050 1200 50  0001 C CNN
+	1    4050 1200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4050 1200 4050 1000
+$EndSCHEMATC
