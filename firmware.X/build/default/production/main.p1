@@ -1,4 +1,19 @@
 Version 3.2 HI-TECH Software Intermediate Code
+"388 /opt/microchip/xc8/v1.45/include/pic16f716.h
+[s S16 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S16 . RBIF INTF TMR0IF RBIE INTE TMR0IE PEIE GIE ]
+"398
+[s S17 :2 `uc 1 :1 `uc 1 :2 `uc 1 :1 `uc 1 ]
+[n S17 . . T0IF . T0IE ]
+"387
+[u S15 `S16 1 `S17 1 ]
+[n S15 . . . ]
+"405
+[v _INTCONbits `VS15 ~T0 @X0 0 e@11 ]
+"4 leds.h
+[v _timer0_interrupt `(v ~T0 @X0 0 ef ]
+"12 ir_decoder.h
+[v _ir_data_valid `Vuc ~T0 @X0 0 e ]
 "466 /opt/microchip/xc8/v1.45/include/pic16f716.h
 [s S19 :1 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
 [n S19 . TMR1IF TMR2IF CCP1IF . ADIF ]
@@ -17,22 +32,21 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _PIE1bits `VS53 ~T0 @X0 0 e@140 ]
 "9 ir_decoder.h
 [v _timer1_interrupt_decoder `(v ~T0 @X0 0 ef ]
-"388 /opt/microchip/xc8/v1.45/include/pic16f716.h
-[s S16 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S16 . RBIF INTF TMR0IF RBIE INTE TMR0IE PEIE GIE ]
-"398
-[s S17 :2 `uc 1 :1 `uc 1 :2 `uc 1 :1 `uc 1 ]
-[n S17 . . T0IF . T0IE ]
-"387
-[u S15 `S16 1 `S17 1 ]
-[n S15 . . . ]
-"405
-[v _INTCONbits `VS15 ~T0 @X0 0 e@11 ]
-"4 leds.h
-[v _timer0_interrupt `(v ~T0 @X0 0 ef ]
 [p mainexit ]
-"7 ir_decoder.h
-[v _setup_ir_decoder `(v ~T0 @X0 0 ef ]
+"5 leds.h
+[v _timer0_setup `(v ~T0 @X0 0 ef ]
+"9 main.c
+[p x FOSC=XT ]
+"10
+[p x WDTE=OFF ]
+"11
+[p x PWRTE=OFF ]
+"12
+[p x BOREN=OFF ]
+"13
+[p x BODENV=40 ]
+"14
+[p x CP=OFF ]
 [; ;htc.h: 26: extern const char __xc8_OPTIM_SPEED;
 [; ;htc.h: 28: extern double __fpnormalize(double);
 [; ;xc8debug.h: 14: extern void __builtin_software_breakpoint(void);
@@ -648,63 +662,83 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;stdint.h: 215: typedef uint16_t uintptr_t;
 [; ;ir_decoder.h: 7: void setup_ir_decoder();
 [; ;ir_decoder.h: 9: void timer1_interrupt_decoder();
-[; ;ir_decoder.h: 11: extern uint32_t ir_data;
-[; ;ir_decoder.h: 12: extern uint8_t ir_data_valid;
+[; ;ir_decoder.h: 11: extern volatile uint32_t ir_data;
+[; ;ir_decoder.h: 12: extern volatile uint8_t ir_data_valid;
 [; ;leds.h: 4: void timer0_interrupt(void);
-[v $root$_isr `(v ~T0 @X0 0 e ]
-[v F651 `(v ~T0 @X0 1 tf ]
-"14 main.c
-[v _isr `IF651 ~T0 @X0 1 e ]
+[; ;leds.h: 5: void timer0_setup(void);
+"21 main.c
+[v _move_leds `Vuc ~T0 @X0 1 e ]
+[i _move_leds
+-> -> 1 `i `uc
+]
+[; ;main.c: 21: volatile uint8_t move_leds = 1;
+[v F654 `(v ~T0 @X0 1 tf ]
+"23
+[v _ISR `IF654 ~T0 @X0 1 s ]
 {
-[; ;main.c: 14: void interrupt isr(void) {
-[e :U _isr ]
+[; ;main.c: 23: static void interrupt ISR(void) {
+[e :U _ISR ]
 [f ]
-[; ;main.c: 15: if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
-"15
-[e $ ! && != -> . . _PIR1bits 0 0 `i -> -> -> 0 `i `Vuc `i != -> . . _PIE1bits 0 0 `i -> -> -> 0 `i `Vuc `i 63  ]
+[; ;main.c: 24: if (INTCONbits.T0IF) {
+"24
+[e $ ! != -> . . _INTCONbits 1 1 `i -> -> -> 0 `i `Vuc `i 63  ]
 {
-[; ;main.c: 16: timer1_interrupt_decoder();
-"16
-[e ( _timer1_interrupt_decoder ..  ]
-"17
+[; ;main.c: 25: timer0_interrupt();
+"25
+[e ( _timer0_interrupt ..  ]
+"26
 }
 [e :U 63 ]
-[; ;main.c: 17: }
-[; ;main.c: 18: if (INTCONbits.T0IF) {
-"18
-[e $ ! != -> . . _INTCONbits 1 1 `i -> -> -> 0 `i `Vuc `i 64  ]
+[; ;main.c: 26: }
+[; ;main.c: 27: if (ir_data_valid) {
+"27
+[e $ ! != -> _ir_data_valid `i -> -> -> 0 `i `Vuc `i 64  ]
 {
-[; ;main.c: 19: timer0_interrupt();
-"19
-[e ( _timer0_interrupt ..  ]
-"20
+[; ;main.c: 28: move_leds ^= 1;
+"28
+[e =^ _move_leds -> -> 1 `i `uc ]
+[; ;main.c: 29: ir_data_valid = 0;
+"29
+[e = _ir_data_valid -> -> 0 `i `uc ]
+"30
 }
 [e :U 64 ]
-[; ;main.c: 20: }
-[; ;main.c: 21: }
-"21
+[; ;main.c: 30: }
+[; ;main.c: 31: if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
+"31
+[e $ ! && != -> . . _PIR1bits 0 0 `i -> -> -> 0 `i `Vuc `i != -> . . _PIE1bits 0 0 `i -> -> -> 0 `i `Vuc `i 65  ]
+{
+[; ;main.c: 32: timer1_interrupt_decoder();
+"32
+[e ( _timer1_interrupt_decoder ..  ]
+"33
+}
+[e :U 65 ]
+[; ;main.c: 33: }
+[; ;main.c: 34: }
+"34
 [e :UE 62 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
-"23
+"36
 [v _main `(v ~T0 @X0 1 ef ]
 {
-[; ;main.c: 23: void main(void) {
+[; ;main.c: 36: void main(void) {
 [e :U _main ]
 [f ]
-[; ;main.c: 24: setup_ir_decoder();
-"24
-[e ( _setup_ir_decoder ..  ]
-[; ;main.c: 26: for(;;){}
-"26
+[; ;main.c: 37: timer0_setup();
+"37
+[e ( _timer0_setup ..  ]
+[; ;main.c: 40: for(;;){}
+"40
 {
-[e :U 66 ]
-{
-}
-[e $U 66  ]
 [e :U 67 ]
+{
 }
-[; ;main.c: 27: }
-"27
-[e :UE 65 ]
+[e $U 67  ]
+[e :U 68 ]
+}
+[; ;main.c: 41: }
+"41
+[e :UE 66 ]
 }

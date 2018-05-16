@@ -44,7 +44,7 @@ static inline void ledb_on(uint8_t pos, uint8_t dir) {
 #define LED_BLUE_RIGHT()        leda_on(3, 1)
 
 void timer0_interrupt(void) {
-    static uint8_t pos = 0;
+    static volatile uint8_t pos = 0;
     pos++;
     pos &= 7;
     all_off();
@@ -74,4 +74,14 @@ void timer0_interrupt(void) {
             LED_BLUE_RIGHT();
             break;
     }
+    INTCONbits.T0IF = 0;  // Clear flag
+}
+
+void timer0_setup() {
+    OPTION_REGbits.PSA   = 0;      // Prescaler
+    OPTION_REGbits.PS    = 0b111;  // 1:256 Prescaler
+    OPTION_REGbits.T0CS  = 0;      // Source = oscillator
+    INTCONbits.T0IF      = 0;      // Clear flag.
+    INTCONbits.T0IE      = 1;      // Enable timer0 interrupts
+    INTCONbits.GIE       = 1;      // Enable global interrupts
 }

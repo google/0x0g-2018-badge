@@ -681,8 +681,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic.h: 195: extern __bank0 __bit __timeout;
 [; ;ir_decoder.h: 7: void setup_ir_decoder();
 [; ;ir_decoder.h: 9: void timer1_interrupt_decoder();
-[; ;ir_decoder.h: 11: extern volatile uint32_t ir_data;
-[; ;ir_decoder.h: 12: extern volatile uint8_t ir_data_valid;
+[; ;ir_decoder.h: 11: extern uint32_t ir_data;
+[; ;ir_decoder.h: 12: extern uint8_t ir_data_valid;
 [; ;ir_decoder.c: 37: typedef enum __PACK {
 [; ;ir_decoder.c: 38: STATE_IDLE,
 [; ;ir_decoder.c: 39: STATE_START,
@@ -691,14 +691,14 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;ir_decoder.c: 42: STATE_GAP,
 [; ;ir_decoder.c: 43: } ir_decoder_state_t;
 "45 ir_decoder.c
-[v _ir_data `Vul ~T0 @X0 1 e ]
-[; ;ir_decoder.c: 45: volatile uint32_t ir_data;
+[v _ir_data `ul ~T0 @X0 1 e ]
+[; ;ir_decoder.c: 45: uint32_t ir_data;
 "46
-[v _ir_data_valid `Vuc ~T0 @X0 1 e ]
+[v _ir_data_valid `uc ~T0 @X0 1 e ]
 [i _ir_data_valid
 -> -> 0 `i `uc
 ]
-[; ;ir_decoder.c: 46: volatile uint8_t ir_data_valid = 0;
+[; ;ir_decoder.c: 46: uint8_t ir_data_valid = 0;
 "48
 [v _timer1_interrupt_decoder `(v ~T0 @X0 1 ef ]
 {
@@ -706,23 +706,23 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e :U _timer1_interrupt_decoder ]
 [f ]
 "50
-[v F654 `VE647 ~T0 @X0 1 s decoder_state ]
+[v F654 `E647 ~T0 @X0 1 s decoder_state ]
 [i F654
 . `E647 0
 ]
 "51
-[v F655 `Vuc ~T0 @X0 1 s bit_count ]
+[v F655 `uc ~T0 @X0 1 s bit_count ]
 [i F655
 -> -> 0 `i `uc
 ]
 "52
-[v F656 `Vuc ~T0 @X0 1 s state_timer ]
+[v F656 `uc ~T0 @X0 1 s state_timer ]
 [i F656
 -> -> 0 `i `uc
 ]
-[; ;ir_decoder.c: 50: static volatile ir_decoder_state_t decoder_state = STATE_IDLE;
-[; ;ir_decoder.c: 51: static volatile uint8_t bit_count = 0;
-[; ;ir_decoder.c: 52: static volatile uint8_t state_timer = 0;
+[; ;ir_decoder.c: 50: static ir_decoder_state_t decoder_state = STATE_IDLE;
+[; ;ir_decoder.c: 51: static uint8_t bit_count = 0;
+[; ;ir_decoder.c: 52: static uint8_t state_timer = 0;
 [; ;ir_decoder.c: 54: do { TMR1H = 255; TMR1L = (255-140); PIR1bits.TMR1IF = 0; } while(0);
 "54
 [e :U 65 ]
@@ -734,7 +734,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e :U 64 ]
 [; ;ir_decoder.c: 57: if(ir_data_valid)
 "57
-[e $ ! != -> _ir_data_valid `i -> -> -> 0 `i `Vuc `i 66  ]
+[e $ ! != -> _ir_data_valid `i -> -> -> 0 `i `uc `i 66  ]
 [; ;ir_decoder.c: 58: return;
 "58
 [e $UE 62  ]

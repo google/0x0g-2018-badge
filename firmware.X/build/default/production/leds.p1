@@ -15,6 +15,28 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _PORTA `Vuc ~T0 @X0 0 e@5 ]
 "208
 [v _PORTB `Vuc ~T0 @X0 0 e@6 ]
+"388
+[s S16 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S16 . RBIF INTF TMR0IF RBIE INTE TMR0IE PEIE GIE ]
+"398
+[s S17 :2 `uc 1 :1 `uc 1 :2 `uc 1 :1 `uc 1 ]
+[n S17 . . T0IF . T0IE ]
+"387
+[u S15 `S16 1 `S17 1 ]
+[n S15 . . . ]
+"405
+[v _INTCONbits `VS15 ~T0 @X0 0 e@11 ]
+"1037
+[s S43 :3 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S43 . PS PSA T0SE T0CS INTEDG nRBPU ]
+"1045
+[s S44 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S44 . PS0 PS1 PS2 ]
+"1036
+[u S42 `S43 1 `S44 1 ]
+[n S42 . . . ]
+"1051
+[v _OPTION_REGbits `VS42 ~T0 @X0 0 e@129 ]
 [; ;stdint.h: 13: typedef signed char int8_t;
 [; ;stdint.h: 20: typedef signed int int16_t;
 [; ;stdint.h: 28: typedef signed short long int int24_t;
@@ -629,9 +651,10 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic.h: 194: extern __bank0 __bit __powerdown;
 [; ;pic.h: 195: extern __bank0 __bit __timeout;
 [; ;leds.h: 4: void timer0_interrupt(void);
-[v F646 `(v ~T0 @X0 1 tf ]
+[; ;leds.h: 5: void timer0_setup(void);
+[v F648 `(v ~T0 @X0 1 tf ]
 "10 leds.c
-[v _all_off `TF646 ~T0 @X0 1 s ]
+[v _all_off `TF648 ~T0 @X0 1 s ]
 {
 [; ;leds.c: 10: static inline void all_off() {
 [e :U _all_off ]
@@ -646,9 +669,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 "13
 [e :UE 62 ]
 }
-[v F650 `(v ~T0 @X0 1 tf2`uc`uc ]
+[v F652 `(v ~T0 @X0 1 tf2`uc`uc ]
 "18
-[v _leda_on `TF650 ~T0 @X0 1 s ]
+[v _leda_on `TF652 ~T0 @X0 1 s ]
 {
 [; ;leds.c: 18: static inline void leda_on(uint8_t pos, uint8_t dir) {
 [e :U _leda_on ]
@@ -676,9 +699,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 "24
 [e :UE 63 ]
 }
-[v F654 `(v ~T0 @X0 1 tf2`uc`uc ]
+[v F656 `(v ~T0 @X0 1 tf2`uc`uc ]
 "29
-[v _ledb_on `TF654 ~T0 @X0 1 s ]
+[v _ledb_on `TF656 ~T0 @X0 1 s ]
 {
 [; ;leds.c: 29: static inline void ledb_on(uint8_t pos, uint8_t dir) {
 [e :U _ledb_on ]
@@ -713,17 +736,17 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e :U _timer0_interrupt ]
 [f ]
 "47
-[v F656 `uc ~T0 @X0 1 s pos ]
-[i F656
+[v F658 `Vuc ~T0 @X0 1 s pos ]
+[i F658
 -> -> 0 `i `uc
 ]
-[; ;leds.c: 47: static uint8_t pos = 0;
+[; ;leds.c: 47: static volatile uint8_t pos = 0;
 [; ;leds.c: 48: pos++;
 "48
-[e ++ F656 -> -> 1 `i `uc ]
+[e ++ F658 -> -> 1 `i `uc ]
 [; ;leds.c: 49: pos &= 7;
 "49
-[e =& F656 -> -> 7 `i `uc ]
+[e =& F658 -> -> 7 `i `uc ]
 [; ;leds.c: 50: all_off();
 "50
 [e ( _all_off ..  ]
@@ -809,7 +832,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e $U 70  ]
 "51
 [e :U 71 ]
-[e [\ F656 , $ -> -> 0 `i `uc 72
+[e [\ F658 , $ -> -> 0 `i `uc 72
  , $ -> -> 1 `i `uc 73
  , $ -> -> 2 `i `uc 74
  , $ -> -> 3 `i `uc 75
@@ -820,7 +843,38 @@ Version 3.2 HI-TECH Software Intermediate Code
  70 ]
 "76
 [e :U 70 ]
-[; ;leds.c: 77: }
+[; ;leds.c: 77: INTCONbits.T0IF = 0;
 "77
+[e = . . _INTCONbits 1 1 -> -> 0 `i `uc ]
+[; ;leds.c: 78: }
+"78
 [e :UE 69 ]
+}
+"80
+[v _timer0_setup `(v ~T0 @X0 1 ef ]
+{
+[; ;leds.c: 80: void timer0_setup() {
+[e :U _timer0_setup ]
+[f ]
+[; ;leds.c: 81: OPTION_REGbits.PSA = 0;
+"81
+[e = . . _OPTION_REGbits 0 1 -> -> 0 `i `uc ]
+[; ;leds.c: 82: OPTION_REGbits.PS = 0b111;
+"82
+[e = . . _OPTION_REGbits 0 0 -> -> 7 `i `uc ]
+[; ;leds.c: 83: OPTION_REGbits.T0CS = 0;
+"83
+[e = . . _OPTION_REGbits 0 3 -> -> 0 `i `uc ]
+[; ;leds.c: 84: INTCONbits.T0IF = 0;
+"84
+[e = . . _INTCONbits 1 1 -> -> 0 `i `uc ]
+[; ;leds.c: 85: INTCONbits.T0IE = 1;
+"85
+[e = . . _INTCONbits 1 3 -> -> 1 `i `uc ]
+[; ;leds.c: 86: INTCONbits.GIE = 1;
+"86
+[e = . . _INTCONbits 0 7 -> -> 1 `i `uc ]
+[; ;leds.c: 87: }
+"87
+[e :UE 80 ]
 }

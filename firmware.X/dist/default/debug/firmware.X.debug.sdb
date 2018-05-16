@@ -17,6 +17,8 @@ STATE_GAP 4
 [v ___ftadd __ftadd `(f  1 e 3 0 ]
 "48 /firmware.X/ir_decoder.c
 [v _timer1_interrupt_decoder timer1_interrupt_decoder `(v  1 e 1 0 ]
+"139
+[v _setup_ir_decoder setup_ir_decoder `(v  1 e 1 0 ]
 "10 /firmware.X/leds.c
 [v _all_off all_off `T(v  1 s 1 all_off ]
 "18
@@ -25,11 +27,9 @@ STATE_GAP 4
 [v _ledb_on ledb_on `T(v  1 s 1 ledb_on ]
 "46
 [v _timer0_interrupt timer0_interrupt `(v  1 e 1 0 ]
-"80
-[v _timer0_setup timer0_setup `(v  1 e 1 0 ]
-"23 /firmware.X/main.c
-[v _ISR ISR `II(v  1 s 1 ISR ]
-"36
+"15 /firmware.X/main.c
+[v _isr isr `II(v  1 e 1 0 ]
+"28
 [v _main main `(v  1 e 1 0 ]
 "164 /opt/microchip/xc8/v1.45/include/pic16f716.h
 [v _PORTA PORTA `VEuc  1 e 1 @5 ]
@@ -97,20 +97,6 @@ STATE_GAP 4
 ]
 [u S118 . 1 `S106 1 . 1 0 `S112 1 . 1 0 ]
 [v _T1CONbits T1CONbits `VES118  1 e 1 @16 ]
-[s S317 . 1 `uc 1 PS 1 0 :3:0 
-`uc 1 PSA 1 0 :1:3 
-`uc 1 T0SE 1 0 :1:4 
-`uc 1 T0CS 1 0 :1:5 
-`uc 1 INTEDG 1 0 :1:6 
-`uc 1 nRBPU 1 0 :1:7 
-]
-"1051
-[s S324 . 1 `uc 1 PS0 1 0 :1:0 
-`uc 1 PS1 1 0 :1:1 
-`uc 1 PS2 1 0 :1:2 
-]
-[u S328 . 1 `S317 1 . 1 0 `S324 1 . 1 0 ]
-[v _OPTION_REGbits OPTION_REGbits `VES328  1 e 1 @129 ]
 "1101
 [v _TRISA TRISA `VEuc  1 e 1 @133 ]
 "1145
@@ -150,43 +136,43 @@ STATE_GAP 4
 "1638
 [v _TRISB3 TRISB3 `VEb  1 e 0 @1075 ]
 "45 /firmware.X/ir_decoder.c
-[v _ir_data ir_data `VEul  1 e 4 0 ]
+[v _ir_data ir_data `ul  1 e 4 0 ]
 "46
-[v _ir_data_valid ir_data_valid `VEuc  1 e 1 0 ]
-"21 /firmware.X/main.c
-[v _move_leds move_leds `VEuc  1 e 1 0 ]
-"36
+[v _ir_data_valid ir_data_valid `uc  1 e 1 0 ]
+"13 /firmware.X/main.c
+[v _move_leds move_leds `uc  1 e 1 0 ]
+"28
 [v _main main `(v  1 e 1 0 ]
 {
-"41
+"32
 } 0
-"80 /firmware.X/leds.c
-[v _timer0_setup timer0_setup `(v  1 e 1 0 ]
+"139 /firmware.X/ir_decoder.c
+[v _setup_ir_decoder setup_ir_decoder `(v  1 e 1 0 ]
 {
-"87
+"150
 } 0
-"23 /firmware.X/main.c
-[v _ISR ISR `II(v  1 s 1 ISR ]
+"15 /firmware.X/main.c
+[v _isr isr `II(v  1 e 1 0 ]
 {
-"34
+"26
 } 0
 "48 /firmware.X/ir_decoder.c
 [v _timer1_interrupt_decoder timer1_interrupt_decoder `(v  1 e 1 0 ]
 {
 "50
-[v timer1_interrupt_decoder@decoder_state decoder_state `VEE647  1 s 1 decoder_state ]
+[v timer1_interrupt_decoder@decoder_state decoder_state `E647  1 s 1 decoder_state ]
 "51
-[v timer1_interrupt_decoder@bit_count bit_count `VEuc  1 s 1 bit_count ]
+[v timer1_interrupt_decoder@bit_count bit_count `uc  1 s 1 bit_count ]
 "52
-[v timer1_interrupt_decoder@state_timer state_timer `VEuc  1 s 1 state_timer ]
+[v timer1_interrupt_decoder@state_timer state_timer `uc  1 s 1 state_timer ]
 "137
 } 0
 "46 /firmware.X/leds.c
 [v _timer0_interrupt timer0_interrupt `(v  1 e 1 0 ]
 {
 "47
-[v timer0_interrupt@pos pos `VEuc  1 s 1 pos ]
-"78
+[v timer0_interrupt@pos pos `uc  1 s 1 pos ]
+"77
 } 0
 "29
 [v _ledb_on ledb_on `T(v  1 s 1 ledb_on ]

@@ -922,8 +922,8 @@ void setup_ir_decoder();
 
 void timer1_interrupt_decoder();
 
-extern volatile uint32_t ir_data;
-extern volatile uint8_t ir_data_valid;
+extern uint32_t ir_data;
+extern uint8_t ir_data_valid;
 
 # 37 "ir_decoder.c"
 typedef enum __PACK {
@@ -934,14 +934,14 @@ STATE_BURST,
 STATE_GAP,
 } ir_decoder_state_t;
 
-volatile uint32_t ir_data;
-volatile uint8_t ir_data_valid = 0;
+uint32_t ir_data;
+uint8_t ir_data_valid = 0;
 
 void timer1_interrupt_decoder() {
 
-static volatile ir_decoder_state_t decoder_state = STATE_IDLE;
-static volatile uint8_t bit_count = 0;
-static volatile uint8_t state_timer = 0;
+static ir_decoder_state_t decoder_state = STATE_IDLE;
+static uint8_t bit_count = 0;
+static uint8_t state_timer = 0;
 
 do { TMR1H = 255; TMR1L = (255-140); PIR1bits.TMR1IF = 0; } while(0);
 

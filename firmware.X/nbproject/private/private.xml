@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/firmware/firmware_dev.X/main.c</file>
-            <file>file:/firmware/firmware_dev.X/ir_decoder.h</file>
-            <file>file:/firmware/firmware_dev.X/ir_decoder.c</file>
+            <file>file:/firmware.X/ir_decoder.c</file>
+            <file>file:/firmware.X/leds.c</file>
+            <file>file:/firmware.X/main.c</file>
+            <file>file:/firmware.X/leds.h</file>
         </group>
     </open-files>
 </project-private>

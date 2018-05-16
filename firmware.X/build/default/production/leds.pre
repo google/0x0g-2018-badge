@@ -919,6 +919,7 @@ extern __bank0 __bit __timeout;
 
 # 4 "leds.h"
 void timer0_interrupt(void);
+void timer0_setup(void);
 
 # 10 "leds.c"
 static inline void all_off() {
@@ -946,7 +947,7 @@ TRISB &= ~(1u<<pos);
 
 # 46
 void timer0_interrupt(void) {
-static uint8_t pos = 0;
+static volatile uint8_t pos = 0;
 pos++;
 pos &= 7;
 all_off();
@@ -976,4 +977,14 @@ case 7:
 leda_on(3, 1);
 break;
 }
+INTCONbits.T0IF = 0;
+}
+
+void timer0_setup() {
+OPTION_REGbits.PSA = 0;
+OPTION_REGbits.PS = 0b111;
+OPTION_REGbits.T0CS = 0;
+INTCONbits.T0IF = 0;
+INTCONbits.T0IE = 1;
+INTCONbits.GIE = 1;
 }

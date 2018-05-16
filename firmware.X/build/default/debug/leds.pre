@@ -1,5 +1,5 @@
 
-# 1 "ir_decoder.c"
+# 1 "leds.c"
 
 # 13 "/opt/microchip/xc8/v1.45/include/stdint.h"
 typedef signed char int8_t;
@@ -917,127 +917,63 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 
-# 7 "ir_decoder.h"
-void setup_ir_decoder();
+# 4 "leds.h"
+void timer0_interrupt(void);
 
-void timer1_interrupt_decoder();
-
-extern volatile uint32_t ir_data;
-extern volatile uint8_t ir_data_valid;
-
-# 37 "ir_decoder.c"
-typedef enum __PACK {
-STATE_IDLE,
-STATE_START,
-STATE_START_GAP,
-STATE_BURST,
-STATE_GAP,
-} ir_decoder_state_t;
-
-volatile uint32_t ir_data;
-volatile uint8_t ir_data_valid = 0;
-
-void timer1_interrupt_decoder() {
-
-static volatile ir_decoder_state_t decoder_state = STATE_IDLE;
-static volatile uint8_t bit_count = 0;
-static volatile uint8_t state_timer = 0;
-
-do { TMR1H = 255; TMR1L = (255-140); PIR1bits.TMR1IF = 0; } while(0);
-
-
-if(ir_data_valid)
-return;
-
-switch (decoder_state) {
-case STATE_IDLE:
-
-if (PORTBbits.RB0)
-return;
-decoder_state = STATE_START;
-state_timer = 1;
-bit_count = 0;
-return;
-case STATE_START:
-
-if (!PORTBbits.RB0) {
-state_timer++;
-return;
+# 10 "leds.c"
+static inline void all_off() {
+TRISA |= TRISA0 | TRISA2 | TRISA3;
+TRISB |= TRISB3;
 }
 
-if (((((9000/140)-2) <= ((state_timer))) && (((state_timer)) <= ((9000/140)+2)))) {
-decoder_state = STATE_START_GAP;
-state_timer=0;
-return;
+# 18
+static inline void leda_on(uint8_t pos, uint8_t dir) {
+if (dir)
+PORTA |= (1u<<pos);
+else
+PORTA &= ~(1u<<pos);
+TRISA &= ~(1u<<pos);
 }
 
-decoder_state = STATE_IDLE;
-return;
-case STATE_START_GAP:
-
-if (PORTBbits.RB0) {
-state_timer++;
-return;
-}
-if (!((((4500/140)-2) <= ((state_timer))) && (((state_timer)) <= ((4500/140)+2)))) {
-decoder_state = STATE_IDLE;
-return;
+# 29
+static inline void ledb_on(uint8_t pos, uint8_t dir) {
+if (dir)
+PORTB |= (1u<<pos);
+else
+PORTB &= ~(1u<<pos);
+TRISB &= ~(1u<<pos);
 }
 
-state_timer = 0;
-decoder_state = STATE_BURST;
-return;
-case STATE_BURST:
-if (!PORTBbits.RB0) {
-state_timer++;
-return;
-}
-
-if (!((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((562/140)+2)))) {
-decoder_state = STATE_IDLE;
-} else {
-decoder_state = STATE_GAP;
-state_timer = 0;
-}
-return;
-case STATE_GAP:
-if (PORTBbits.RB0) {
-state_timer++;
-return;
-}
-if (((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((562/140)+2)))) {
-
-ir_data &= ~(1u << (31u-bit_count));
-} else if (((((1675/140)-2) <= ((state_timer))) && (((state_timer)) <= ((1675/140)+2)))) {
-
-ir_data |= (1u << (31u-bit_count));
-} else {
-
-decoder_state = STATE_IDLE;
-return;
-}
-
-bit_count++;
-if (bit_count == 32) {
-ir_data_valid = 1;
-decoder_state = STATE_IDLE;
-} else {
-decoder_state = STATE_BURST;
-}
-return;
+# 46
+void timer0_interrupt(void) {
+static uint8_t pos = 0;
+pos++;
+pos &= 7;
+all_off();
+switch (pos) {
+case 0:
+leda_on(0, 0);
+break;
+case 1:
+leda_on(2, 0);
+break;
+case 2:
+ledb_on(3, 0);
+break;
+case 3:
+ledb_on(3, 1);
+break;
+case 4:
+leda_on(0, 1);
+break;
+case 5:
+leda_on(2, 1);
+break;
+case 6:
+leda_on(3, 0);
+break;
+case 7:
+leda_on(3, 1);
+break;
 }
 }
-
-void setup_ir_decoder() {
-
-TRISBbits.TRISB0 = 1;
-
-T1CONbits.T1OSCEN = 1;
-T1CONbits.T1SYNC = 1;
-T1CONbits.TMR1ON = 1;
-PIE1bits.TMR1IE = 1;
-INTCONbits.PEIE = 1;
-INTCONbits.GIE = 1;
-do { TMR1H = 255; TMR1L = (255-140); PIR1bits.TMR1IF = 0; } while(0);
-}
-

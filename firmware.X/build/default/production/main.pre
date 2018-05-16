@@ -1,6 +1,15 @@
 
 # 1 "main.c"
 
+
+# 9
+#pragma config FOSC = XT
+#pragma config WDTE = OFF
+#pragma config PWRTE = OFF
+#pragma config BOREN = OFF
+#pragma config BODENV = 40
+#pragma config CP = OFF
+
 # 26 "/opt/microchip/xc8/v1.45/include/htc.h"
 extern const char __xc8_OPTIM_SPEED;
 
@@ -922,24 +931,32 @@ void setup_ir_decoder();
 
 void timer1_interrupt_decoder();
 
-extern uint32_t ir_data;
-extern uint8_t ir_data_valid;
+extern volatile uint32_t ir_data;
+extern volatile uint8_t ir_data_valid;
 
 # 4 "leds.h"
 void timer0_interrupt(void);
+void timer0_setup(void);
 
-# 14 "main.c"
-void interrupt isr(void) {
-if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
-timer1_interrupt_decoder();
-}
+# 21 "main.c"
+volatile uint8_t move_leds = 1;
+
+static void interrupt ISR(void) {
 if (INTCONbits.T0IF) {
 timer0_interrupt();
+}
+if (ir_data_valid) {
+move_leds ^= 1;
+ir_data_valid = 0;
+}
+if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
+timer1_interrupt_decoder();
 }
 }
 
 void main(void) {
-setup_ir_decoder();
+timer0_setup();
+
 
 for(;;){}
 }

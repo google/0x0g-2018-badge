@@ -1,71 +1,20 @@
 Version 3.2 HI-TECH Software Intermediate Code
-"50 ir_decoder.c
-[c E647 0 1 2 3 4 .. ]
-[n E647 __PACK STATE_IDLE STATE_START STATE_START_GAP STATE_BURST STATE_GAP  ]
-"513 /opt/microchip/xc8/v1.45/include/pic16f716.h
-[v _TMR1H `Vuc ~T0 @X0 0 e@15 ]
-"506
-[v _TMR1L `Vuc ~T0 @X0 0 e@14 ]
-"466
-[s S19 :1 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
-[n S19 . TMR1IF TMR2IF CCP1IF . ADIF ]
-"465
-[u S18 `S19 1 ]
-[n S18 . . ]
-"474
-[v _PIR1bits `VS18 ~T0 @X0 0 e@12 ]
-"219
-[s S8 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S8 . RB0 RB1 RB2 RB3 RB4 RB5 RB6 RB7 ]
-"229
-[s S9 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S9 . . DT1CK . DCCP ]
-"218
-[u S7 `S8 1 `S9 1 ]
-[n S7 . . . ]
-"236
-[v _PORTBbits `VS7 ~T0 @X0 0 e@6 ]
-"1156
-[s S48 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S48 . TRISB0 TRISB1 TRISB2 TRISB3 TRISB4 TRISB5 TRISB6 TRISB7 ]
-"1166
-[s S49 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S49 . . TT1CK . TCCP ]
-"1155
-[u S47 `S48 1 `S49 1 ]
-[n S47 . . . ]
-"1173
-[v _TRISBbits `VS47 ~T0 @X0 0 e@134 ]
-"526
-[s S21 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :2 `uc 1 ]
-[n S21 . TMR1ON TMR1CS nT1SYNC T1OSCEN T1CKPS ]
-"533
-[s S22 :2 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S22 . . T1SYNC . T1CKPS0 T1CKPS1 ]
-"525
-[u S20 `S21 1 `S22 1 ]
-[n S20 . . . ]
-"541
-[v _T1CONbits `VS20 ~T0 @X0 0 e@16 ]
-"1305
-[s S54 :1 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
-[n S54 . TMR1IE TMR2IE CCP1IE . ADIE ]
-"1304
-[u S53 `S54 1 ]
-[n S53 . . ]
-"1313
-[v _PIE1bits `VS53 ~T0 @X0 0 e@140 ]
-"388
-[s S16 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S16 . RBIF INTF TMR0IF RBIE INTE TMR0IE PEIE GIE ]
-"398
-[s S17 :2 `uc 1 :1 `uc 1 :2 `uc 1 :1 `uc 1 ]
-[n S17 . . T0IF . T0IE ]
-"387
-[u S15 `S16 1 `S17 1 ]
-[n S15 . . . ]
-"405
-[v _INTCONbits `VS15 ~T0 @X0 0 e@11 ]
+"1101 /opt/microchip/xc8/v1.45/include/pic16f716.h
+[v _TRISA `Vuc ~T0 @X0 0 e@133 ]
+"1622
+[v _TRISA0 `Vb ~T0 @X0 0 e@1064 ]
+"1626
+[v _TRISA2 `Vb ~T0 @X0 0 e@1066 ]
+"1628
+[v _TRISA3 `Vb ~T0 @X0 0 e@1067 ]
+"1145
+[v _TRISB `Vuc ~T0 @X0 0 e@134 ]
+"1638
+[v _TRISB3 `Vb ~T0 @X0 0 e@1075 ]
+"164
+[v _PORTA `Vuc ~T0 @X0 0 e@5 ]
+"208
+[v _PORTB `Vuc ~T0 @X0 0 e@6 ]
 [; ;stdint.h: 13: typedef signed char int8_t;
 [; ;stdint.h: 20: typedef signed int int16_t;
 [; ;stdint.h: 28: typedef signed short long int int24_t;
@@ -679,350 +628,199 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic.h: 193: extern __bank0 unsigned char __resetbits;
 [; ;pic.h: 194: extern __bank0 __bit __powerdown;
 [; ;pic.h: 195: extern __bank0 __bit __timeout;
-[; ;ir_decoder.h: 7: void setup_ir_decoder();
-[; ;ir_decoder.h: 9: void timer1_interrupt_decoder();
-[; ;ir_decoder.h: 11: extern volatile uint32_t ir_data;
-[; ;ir_decoder.h: 12: extern volatile uint8_t ir_data_valid;
-[; ;ir_decoder.c: 37: typedef enum __PACK {
-[; ;ir_decoder.c: 38: STATE_IDLE,
-[; ;ir_decoder.c: 39: STATE_START,
-[; ;ir_decoder.c: 40: STATE_START_GAP,
-[; ;ir_decoder.c: 41: STATE_BURST,
-[; ;ir_decoder.c: 42: STATE_GAP,
-[; ;ir_decoder.c: 43: } ir_decoder_state_t;
-"45 ir_decoder.c
-[v _ir_data `Vul ~T0 @X0 1 e ]
-[; ;ir_decoder.c: 45: volatile uint32_t ir_data;
-"46
-[v _ir_data_valid `Vuc ~T0 @X0 1 e ]
-[i _ir_data_valid
--> -> 0 `i `uc
-]
-[; ;ir_decoder.c: 46: volatile uint8_t ir_data_valid = 0;
-"48
-[v _timer1_interrupt_decoder `(v ~T0 @X0 1 ef ]
+[; ;leds.h: 4: void timer0_interrupt(void);
+[v F646 `(v ~T0 @X0 1 tf ]
+"10 leds.c
+[v _all_off `TF646 ~T0 @X0 1 s ]
 {
-[; ;ir_decoder.c: 48: void timer1_interrupt_decoder() {
-[e :U _timer1_interrupt_decoder ]
+[; ;leds.c: 10: static inline void all_off() {
+[e :U _all_off ]
 [f ]
-"50
-[v F654 `VE647 ~T0 @X0 1 s decoder_state ]
-[i F654
-. `E647 0
-]
-"51
-[v F655 `Vuc ~T0 @X0 1 s bit_count ]
-[i F655
--> -> 0 `i `uc
-]
-"52
-[v F656 `Vuc ~T0 @X0 1 s state_timer ]
+[; ;leds.c: 11: TRISA |= TRISA0 | TRISA2 | TRISA3;
+"11
+[e =| _TRISA -> -> | | _TRISA0 _TRISA2 _TRISA3 `i `uc ]
+[; ;leds.c: 12: TRISB |= TRISB3;
+"12
+[e =| _TRISB -> -> _TRISB3 `i `uc ]
+[; ;leds.c: 13: }
+"13
+[e :UE 62 ]
+}
+[v F650 `(v ~T0 @X0 1 tf2`uc`uc ]
+"18
+[v _leda_on `TF650 ~T0 @X0 1 s ]
+{
+[; ;leds.c: 18: static inline void leda_on(uint8_t pos, uint8_t dir) {
+[e :U _leda_on ]
+[v _pos `uc ~T0 @X0 1 r1 ]
+[v _dir `uc ~T0 @X0 1 r2 ]
+[f ]
+[; ;leds.c: 19: if (dir)
+"19
+[e $ ! != -> _dir `i -> -> -> 0 `i `uc `i 64  ]
+[; ;leds.c: 20: PORTA |= (1u<<pos);
+"20
+[e =| _PORTA -> << -> 1 `ui _pos `uc ]
+[e $U 65  ]
+"21
+[e :U 64 ]
+[; ;leds.c: 21: else
+[; ;leds.c: 22: PORTA &= ~(1u<<pos);
+"22
+[e =& _PORTA -> ~ << -> 1 `ui _pos `uc ]
+[e :U 65 ]
+[; ;leds.c: 23: TRISA &= ~(1u<<pos);
+"23
+[e =& _TRISA -> ~ << -> 1 `ui _pos `uc ]
+[; ;leds.c: 24: }
+"24
+[e :UE 63 ]
+}
+[v F654 `(v ~T0 @X0 1 tf2`uc`uc ]
+"29
+[v _ledb_on `TF654 ~T0 @X0 1 s ]
+{
+[; ;leds.c: 29: static inline void ledb_on(uint8_t pos, uint8_t dir) {
+[e :U _ledb_on ]
+[v _pos `uc ~T0 @X0 1 r1 ]
+[v _dir `uc ~T0 @X0 1 r2 ]
+[f ]
+[; ;leds.c: 30: if (dir)
+"30
+[e $ ! != -> _dir `i -> -> -> 0 `i `uc `i 67  ]
+[; ;leds.c: 31: PORTB |= (1u<<pos);
+"31
+[e =| _PORTB -> << -> 1 `ui _pos `uc ]
+[e $U 68  ]
+"32
+[e :U 67 ]
+[; ;leds.c: 32: else
+[; ;leds.c: 33: PORTB &= ~(1u<<pos);
+"33
+[e =& _PORTB -> ~ << -> 1 `ui _pos `uc ]
+[e :U 68 ]
+[; ;leds.c: 34: TRISB &= ~(1u<<pos);
+"34
+[e =& _TRISB -> ~ << -> 1 `ui _pos `uc ]
+[; ;leds.c: 35: }
+"35
+[e :UE 66 ]
+}
+"46
+[v _timer0_interrupt `(v ~T0 @X0 1 ef ]
+{
+[; ;leds.c: 46: void timer0_interrupt(void) {
+[e :U _timer0_interrupt ]
+[f ]
+"47
+[v F656 `uc ~T0 @X0 1 s pos ]
 [i F656
 -> -> 0 `i `uc
 ]
-[; ;ir_decoder.c: 50: static volatile ir_decoder_state_t decoder_state = STATE_IDLE;
-[; ;ir_decoder.c: 51: static volatile uint8_t bit_count = 0;
-[; ;ir_decoder.c: 52: static volatile uint8_t state_timer = 0;
-[; ;ir_decoder.c: 54: do { TMR1H = 255; TMR1L = (255-140); PIR1bits.TMR1IF = 0; } while(0);
-"54
-[e :U 65 ]
-{
-[e = _TMR1H -> -> 255 `i `uc ]
-[e = _TMR1L -> - -> 255 `i -> 140 `i `uc ]
-[e = . . _PIR1bits 0 0 -> -> 0 `i `uc ]
-}
-[e :U 64 ]
-[; ;ir_decoder.c: 57: if(ir_data_valid)
-"57
-[e $ ! != -> _ir_data_valid `i -> -> -> 0 `i `Vuc `i 66  ]
-[; ;ir_decoder.c: 58: return;
-"58
-[e $UE 62  ]
-[e :U 66 ]
-[; ;ir_decoder.c: 60: switch (decoder_state) {
-"60
-[e $U 68  ]
-{
-[; ;ir_decoder.c: 61: case STATE_IDLE:
-"61
-[e :U 69 ]
-[; ;ir_decoder.c: 63: if (PORTBbits.RB0)
-"63
-[e $ ! != -> . . _PORTBbits 0 0 `i -> -> -> 0 `i `Vuc `i 70  ]
-[; ;ir_decoder.c: 64: return;
-"64
-[e $UE 62  ]
-[e :U 70 ]
-[; ;ir_decoder.c: 65: decoder_state = STATE_START;
-"65
-[e = F654 . `E647 1 ]
-[; ;ir_decoder.c: 66: state_timer = 1;
-"66
-[e = F656 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 67: bit_count = 0;
-"67
-[e = F655 -> -> 0 `i `uc ]
-[; ;ir_decoder.c: 68: return;
-"68
-[e $UE 62  ]
-[; ;ir_decoder.c: 69: case STATE_START:
-"69
-[e :U 71 ]
-[; ;ir_decoder.c: 71: if (!PORTBbits.RB0) {
-"71
-[e $ ! ! != -> . . _PORTBbits 0 0 `i -> -> -> 0 `i `Vuc `i 72  ]
-{
-[; ;ir_decoder.c: 72: state_timer++;
-"72
+[; ;leds.c: 47: static uint8_t pos = 0;
+[; ;leds.c: 48: pos++;
+"48
 [e ++ F656 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 73: return;
-"73
-[e $UE 62  ]
-"74
-}
+[; ;leds.c: 49: pos &= 7;
+"49
+[e =& F656 -> -> 7 `i `uc ]
+[; ;leds.c: 50: all_off();
+"50
+[e ( _all_off ..  ]
+[; ;leds.c: 51: switch (pos) {
+"51
+[e $U 71  ]
+{
+[; ;leds.c: 52: case 0:
+"52
 [e :U 72 ]
-[; ;ir_decoder.c: 74: }
-[; ;ir_decoder.c: 76: if (((((9000/140)-2) <= ((state_timer))) && (((state_timer)) <= ((9000/140)+2)))) {
-"76
-[e $ ! && <= - / -> 9000 `i -> 140 `i -> 2 `i -> F656 `i <= -> F656 `i + / -> 9000 `i -> 140 `i -> 2 `i 73  ]
-{
-[; ;ir_decoder.c: 77: decoder_state = STATE_START_GAP;
-"77
-[e = F654 . `E647 2 ]
-[; ;ir_decoder.c: 78: state_timer=0;
-"78
-[e = F656 -> -> 0 `i `uc ]
-[; ;ir_decoder.c: 79: return;
-"79
-[e $UE 62  ]
-"80
-}
+[; ;leds.c: 53: leda_on(0, 0);
+"53
+[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;leds.c: 54: break;
+"54
+[e $U 70  ]
+[; ;leds.c: 55: case 1:
+"55
 [e :U 73 ]
-[; ;ir_decoder.c: 80: }
-[; ;ir_decoder.c: 82: decoder_state = STATE_IDLE;
-"82
-[e = F654 . `E647 0 ]
-[; ;ir_decoder.c: 83: return;
-"83
-[e $UE 62  ]
-[; ;ir_decoder.c: 84: case STATE_START_GAP:
-"84
+[; ;leds.c: 56: leda_on(2, 0);
+"56
+[e ( _leda_on (2 , -> -> 2 `i `uc -> -> 0 `i `uc ]
+[; ;leds.c: 57: break;
+"57
+[e $U 70  ]
+[; ;leds.c: 58: case 2:
+"58
 [e :U 74 ]
-[; ;ir_decoder.c: 86: if (PORTBbits.RB0) {
-"86
-[e $ ! != -> . . _PORTBbits 0 0 `i -> -> -> 0 `i `Vuc `i 75  ]
-{
-[; ;ir_decoder.c: 87: state_timer++;
-"87
-[e ++ F656 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 88: return;
-"88
-[e $UE 62  ]
-"89
-}
-[e :U 75 ]
-[; ;ir_decoder.c: 89: }
-[; ;ir_decoder.c: 90: if (!((((4500/140)-2) <= ((state_timer))) && (((state_timer)) <= ((4500/140)+2)))) {
-"90
-[e $ ! ! && <= - / -> 4500 `i -> 140 `i -> 2 `i -> F656 `i <= -> F656 `i + / -> 4500 `i -> 140 `i -> 2 `i 76  ]
-{
-[; ;ir_decoder.c: 91: decoder_state = STATE_IDLE;
-"91
-[e = F654 . `E647 0 ]
-[; ;ir_decoder.c: 92: return;
-"92
-[e $UE 62  ]
-"93
-}
-[e :U 76 ]
-[; ;ir_decoder.c: 93: }
-[; ;ir_decoder.c: 95: state_timer = 0;
-"95
-[e = F656 -> -> 0 `i `uc ]
-[; ;ir_decoder.c: 96: decoder_state = STATE_BURST;
-"96
-[e = F654 . `E647 3 ]
-[; ;ir_decoder.c: 97: return;
-"97
-[e $UE 62  ]
-[; ;ir_decoder.c: 98: case STATE_BURST:
-"98
-[e :U 77 ]
-[; ;ir_decoder.c: 99: if (!PORTBbits.RB0) {
-"99
-[e $ ! ! != -> . . _PORTBbits 0 0 `i -> -> -> 0 `i `Vuc `i 78  ]
-{
-[; ;ir_decoder.c: 100: state_timer++;
-"100
-[e ++ F656 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 101: return;
-"101
-[e $UE 62  ]
-"102
-}
-[e :U 78 ]
-[; ;ir_decoder.c: 102: }
-[; ;ir_decoder.c: 104: if (!((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((562/140)+2)))) {
-"104
-[e $ ! ! && <= - / -> 562 `i -> 140 `i -> 2 `i -> F656 `i <= -> F656 `i + / -> 562 `i -> 140 `i -> 2 `i 79  ]
-{
-[; ;ir_decoder.c: 105: decoder_state = STATE_IDLE;
-"105
-[e = F654 . `E647 0 ]
-"106
-}
-[; ;ir_decoder.c: 106: } else {
-[e $U 80  ]
-[e :U 79 ]
-{
-[; ;ir_decoder.c: 107: decoder_state = STATE_GAP;
-"107
-[e = F654 . `E647 4 ]
-[; ;ir_decoder.c: 108: state_timer = 0;
-"108
-[e = F656 -> -> 0 `i `uc ]
-"109
-}
-[e :U 80 ]
-[; ;ir_decoder.c: 109: }
-[; ;ir_decoder.c: 110: return;
-"110
-[e $UE 62  ]
-[; ;ir_decoder.c: 111: case STATE_GAP:
-"111
-[e :U 81 ]
-[; ;ir_decoder.c: 112: if (PORTBbits.RB0) {
-"112
-[e $ ! != -> . . _PORTBbits 0 0 `i -> -> -> 0 `i `Vuc `i 82  ]
-{
-[; ;ir_decoder.c: 113: state_timer++;
-"113
-[e ++ F656 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 114: return;
-"114
-[e $UE 62  ]
-"115
-}
-[e :U 82 ]
-[; ;ir_decoder.c: 115: }
-[; ;ir_decoder.c: 116: if (((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((562/140)+2)))) {
-"116
-[e $ ! && <= - / -> 562 `i -> 140 `i -> 2 `i -> F656 `i <= -> F656 `i + / -> 562 `i -> 140 `i -> 2 `i 83  ]
-{
-[; ;ir_decoder.c: 118: ir_data &= ~(1u << (31u-bit_count));
-"118
-[e =& _ir_data -> ~ << -> 1 `ui - -> 31 `ui -> F655 `ui `ul ]
-"119
-}
-[; ;ir_decoder.c: 119: } else if (((((1675/140)-2) <= ((state_timer))) && (((state_timer)) <= ((1675/140)+2)))) {
-[e $U 84  ]
-[e :U 83 ]
-[e $ ! && <= - / -> 1675 `i -> 140 `i -> 2 `i -> F656 `i <= -> F656 `i + / -> 1675 `i -> 140 `i -> 2 `i 85  ]
-{
-[; ;ir_decoder.c: 121: ir_data |= (1u << (31u-bit_count));
-"121
-[e =| _ir_data -> << -> 1 `ui - -> 31 `ui -> F655 `ui `ul ]
-"122
-}
-[; ;ir_decoder.c: 122: } else {
-[e $U 86  ]
-[e :U 85 ]
-{
-[; ;ir_decoder.c: 124: decoder_state = STATE_IDLE;
-"124
-[e = F654 . `E647 0 ]
-[; ;ir_decoder.c: 125: return;
-"125
-[e $UE 62  ]
-"126
-}
-[e :U 86 ]
-[e :U 84 ]
-[; ;ir_decoder.c: 126: }
-[; ;ir_decoder.c: 128: bit_count++;
-"128
-[e ++ F655 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 129: if (bit_count == 32) {
-"129
-[e $ ! == -> F655 `i -> 32 `i 87  ]
-{
-[; ;ir_decoder.c: 130: ir_data_valid = 1;
-"130
-[e = _ir_data_valid -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 131: decoder_state = STATE_IDLE;
-"131
-[e = F654 . `E647 0 ]
-"132
-}
-[; ;ir_decoder.c: 132: } else {
-[e $U 88  ]
-[e :U 87 ]
-{
-[; ;ir_decoder.c: 133: decoder_state = STATE_BURST;
-"133
-[e = F654 . `E647 3 ]
-"134
-}
-[e :U 88 ]
-[; ;ir_decoder.c: 134: }
-[; ;ir_decoder.c: 135: return;
-"135
-[e $UE 62  ]
-"136
-}
-[; ;ir_decoder.c: 136: }
-[e $U 67  ]
+[; ;leds.c: 59: ledb_on(3, 0);
+"59
+[e ( _ledb_on (2 , -> -> 3 `i `uc -> -> 0 `i `uc ]
+[; ;leds.c: 60: break;
 "60
-[e :U 68 ]
-[e [\ F654 , $ . `E647 0 69
- , $ . `E647 1 71
- , $ . `E647 2 74
- , $ . `E647 3 77
- , $ . `E647 4 81
- 67 ]
-"136
-[e :U 67 ]
-[; ;ir_decoder.c: 137: }
-"137
-[e :UE 62 ]
+[e $U 70  ]
+[; ;leds.c: 61: case 3:
+"61
+[e :U 75 ]
+[; ;leds.c: 62: ledb_on(3, 1);
+"62
+[e ( _ledb_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
+[; ;leds.c: 63: break;
+"63
+[e $U 70  ]
+[; ;leds.c: 64: case 4:
+"64
+[e :U 76 ]
+[; ;leds.c: 65: leda_on(0, 1);
+"65
+[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
+[; ;leds.c: 66: break;
+"66
+[e $U 70  ]
+[; ;leds.c: 67: case 5:
+"67
+[e :U 77 ]
+[; ;leds.c: 68: leda_on(2, 1);
+"68
+[e ( _leda_on (2 , -> -> 2 `i `uc -> -> 1 `i `uc ]
+[; ;leds.c: 69: break;
+"69
+[e $U 70  ]
+[; ;leds.c: 70: case 6:
+"70
+[e :U 78 ]
+[; ;leds.c: 71: leda_on(3, 0);
+"71
+[e ( _leda_on (2 , -> -> 3 `i `uc -> -> 0 `i `uc ]
+[; ;leds.c: 72: break;
+"72
+[e $U 70  ]
+[; ;leds.c: 73: case 7:
+"73
+[e :U 79 ]
+[; ;leds.c: 74: leda_on(3, 1);
+"74
+[e ( _leda_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
+[; ;leds.c: 75: break;
+"75
+[e $U 70  ]
+"76
 }
-"139
-[v _setup_ir_decoder `(v ~T0 @X0 1 ef ]
-{
-[; ;ir_decoder.c: 139: void setup_ir_decoder() {
-[e :U _setup_ir_decoder ]
-[f ]
-[; ;ir_decoder.c: 141: TRISBbits.TRISB0 = 1;
-"141
-[e = . . _TRISBbits 0 0 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 143: T1CONbits.T1OSCEN = 1;
-"143
-[e = . . _T1CONbits 0 3 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 144: T1CONbits.T1SYNC = 1;
-"144
-[e = . . _T1CONbits 1 1 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 145: T1CONbits.TMR1ON = 1;
-"145
-[e = . . _T1CONbits 0 0 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 146: PIE1bits.TMR1IE = 1;
-"146
-[e = . . _PIE1bits 0 0 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 147: INTCONbits.PEIE = 1;
-"147
-[e = . . _INTCONbits 0 6 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 148: INTCONbits.GIE = 1;
-"148
-[e = . . _INTCONbits 0 7 -> -> 1 `i `uc ]
-[; ;ir_decoder.c: 149: do { TMR1H = 255; TMR1L = (255-140); PIR1bits.TMR1IF = 0; } while(0);
-"149
-[e :U 92 ]
-{
-[e = _TMR1H -> -> 255 `i `uc ]
-[e = _TMR1L -> - -> 255 `i -> 140 `i `uc ]
-[e = . . _PIR1bits 0 0 -> -> 0 `i `uc ]
-}
-[e :U 91 ]
-[; ;ir_decoder.c: 150: }
-"150
-[e :UE 89 ]
+[; ;leds.c: 76: }
+[e $U 70  ]
+"51
+[e :U 71 ]
+[e [\ F656 , $ -> -> 0 `i `uc 72
+ , $ -> -> 1 `i `uc 73
+ , $ -> -> 2 `i `uc 74
+ , $ -> -> 3 `i `uc 75
+ , $ -> -> 4 `i `uc 76
+ , $ -> -> 5 `i `uc 77
+ , $ -> -> 6 `i `uc 78
+ , $ -> -> 7 `i `uc 79
+ 70 ]
+"76
+[e :U 70 ]
+[; ;leds.c: 77: }
+"77
+[e :UE 69 ]
 }

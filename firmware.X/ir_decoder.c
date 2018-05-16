@@ -42,14 +42,14 @@ typedef enum __PACK {
   STATE_GAP,
 } ir_decoder_state_t;
 
-uint32_t ir_data;  // Data when valid
-uint8_t ir_data_valid = 0;  // Reader should reset this
+volatile uint32_t ir_data;  // Data when valid
+volatile uint8_t ir_data_valid = 0;  // Reader should reset this
 
 void timer1_interrupt_decoder() {
   /** Call from ISR when (TMR1IF && TMR1IE) */
-  static ir_decoder_state_t decoder_state = STATE_IDLE;
-  static uint8_t bit_count = 0;
-  static uint8_t state_timer = 0;  // Time spent in current state
+  static volatile ir_decoder_state_t decoder_state = STATE_IDLE;
+  static volatile uint8_t bit_count = 0;
+  static volatile uint8_t state_timer = 0;  // Time spent in current state
 
   TIMER1_RESET();
 
