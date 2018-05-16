@@ -1,0 +1,4 @@
+ - The 'down' side of the PCB can be determined by the text on the front side. Additionally, the test points used for programming (designator J1) are torwards the top of the board on the REVERSE side.
+ - All LEDs are polarized such that their negative side / cathode faces the bottom of the PCB (cathode closer to the bottom than the anode). The silkscreen should also indicate this.
+ - The PIC chip is polarized such that the dot must face the 'down' side of the PCB.
+ - The IR reciever (through-hole component) MUST be oriented correctly. Once soldered in, it should be bent at right-angles so its body is flush with the PCB, and the curved window faces away from the PCB..
