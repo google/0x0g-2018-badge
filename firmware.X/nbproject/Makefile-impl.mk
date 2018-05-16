@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=firmware_dev.X
+PROJECTNAME=firmware.X
 
 # Active Configuration
 DEFAULTCONF=default

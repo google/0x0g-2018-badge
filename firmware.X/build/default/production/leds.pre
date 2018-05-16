@@ -1,5 +1,95 @@
 
-# 1 "main.c"
+# 1 "leds.c"
+
+# 13 "/opt/microchip/xc8/v1.45/include/stdint.h"
+typedef signed char int8_t;
+
+# 20
+typedef signed int int16_t;
+
+# 28
+typedef signed short long int int24_t;
+
+# 36
+typedef signed long int int32_t;
+
+# 43
+typedef unsigned char uint8_t;
+
+# 49
+typedef unsigned int uint16_t;
+
+# 56
+typedef unsigned short long int uint24_t;
+
+# 63
+typedef unsigned long int uint32_t;
+
+# 71
+typedef signed char int_least8_t;
+
+# 78
+typedef signed int int_least16_t;
+
+# 90
+typedef signed short long int int_least24_t;
+
+# 98
+typedef signed long int int_least32_t;
+
+# 105
+typedef unsigned char uint_least8_t;
+
+# 111
+typedef unsigned int uint_least16_t;
+
+# 121
+typedef unsigned short long int uint_least24_t;
+
+# 128
+typedef unsigned long int uint_least32_t;
+
+# 137
+typedef signed char int_fast8_t;
+
+# 144
+typedef signed int int_fast16_t;
+
+# 156
+typedef signed short long int int_fast24_t;
+
+# 164
+typedef signed long int int_fast32_t;
+
+# 171
+typedef unsigned char uint_fast8_t;
+
+# 177
+typedef unsigned int uint_fast16_t;
+
+# 187
+typedef unsigned short long int uint_fast24_t;
+
+# 194
+typedef unsigned long int uint_fast32_t;
+
+# 200
+typedef int32_t intmax_t;
+
+
+
+
+typedef uint32_t uintmax_t;
+
+
+
+
+typedef int16_t intptr_t;
+
+
+
+
+typedef uint16_t uintptr_t;
 
 # 26 "/opt/microchip/xc8/v1.45/include/htc.h"
 extern const char __xc8_OPTIM_SPEED;
@@ -827,119 +917,63 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 
-# 13 "/opt/microchip/xc8/v1.45/include/stdint.h"
-typedef signed char int8_t;
-
-# 20
-typedef signed int int16_t;
-
-# 28
-typedef signed short long int int24_t;
-
-# 36
-typedef signed long int int32_t;
-
-# 43
-typedef unsigned char uint8_t;
-
-# 49
-typedef unsigned int uint16_t;
-
-# 56
-typedef unsigned short long int uint24_t;
-
-# 63
-typedef unsigned long int uint32_t;
-
-# 71
-typedef signed char int_least8_t;
-
-# 78
-typedef signed int int_least16_t;
-
-# 90
-typedef signed short long int int_least24_t;
-
-# 98
-typedef signed long int int_least32_t;
-
-# 105
-typedef unsigned char uint_least8_t;
-
-# 111
-typedef unsigned int uint_least16_t;
-
-# 121
-typedef unsigned short long int uint_least24_t;
-
-# 128
-typedef unsigned long int uint_least32_t;
-
-# 137
-typedef signed char int_fast8_t;
-
-# 144
-typedef signed int int_fast16_t;
-
-# 156
-typedef signed short long int int_fast24_t;
-
-# 164
-typedef signed long int int_fast32_t;
-
-# 171
-typedef unsigned char uint_fast8_t;
-
-# 177
-typedef unsigned int uint_fast16_t;
-
-# 187
-typedef unsigned short long int uint_fast24_t;
-
-# 194
-typedef unsigned long int uint_fast32_t;
-
-# 200
-typedef int32_t intmax_t;
-
-
-
-
-typedef uint32_t uintmax_t;
-
-
-
-
-typedef int16_t intptr_t;
-
-
-
-
-typedef uint16_t uintptr_t;
-
-# 7 "ir_decoder.h"
-void setup_ir_decoder();
-
-void timer1_interrupt_decoder();
-
-extern uint32_t ir_data;
-extern uint8_t ir_data_valid;
-
 # 4 "leds.h"
 void timer0_interrupt(void);
 
-# 14 "main.c"
-void interrupt isr(void) {
-if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
-timer1_interrupt_decoder();
-}
-if (INTCONbits.T0IF) {
-timer0_interrupt();
-}
+# 10 "leds.c"
+static inline void all_off() {
+TRISA |= TRISA0 | TRISA2 | TRISA3;
+TRISB |= TRISB3;
 }
 
-void main(void) {
-setup_ir_decoder();
+# 18
+static inline void leda_on(uint8_t pos, uint8_t dir) {
+if (dir)
+PORTA |= (1u<<pos);
+else
+PORTA &= ~(1u<<pos);
+TRISA &= ~(1u<<pos);
+}
 
-for(;;){}
+# 29
+static inline void ledb_on(uint8_t pos, uint8_t dir) {
+if (dir)
+PORTB |= (1u<<pos);
+else
+PORTB &= ~(1u<<pos);
+TRISB &= ~(1u<<pos);
+}
+
+# 46
+void timer0_interrupt(void) {
+static uint8_t pos = 0;
+pos++;
+pos &= 7;
+all_off();
+switch (pos) {
+case 0:
+leda_on(0, 0);
+break;
+case 1:
+leda_on(2, 0);
+break;
+case 2:
+ledb_on(3, 0);
+break;
+case 3:
+ledb_on(3, 1);
+break;
+case 4:
+leda_on(0, 1);
+break;
+case 5:
+leda_on(2, 1);
+break;
+case 6:
+leda_on(3, 0);
+break;
+case 7:
+leda_on(3, 1);
+break;
+}
 }

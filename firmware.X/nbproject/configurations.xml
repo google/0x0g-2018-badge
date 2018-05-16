@@ -15,6 +15,8 @@
                    projectFiles="true">
       <itemPath>ir_decoder.c</itemPath>
       <itemPath>main.c</itemPath>
+      <itemPath>leds.h</itemPath>
+      <itemPath>leds.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

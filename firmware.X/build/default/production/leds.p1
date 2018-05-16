@@ -1,38 +1,48 @@
 Version 3.2 HI-TECH Software Intermediate Code
-"466 /opt/microchip/xc8/v1.45/include/pic16f716.h
-[s S19 :1 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
-[n S19 . TMR1IF TMR2IF CCP1IF . ADIF ]
-"465
-[u S18 `S19 1 ]
-[n S18 . . ]
-"474
-[v _PIR1bits `VS18 ~T0 @X0 0 e@12 ]
-"1305
-[s S54 :1 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
-[n S54 . TMR1IE TMR2IE CCP1IE . ADIE ]
-"1304
-[u S53 `S54 1 ]
-[n S53 . . ]
-"1313
-[v _PIE1bits `VS53 ~T0 @X0 0 e@140 ]
-"9 ir_decoder.h
-[v _timer1_interrupt_decoder `(v ~T0 @X0 0 ef ]
-"388 /opt/microchip/xc8/v1.45/include/pic16f716.h
-[s S16 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S16 . RBIF INTF TMR0IF RBIE INTE TMR0IE PEIE GIE ]
-"398
-[s S17 :2 `uc 1 :1 `uc 1 :2 `uc 1 :1 `uc 1 ]
-[n S17 . . T0IF . T0IE ]
-"387
-[u S15 `S16 1 `S17 1 ]
-[n S15 . . . ]
-"405
-[v _INTCONbits `VS15 ~T0 @X0 0 e@11 ]
-"4 leds.h
-[v _timer0_interrupt `(v ~T0 @X0 0 ef ]
-[p mainexit ]
-"7 ir_decoder.h
-[v _setup_ir_decoder `(v ~T0 @X0 0 ef ]
+"1101 /opt/microchip/xc8/v1.45/include/pic16f716.h
+[v _TRISA `Vuc ~T0 @X0 0 e@133 ]
+"1622
+[v _TRISA0 `Vb ~T0 @X0 0 e@1064 ]
+"1626
+[v _TRISA2 `Vb ~T0 @X0 0 e@1066 ]
+"1628
+[v _TRISA3 `Vb ~T0 @X0 0 e@1067 ]
+"1145
+[v _TRISB `Vuc ~T0 @X0 0 e@134 ]
+"1638
+[v _TRISB3 `Vb ~T0 @X0 0 e@1075 ]
+"164
+[v _PORTA `Vuc ~T0 @X0 0 e@5 ]
+"208
+[v _PORTB `Vuc ~T0 @X0 0 e@6 ]
+[; ;stdint.h: 13: typedef signed char int8_t;
+[; ;stdint.h: 20: typedef signed int int16_t;
+[; ;stdint.h: 28: typedef signed short long int int24_t;
+[; ;stdint.h: 36: typedef signed long int int32_t;
+[; ;stdint.h: 43: typedef unsigned char uint8_t;
+[; ;stdint.h: 49: typedef unsigned int uint16_t;
+[; ;stdint.h: 56: typedef unsigned short long int uint24_t;
+[; ;stdint.h: 63: typedef unsigned long int uint32_t;
+[; ;stdint.h: 71: typedef signed char int_least8_t;
+[; ;stdint.h: 78: typedef signed int int_least16_t;
+[; ;stdint.h: 90: typedef signed short long int int_least24_t;
+[; ;stdint.h: 98: typedef signed long int int_least32_t;
+[; ;stdint.h: 105: typedef unsigned char uint_least8_t;
+[; ;stdint.h: 111: typedef unsigned int uint_least16_t;
+[; ;stdint.h: 121: typedef unsigned short long int uint_least24_t;
+[; ;stdint.h: 128: typedef unsigned long int uint_least32_t;
+[; ;stdint.h: 137: typedef signed char int_fast8_t;
+[; ;stdint.h: 144: typedef signed int int_fast16_t;
+[; ;stdint.h: 156: typedef signed short long int int_fast24_t;
+[; ;stdint.h: 164: typedef signed long int int_fast32_t;
+[; ;stdint.h: 171: typedef unsigned char uint_fast8_t;
+[; ;stdint.h: 177: typedef unsigned int uint_fast16_t;
+[; ;stdint.h: 187: typedef unsigned short long int uint_fast24_t;
+[; ;stdint.h: 194: typedef unsigned long int uint_fast32_t;
+[; ;stdint.h: 200: typedef int32_t intmax_t;
+[; ;stdint.h: 205: typedef uint32_t uintmax_t;
+[; ;stdint.h: 210: typedef int16_t intptr_t;
+[; ;stdint.h: 215: typedef uint16_t uintptr_t;
 [; ;htc.h: 26: extern const char __xc8_OPTIM_SPEED;
 [; ;htc.h: 28: extern double __fpnormalize(double);
 [; ;xc8debug.h: 14: extern void __builtin_software_breakpoint(void);
@@ -618,93 +628,199 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic.h: 193: extern __bank0 unsigned char __resetbits;
 [; ;pic.h: 194: extern __bank0 __bit __powerdown;
 [; ;pic.h: 195: extern __bank0 __bit __timeout;
-[; ;stdint.h: 13: typedef signed char int8_t;
-[; ;stdint.h: 20: typedef signed int int16_t;
-[; ;stdint.h: 28: typedef signed short long int int24_t;
-[; ;stdint.h: 36: typedef signed long int int32_t;
-[; ;stdint.h: 43: typedef unsigned char uint8_t;
-[; ;stdint.h: 49: typedef unsigned int uint16_t;
-[; ;stdint.h: 56: typedef unsigned short long int uint24_t;
-[; ;stdint.h: 63: typedef unsigned long int uint32_t;
-[; ;stdint.h: 71: typedef signed char int_least8_t;
-[; ;stdint.h: 78: typedef signed int int_least16_t;
-[; ;stdint.h: 90: typedef signed short long int int_least24_t;
-[; ;stdint.h: 98: typedef signed long int int_least32_t;
-[; ;stdint.h: 105: typedef unsigned char uint_least8_t;
-[; ;stdint.h: 111: typedef unsigned int uint_least16_t;
-[; ;stdint.h: 121: typedef unsigned short long int uint_least24_t;
-[; ;stdint.h: 128: typedef unsigned long int uint_least32_t;
-[; ;stdint.h: 137: typedef signed char int_fast8_t;
-[; ;stdint.h: 144: typedef signed int int_fast16_t;
-[; ;stdint.h: 156: typedef signed short long int int_fast24_t;
-[; ;stdint.h: 164: typedef signed long int int_fast32_t;
-[; ;stdint.h: 171: typedef unsigned char uint_fast8_t;
-[; ;stdint.h: 177: typedef unsigned int uint_fast16_t;
-[; ;stdint.h: 187: typedef unsigned short long int uint_fast24_t;
-[; ;stdint.h: 194: typedef unsigned long int uint_fast32_t;
-[; ;stdint.h: 200: typedef int32_t intmax_t;
-[; ;stdint.h: 205: typedef uint32_t uintmax_t;
-[; ;stdint.h: 210: typedef int16_t intptr_t;
-[; ;stdint.h: 215: typedef uint16_t uintptr_t;
-[; ;ir_decoder.h: 7: void setup_ir_decoder();
-[; ;ir_decoder.h: 9: void timer1_interrupt_decoder();
-[; ;ir_decoder.h: 11: extern uint32_t ir_data;
-[; ;ir_decoder.h: 12: extern uint8_t ir_data_valid;
 [; ;leds.h: 4: void timer0_interrupt(void);
-[v $root$_isr `(v ~T0 @X0 0 e ]
-[v F651 `(v ~T0 @X0 1 tf ]
-"14 main.c
-[v _isr `IF651 ~T0 @X0 1 e ]
+[v F646 `(v ~T0 @X0 1 tf ]
+"10 leds.c
+[v _all_off `TF646 ~T0 @X0 1 s ]
 {
-[; ;main.c: 14: void interrupt isr(void) {
-[e :U _isr ]
+[; ;leds.c: 10: static inline void all_off() {
+[e :U _all_off ]
 [f ]
-[; ;main.c: 15: if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
-"15
-[e $ ! && != -> . . _PIR1bits 0 0 `i -> -> -> 0 `i `Vuc `i != -> . . _PIE1bits 0 0 `i -> -> -> 0 `i `Vuc `i 63  ]
-{
-[; ;main.c: 16: timer1_interrupt_decoder();
-"16
-[e ( _timer1_interrupt_decoder ..  ]
-"17
-}
-[e :U 63 ]
-[; ;main.c: 17: }
-[; ;main.c: 18: if (INTCONbits.T0IF) {
-"18
-[e $ ! != -> . . _INTCONbits 1 1 `i -> -> -> 0 `i `Vuc `i 64  ]
-{
-[; ;main.c: 19: timer0_interrupt();
-"19
-[e ( _timer0_interrupt ..  ]
-"20
-}
-[e :U 64 ]
-[; ;main.c: 20: }
-[; ;main.c: 21: }
-"21
+[; ;leds.c: 11: TRISA |= TRISA0 | TRISA2 | TRISA3;
+"11
+[e =| _TRISA -> -> | | _TRISA0 _TRISA2 _TRISA3 `i `uc ]
+[; ;leds.c: 12: TRISB |= TRISB3;
+"12
+[e =| _TRISB -> -> _TRISB3 `i `uc ]
+[; ;leds.c: 13: }
+"13
 [e :UE 62 ]
 }
-[v $root$_main `(v ~T0 @X0 0 e ]
-"23
-[v _main `(v ~T0 @X0 1 ef ]
+[v F650 `(v ~T0 @X0 1 tf2`uc`uc ]
+"18
+[v _leda_on `TF650 ~T0 @X0 1 s ]
 {
-[; ;main.c: 23: void main(void) {
-[e :U _main ]
+[; ;leds.c: 18: static inline void leda_on(uint8_t pos, uint8_t dir) {
+[e :U _leda_on ]
+[v _pos `uc ~T0 @X0 1 r1 ]
+[v _dir `uc ~T0 @X0 1 r2 ]
 [f ]
-[; ;main.c: 24: setup_ir_decoder();
+[; ;leds.c: 19: if (dir)
+"19
+[e $ ! != -> _dir `i -> -> -> 0 `i `uc `i 64  ]
+[; ;leds.c: 20: PORTA |= (1u<<pos);
+"20
+[e =| _PORTA -> << -> 1 `ui _pos `uc ]
+[e $U 65  ]
+"21
+[e :U 64 ]
+[; ;leds.c: 21: else
+[; ;leds.c: 22: PORTA &= ~(1u<<pos);
+"22
+[e =& _PORTA -> ~ << -> 1 `ui _pos `uc ]
+[e :U 65 ]
+[; ;leds.c: 23: TRISA &= ~(1u<<pos);
+"23
+[e =& _TRISA -> ~ << -> 1 `ui _pos `uc ]
+[; ;leds.c: 24: }
 "24
-[e ( _setup_ir_decoder ..  ]
-[; ;main.c: 26: for(;;){}
-"26
-{
-[e :U 66 ]
-{
+[e :UE 63 ]
 }
-[e $U 66  ]
+[v F654 `(v ~T0 @X0 1 tf2`uc`uc ]
+"29
+[v _ledb_on `TF654 ~T0 @X0 1 s ]
+{
+[; ;leds.c: 29: static inline void ledb_on(uint8_t pos, uint8_t dir) {
+[e :U _ledb_on ]
+[v _pos `uc ~T0 @X0 1 r1 ]
+[v _dir `uc ~T0 @X0 1 r2 ]
+[f ]
+[; ;leds.c: 30: if (dir)
+"30
+[e $ ! != -> _dir `i -> -> -> 0 `i `uc `i 67  ]
+[; ;leds.c: 31: PORTB |= (1u<<pos);
+"31
+[e =| _PORTB -> << -> 1 `ui _pos `uc ]
+[e $U 68  ]
+"32
 [e :U 67 ]
+[; ;leds.c: 32: else
+[; ;leds.c: 33: PORTB &= ~(1u<<pos);
+"33
+[e =& _PORTB -> ~ << -> 1 `ui _pos `uc ]
+[e :U 68 ]
+[; ;leds.c: 34: TRISB &= ~(1u<<pos);
+"34
+[e =& _TRISB -> ~ << -> 1 `ui _pos `uc ]
+[; ;leds.c: 35: }
+"35
+[e :UE 66 ]
 }
-[; ;main.c: 27: }
-"27
-[e :UE 65 ]
+"46
+[v _timer0_interrupt `(v ~T0 @X0 1 ef ]
+{
+[; ;leds.c: 46: void timer0_interrupt(void) {
+[e :U _timer0_interrupt ]
+[f ]
+"47
+[v F656 `uc ~T0 @X0 1 s pos ]
+[i F656
+-> -> 0 `i `uc
+]
+[; ;leds.c: 47: static uint8_t pos = 0;
+[; ;leds.c: 48: pos++;
+"48
+[e ++ F656 -> -> 1 `i `uc ]
+[; ;leds.c: 49: pos &= 7;
+"49
+[e =& F656 -> -> 7 `i `uc ]
+[; ;leds.c: 50: all_off();
+"50
+[e ( _all_off ..  ]
+[; ;leds.c: 51: switch (pos) {
+"51
+[e $U 71  ]
+{
+[; ;leds.c: 52: case 0:
+"52
+[e :U 72 ]
+[; ;leds.c: 53: leda_on(0, 0);
+"53
+[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
+[; ;leds.c: 54: break;
+"54
+[e $U 70  ]
+[; ;leds.c: 55: case 1:
+"55
+[e :U 73 ]
+[; ;leds.c: 56: leda_on(2, 0);
+"56
+[e ( _leda_on (2 , -> -> 2 `i `uc -> -> 0 `i `uc ]
+[; ;leds.c: 57: break;
+"57
+[e $U 70  ]
+[; ;leds.c: 58: case 2:
+"58
+[e :U 74 ]
+[; ;leds.c: 59: ledb_on(3, 0);
+"59
+[e ( _ledb_on (2 , -> -> 3 `i `uc -> -> 0 `i `uc ]
+[; ;leds.c: 60: break;
+"60
+[e $U 70  ]
+[; ;leds.c: 61: case 3:
+"61
+[e :U 75 ]
+[; ;leds.c: 62: ledb_on(3, 1);
+"62
+[e ( _ledb_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
+[; ;leds.c: 63: break;
+"63
+[e $U 70  ]
+[; ;leds.c: 64: case 4:
+"64
+[e :U 76 ]
+[; ;leds.c: 65: leda_on(0, 1);
+"65
+[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
+[; ;leds.c: 66: break;
+"66
+[e $U 70  ]
+[; ;leds.c: 67: case 5:
+"67
+[e :U 77 ]
+[; ;leds.c: 68: leda_on(2, 1);
+"68
+[e ( _leda_on (2 , -> -> 2 `i `uc -> -> 1 `i `uc ]
+[; ;leds.c: 69: break;
+"69
+[e $U 70  ]
+[; ;leds.c: 70: case 6:
+"70
+[e :U 78 ]
+[; ;leds.c: 71: leda_on(3, 0);
+"71
+[e ( _leda_on (2 , -> -> 3 `i `uc -> -> 0 `i `uc ]
+[; ;leds.c: 72: break;
+"72
+[e $U 70  ]
+[; ;leds.c: 73: case 7:
+"73
+[e :U 79 ]
+[; ;leds.c: 74: leda_on(3, 1);
+"74
+[e ( _leda_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
+[; ;leds.c: 75: break;
+"75
+[e $U 70  ]
+"76
+}
+[; ;leds.c: 76: }
+[e $U 70  ]
+"51
+[e :U 71 ]
+[e [\ F656 , $ -> -> 0 `i `uc 72
+ , $ -> -> 1 `i `uc 73
+ , $ -> -> 2 `i `uc 74
+ , $ -> -> 3 `i `uc 75
+ , $ -> -> 4 `i `uc 76
+ , $ -> -> 5 `i `uc 77
+ , $ -> -> 6 `i `uc 78
+ , $ -> -> 7 `i `uc 79
+ 70 ]
+"76
+[e :U 70 ]
+[; ;leds.c: 77: }
+"77
+[e :UE 69 ]
 }
