@@ -1,0 +1,387 @@
+Microchip MPLAB XC8 Compiler V1.45 ()
+
+Linker command line:
+
+-W-3 --edf=/opt/microchip/xc8/v1.45/dat/en_msgs.txt -cs \
+  -h+dist/default/production/firmware_dev.X.production.sym \
+  --cmf=dist/default/production/firmware_dev.X.production.cmf -z -Q16F716 \
+  -o/tmp/xcXsOLvwv -Mdist/default/production/firmware_dev.X.production.map \
+  -E1 -ver=XC8 -ASTACK=025h-06fh -pstack=STACK -ACODE=00h-07FFh \
+  -ASTRCODE=00h-07FFh -ASTRING=00h-0FFhx8 -ACONST=00h-0FFhx8 \
+  -AENTRY=00h-0FFhx8 -ACOMMON=070h-07Fh -ABANK0=020h-06Fh -ABANK1=0A0h-0BFh \
+  -ARAM=020h-06Fh,0A0h-0BFh -AABS1=020h-07Fh,0A0h-0BFh -ASFR0=00h-01Fh \
+  -ASFR1=080h-09Fh -preset_vec=00h,intentry=04h,init,end_init \
+  -ppowerup=CODE -pcinit=CODE -pfunctab=ENTRY -ACONFIG=02007h-02007h \
+  -pconfig=CONFIG -DCONFIG=2 -AIDLOC=02000h-02003h -pidloc=IDLOC -DIDLOC=2 \
+  -DCODE=2 -DSTRCODE=2 -DSTRING=2 -DCONST=2 -DENTRY=2 -k /tmp/xcXeM8Njj.obj \
+  dist/default/production/firmware_dev.X.production.obj 
+
+Object code version is 3.11
+
+Machine type is 16F716
+
+
+
+                Name                               Link     Load   Length Selector   Space Scale
+/tmp/xcXeM8Njj.obj
+                end_init                              F        F        1        8       0
+                reset_vec                             0        0        1        0       0
+dist/default/production/firmware_dev.X.production.obj
+                cinit                                10       10        B        8       0
+                intentry                              4        4        B        8       0
+                swtext1                             109      109        5      212       0
+                text3                                1B       1B       CB        8       0
+                text2                                E6       E6       12        8       0
+                text1                                F8       F8       11        8       0
+                maintext                            10E      10E        2      21C       0
+                cstackCOMMON                         70       70        B       70       1
+                bssBANK0                             20       20        5       20       1
+                bssCOMMON                            7B       7B        3       70       1
+
+TOTAL           Name                               Link     Load   Length     Space
+        CLASS   STACK          
+
+        CLASS   CODE           
+                end_init                              F        F        1         0
+                cinit                                10       10        B         0
+                intentry                              4        4        B         0
+                reset_vec                             0        0        1         0
+                text3                                1B       1B       CB         0
+                text2                                E6       E6       12         0
+                text1                                F8       F8       11         0
+                maintext                            10E      10E        2         0
+
+        CLASS   STRCODE        
+
+        CLASS   STRING         
+
+        CLASS   CONST          
+                swtext1                             109      109        5         0
+
+        CLASS   ENTRY          
+
+        CLASS   COMMON         
+                cstackCOMMON                         70       70        B         1
+                bssCOMMON                            7B       7B        3         1
+
+        CLASS   BANK0          
+                bssBANK0                             20       20        5         1
+
+        CLASS   BANK1          
+
+        CLASS   RAM            
+
+        CLASS   ABS1           
+                abs_s1                               7E       7E        2         1
+
+        CLASS   SFR0           
+
+        CLASS   SFR1           
+
+        CLASS   CONFIG         
+
+        CLASS   IDLOC          
+
+        CLASS   EEDATA         
+
+
+
+SEGMENTS        Name                           Load    Length   Top    Selector   Space  Class     Delta
+
+                reset_vec                      000000  000001  000001         0       0  CODE        2
+                intentry                       000004  000105  000109         8       0  CODE        2
+                bssBANK0                       000020  000005  000025        20       1  BANK0       1
+                cstackCOMMON                   000070  00000E  00007E        70       1  COMMON      1
+                swtext1                        000109  000005  00010E       212       0  CONST       2
+                maintext                       00010E  000002  000110       21C       0  CODE        2
+
+
+UNUSED ADDRESS RANGES
+
+        Name                Unused          Largest block    Delta
+        BANK0            025-06F            4B           1
+        BANK1            0A0-0BF            20           1
+        CODE             001-003             3           2
+                         110-7FF           6F0
+        CONFIG           2007-2007             1           2
+        CONST            001-003             3           2
+                         110-7FF           100
+        ENTRY            001-003             3           2
+                         110-7FF           100
+        IDLOC            2000-2003             4           2
+        RAM              025-06F            4B           1
+                         0A0-0BF            20
+        SFR0             000-01F            20           1
+        SFR1             080-09F            20           1
+        STACK            025-06F            4B           1
+        STRCODE          001-003             3           2
+                         110-7FF           6F0
+        STRING           001-003             3           2
+                         110-7FF           100
+
+                                  Symbol Table
+
+_INTCONbits                            (abs)        00B
+_PIE1bits                              (abs)        08C
+_PIR1bits                              (abs)        00C
+_PORTBbits                             (abs)        006
+_T1CONbits                             (abs)        010
+_TMR1H                                 (abs)        00F
+_TMR1L                                 (abs)        00E
+_TRISBbits                             (abs)        086
+__Habs1                                abs1         000
+__Hbank0                               bank0        000
+__Hbank1                               bank1        000
+__HbssBANK0                            bssBANK0     000
+__HbssCOMMON                           bssCOMMON    000
+__Hcinit                               cinit        01B
+__Hclrtext                             clrtext      000
+__Hcode                                code         000
+__Hcommon                              common       000
+__Hconfig                              config       000
+__HcstackBANK0                         cstackBANK0  000
+__HcstackCOMMON                        cstackCOMMON 000
+__Heeprom_data                         eeprom_data  000
+__Hend_init                            end_init     010
+__Hfunctab                             functab      000
+__Hidloc                               idloc        000
+__Hinit                                init         00F
+__Hintentry                            intentry     00F
+__Hmaintext                            maintext     000
+__Hpowerup                             powerup      000
+__Hram                                 ram          000
+__Hreset_vec                           reset_vec    001
+__Hsfr0                                sfr0         000
+__Hsfr1                                sfr1         000
+__Hspace_0                             (abs)        110
+__Hspace_1                             (abs)        07E
+__Hspace_2                             (abs)        000
+__Hspace_3                             (abs)        000
+__Hstack                               stack        000
+__Hstrings                             strings      000
+__Htext                                text         000
+__Labs1                                abs1         000
+__Lbank0                               bank0        000
+__Lbank1                               bank1        000
+__LbssBANK0                            bssBANK0     000
+__LbssCOMMON                           bssCOMMON    000
+__Lcinit                               cinit        010
+__Lclrtext                             clrtext      000
+__Lcode                                code         000
+__Lcommon                              common       000
+__Lconfig                              config       000
+__LcstackBANK0                         cstackBANK0  000
+__LcstackCOMMON                        cstackCOMMON 000
+__Leeprom_data                         eeprom_data  000
+__Lend_init                            end_init     00F
+__Lfunctab                             functab      000
+__Lidloc                               idloc        000
+__Linit                                init         00F
+__Lintentry                            intentry     004
+__Lmaintext                            maintext     000
+__Lpowerup                             powerup      000
+__Lram                                 ram          000
+__Lreset_vec                           reset_vec    000
+__Lsfr0                                sfr0         000
+__Lsfr1                                sfr1         000
+__Lspace_0                             (abs)        000
+__Lspace_1                             (abs)        000
+__Lspace_2                             (abs)        000
+__Lspace_3                             (abs)        000
+__Lstack                               stack        000
+__Lstrings                             strings      000
+__Ltext                                text         000
+__S0                                   (abs)        110
+__S1                                   (abs)        07E
+__S2                                   (abs)        000
+___int_sp                              stack        000
+___latbits                             (abs)        000
+___sp                                  stack        000
+__end_of__initialization               cinit        019
+__end_of_isr                           text2        0F8
+__end_of_main                          maintext     110
+__end_of_setup_ir_decoder              text1        109
+__end_of_timer1_interrupt_decoder      text3        0E6
+__initialization                       cinit        010
+__pbssBANK0                            bssBANK0     020
+__pbssCOMMON                           bssCOMMON    07B
+__pcstackBANK0                         cstackBANK0  000
+__pcstackCOMMON                        cstackCOMMON 070
+__pintentry                            intentry     004
+__pmaintext                            maintext     10E
+__pswtext1                             swtext1      109
+__ptext1                               text1        0F8
+__ptext2                               text2        0E6
+__ptext3                               text3        01B
+__size_of_isr                          (abs)        000
+__size_of_main                         (abs)        000
+__size_of_setup_ir_decoder             (abs)        000
+__size_of_timer1_interrupt_decoder     (abs)        000
+_ir_data                               bssBANK0     020
+_ir_data_valid                         bssCOMMON    07D
+_isr                                   text2        0E6
+_main                                  maintext     10E
+_setup_ir_decoder                      text1        0F8
+_timer1_interrupt_decoder              text3        01B
+btemp                                  (abs)        07E
+end_of_initialization                  cinit        019
+interrupt_function                     intentry     004
+intlevel0                              functab      000
+intlevel1                              functab      000
+intlevel2                              functab      000
+intlevel3                              functab      000
+intlevel4                              functab      000
+intlevel5                              functab      000
+reset_vec                              reset_vec    000
+saved_w                                (abs)        07E
+stackhi                                (abs)        000
+stacklo                                (abs)        000
+start                                  init         00F
+start_initialization                   cinit        010
+timer1_interrupt_decoder@bit_count     bssCOMMON    07C
+timer1_interrupt_decoder@decoder_state bssBANK0     024
+timer1_interrupt_decoder@state_timer   bssCOMMON    07B
+wtemp0                                 (abs)        07E
+
+
+FUNCTION INFORMATION:
+
+ *************** function _main *****************
+ Defined at:
+		line 18 in file "main.c"
+ Parameters:    Size  Location     Type
+		None
+ Auto vars:     Size  Location     Type
+		None
+ Return value:  Size  Location     Type
+                  1    wreg      void 
+ Registers used:
+		wreg, status,2, status,0, pclath, cstack
+ Tracked objects:
+		On entry : 
+		On exit  : 
+		Unchanged: 
+ Data sizes:     COMMON   BANK0   BANK1
+      Params:         0       0       0
+      Locals:         0       0       0
+      Temps:          0       0       0
+      Totals:         0       0       0
+Total ram usage:        0 bytes
+ Hardware stack levels required when called:    3
+ This function calls:
+		_setup_ir_decoder
+ This function is called by:
+		Startup code after reset
+ This function uses a non-reentrant model
+
+
+ *************** function _setup_ir_decoder *****************
+ Defined at:
+		line 139 in file "ir_decoder.c"
+ Parameters:    Size  Location     Type
+		None
+ Auto vars:     Size  Location     Type
+		None
+ Return value:  Size  Location     Type
+                  1    wreg      void 
+ Registers used:
+		wreg
+ Tracked objects:
+		On entry : 
+		On exit  : 
+		Unchanged: 
+ Data sizes:     COMMON   BANK0   BANK1
+      Params:         0       0       0
+      Locals:         0       0       0
+      Temps:          0       0       0
+      Totals:         0       0       0
+Total ram usage:        0 bytes
+ Hardware stack levels used:    1
+ Hardware stack levels required when called:    2
+ This function calls:
+		Nothing
+ This function is called by:
+		_main
+ This function uses a non-reentrant model
+
+
+ *************** function _isr *****************
+ Defined at:
+		line 12 in file "main.c"
+ Parameters:    Size  Location     Type
+		None
+ Auto vars:     Size  Location     Type
+		None
+ Return value:  Size  Location     Type
+                  1    wreg      void 
+ Registers used:
+		wreg, fsr0l, fsr0h, status,2, status,0, pclath, cstack
+ Tracked objects:
+		On entry : 
+		On exit  : 
+		Unchanged: 
+ Data sizes:     COMMON   BANK0   BANK1
+      Params:         0       0       0
+      Locals:         0       0       0
+      Temps:          4       0       0
+      Totals:         4       0       0
+Total ram usage:        4 bytes
+ Hardware stack levels used:    1
+ Hardware stack levels required when called:    1
+ This function calls:
+		_timer1_interrupt_decoder
+ This function is called by:
+		Interrupt level 1
+ This function uses a non-reentrant model
+
+
+ *************** function _timer1_interrupt_decoder *****************
+ Defined at:
+		line 48 in file "ir_decoder.c"
+ Parameters:    Size  Location     Type
+		None
+ Auto vars:     Size  Location     Type
+		None
+ Return value:  Size  Location     Type
+                  1    wreg      void 
+ Registers used:
+		wreg, fsr0l, fsr0h, status,2, status,0
+ Tracked objects:
+		On entry : 
+		On exit  : 
+		Unchanged: 
+ Data sizes:     COMMON   BANK0   BANK1
+      Params:         0       0       0
+      Locals:         0       0       0
+      Temps:          7       0       0
+      Totals:         7       0       0
+Total ram usage:        7 bytes
+ Hardware stack levels used:    1
+ This function calls:
+		Nothing
+ This function is called by:
+		_isr
+ This function uses a non-reentrant model
+
+
+
+MODULE INFORMATION
+
+Module		Function		Class		Link	Load	Size
+shared
+		__initialization		CODE           	0010	0000	10
+
+shared estimated size: 10
+
+ir_decoder.c
+		_timer1_interrupt_decoder		CODE           	001B	0000	204
+		_setup_ir_decoder		CODE           	00F8	0000	18
+
+ir_decoder.c estimated size: 222
+
+main.c
+		_main          		CODE           	010E	0000	3
+		_isr           		CODE           	00E6	0000	19
+
+main.c estimated size: 22
+
