@@ -2,7 +2,6 @@
 #include <xc.h>
 
 #include "ir_decoder.h"
-#include "leds.h" // For debug signalling only
 
 #define MICROS_PER_CYCLE        140
 #define RESET_MICROS_PER_CYCLE  30
@@ -33,7 +32,7 @@
   (((lo) <= (val)) && ((val) <= (hi)))
 
 #define TIMING_MARGIN_START 15
-#define TIMING_MARGIN 3
+#define TIMING_MARGIN 2
 
 // Is a close to B?
 #define EQUALS_CLOSE(a, b) \
@@ -53,7 +52,7 @@ volatile uint32_t ir_data; // Data when valid
 volatile uint8_t ir_data_valid = 0; // Reader should reset this
 
 #define TRANSITION_STATE(new) \
-    state_timer = 0; \
+    state_timer = 1; \
     decoder_state = (new)
 
 #define RESET_STATE() decoder_state = STATE_IDLE
@@ -80,7 +79,6 @@ void timer1_interrupt_decoder() {
             return;
         case STATE_START:
             // In the start bit
-            exactly_on(1);
             if (!IR_PIN) {
                 state_timer++;
                 return;
@@ -95,7 +93,6 @@ void timer1_interrupt_decoder() {
             return;
         case STATE_START_GAP:
             // In the gap
-            exactly_on(2);
             if (IR_PIN) {
                 state_timer++;
                 return;
@@ -108,7 +105,6 @@ void timer1_interrupt_decoder() {
             TRANSITION_STATE(STATE_BURST);
             return;
         case STATE_BURST:
-            exactly_on(3);
             if (!IR_PIN) {
                 state_timer++;
                 return;
@@ -121,28 +117,36 @@ void timer1_interrupt_decoder() {
             }
             return;
         case STATE_GAP:
-            exactly_on(4);
             if (IR_PIN) {
                 state_timer++;
                 return;
             }
             if (EQUALS_CLOSE(state_timer, ZERO_GAP_CYCLES)) {
                 // LSB first
-                ir_data &= ~(1u << (31u - bit_count));
+                ir_data &= ~(1ul << (31ul - bit_count));
             } else if (EQUALS_CLOSE(state_timer, ONE_GAP_CYCLES)) {
                 // LSB first
-                ir_data |= (1u << (31u - bit_count));
+                ir_data |= (1ul << (31ul - bit_count));
             } else {
                 // Gone invalid
                 RESET_STATE();
                 return;
             }
-            // Found a valid bit
             bit_count++;
             if (bit_count == 32) {
+                T1CONbits.TMR1ON = 0;
                 ir_data_valid = 1;
+                //debug
+                while(bit_count) {
+                    PORTBbits.RB2 = 1;
+                    for(int k=0;k<25;k++)
+                        NOP();
+                    PORTBbits.RB2 = ((ir_data>>(--bit_count)) & 1);
+                    for(int k=0;k<100;k++)
+                        NOP();
+                }
+                T1CONbits.TMR1ON = 1;
                 RESET_STATE();
-                exactly_on(5);
             } else {
                 TRANSITION_STATE(STATE_BURST);
             }
@@ -159,5 +163,7 @@ void setup_ir_decoder() {
     INTCONbits.PEIE = 1; // Peripheral interrupts
     INTCONbits.GIE = 1; // Global interrupts.
     TIMER1_RESET();
+    // debugging
+    TRISBbits.TRISB2 = 0;
 }
 

@@ -925,12 +925,7 @@ void timer1_interrupt_decoder();
 extern volatile uint32_t ir_data;
 extern volatile uint8_t ir_data_valid;
 
-# 4 "leds.h"
-void exactly_on(uint8_t which);
-void timer0_interrupt(void);
-void timer0_setup(void);
-
-# 44 "ir_decoder.c"
+# 43 "ir_decoder.c"
 typedef enum __PACK {
 STATE_IDLE,
 STATE_START,
@@ -942,7 +937,7 @@ STATE_GAP,
 volatile uint32_t ir_data;
 volatile uint8_t ir_data_valid = 0;
 
-# 61
+# 60
 void timer1_interrupt_decoder() {
 
 static volatile ir_decoder_state_t decoder_state = STATE_IDLE;
@@ -960,19 +955,18 @@ case STATE_IDLE:
 
 if (PORTBbits.RB0)
 return;
-state_timer = 0; decoder_state = (STATE_START);
+state_timer = 1; decoder_state = (STATE_START);
 bit_count = 0;
 return;
 case STATE_START:
 
-exactly_on(1);
 if (!PORTBbits.RB0) {
 state_timer++;
 return;
 }
 
 if (((((9000/140)-15) <= ((state_timer))) && (((state_timer)) <= ((9000/140)+15)))) {
-state_timer = 0; decoder_state = (STATE_START_GAP);
+state_timer = 1; decoder_state = (STATE_START_GAP);
 return;
 }
 
@@ -980,7 +974,6 @@ decoder_state = STATE_IDLE;
 return;
 case STATE_START_GAP:
 
-exactly_on(2);
 if (PORTBbits.RB0) {
 state_timer++;
 return;
@@ -990,46 +983,53 @@ decoder_state = STATE_IDLE;
 return;
 }
 
-state_timer = 0; decoder_state = (STATE_BURST);
+state_timer = 1; decoder_state = (STATE_BURST);
 return;
 case STATE_BURST:
-exactly_on(3);
 if (!PORTBbits.RB0) {
 state_timer++;
 return;
 }
 
-if (!((((562/140)-3) <= ((state_timer))) && (((state_timer)) <= ((562/140)+3)))) {
+if (!((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((562/140)+2)))) {
 decoder_state = STATE_IDLE;
 } else {
-state_timer = 0; decoder_state = (STATE_GAP);
+state_timer = 1; decoder_state = (STATE_GAP);
 }
 return;
 case STATE_GAP:
-exactly_on(4);
 if (PORTBbits.RB0) {
 state_timer++;
 return;
 }
-if (((((562/140)-3) <= ((state_timer))) && (((state_timer)) <= ((562/140)+3)))) {
+if (((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((562/140)+2)))) {
 
-ir_data &= ~(1u << (31u - bit_count));
-} else if (((((1675/140)-3) <= ((state_timer))) && (((state_timer)) <= ((1675/140)+3)))) {
+ir_data &= ~(1ul << (31ul - bit_count));
+} else if (((((1675/140)-2) <= ((state_timer))) && (((state_timer)) <= ((1675/140)+2)))) {
 
-ir_data |= (1u << (31u - bit_count));
+ir_data |= (1ul << (31ul - bit_count));
 } else {
 
 decoder_state = STATE_IDLE;
 return;
 }
-
 bit_count++;
 if (bit_count == 32) {
+T1CONbits.TMR1ON = 0;
 ir_data_valid = 1;
+
+while(bit_count) {
+PORTBbits.RB2 = 1;
+for(int k=0;k<25;k++)
+__nop();
+PORTBbits.RB2 = ((ir_data>>(--bit_count)) & 1);
+for(int k=0;k<100;k++)
+__nop();
+}
+T1CONbits.TMR1ON = 1;
 decoder_state = STATE_IDLE;
-exactly_on(5);
 } else {
-state_timer = 0; decoder_state = (STATE_BURST);
+state_timer = 1; decoder_state = (STATE_BURST);
 }
 return;
 }
@@ -1044,5 +1044,7 @@ PIE1bits.TMR1IE = 1;
 INTCONbits.PEIE = 1;
 INTCONbits.GIE = 1;
 do { T1CONbits.TMR1ON = 0; TMR1H = 255; TMR1L = (255-140+30); PIR1bits.TMR1IF = 0; T1CONbits.TMR1ON = 1; } while(0);
+
+TRISBbits.TRISB2 = 0;
 }
 
