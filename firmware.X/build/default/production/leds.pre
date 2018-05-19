@@ -918,34 +918,70 @@ extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 
 # 4 "leds.h"
+void exactly_on(uint8_t which);
 void timer0_interrupt(void);
 void timer0_setup(void);
 
-# 10 "leds.c"
-static inline void all_off() {
-TRISA |= TRISA0 | TRISA2 | TRISA3;
-TRISB |= TRISB3;
+# 16 "leds.c"
+static inline void all_off();
+static inline void leda_on(uint8_t pos, uint8_t dir);
+static inline void ledb_on(uint8_t pos, uint8_t dir);
+
+# 23
+void exactly_on(uint8_t which) {
+all_off();
+switch (which) {
+case 0:
+leda_on(0, 0);
+break;
+case 1:
+leda_on(2, 0);
+break;
+case 2:
+ledb_on(3, 0);
+break;
+case 3:
+ledb_on(3, 1);
+break;
+case 4:
+leda_on(0, 1);
+break;
+case 5:
+leda_on(2, 1);
+break;
+case 6:
+leda_on(3, 0);
+break;
+case 7:
+leda_on(3, 1);
+break;
+}
 }
 
-# 18
+# 56
+static inline void all_off() {
+TRISA |= 1 | (1 << 2) | (1 << 3);
+TRISB |= (1 << 3);
+}
+
+# 64
 static inline void leda_on(uint8_t pos, uint8_t dir) {
 if (dir)
 PORTA |= (1u<<pos);
 else
 PORTA &= ~(1u<<pos);
-TRISA &= ~(1u<<pos);
+TRISA = ~(1u<<pos);
 }
 
-# 29
+# 75
 static inline void ledb_on(uint8_t pos, uint8_t dir) {
 if (dir)
 PORTB |= (1u<<pos);
 else
 PORTB &= ~(1u<<pos);
-TRISB &= ~(1u<<pos);
+TRISB = ~(1u<<pos);
 }
 
-# 46
 void timer0_interrupt(void) {
 static volatile uint8_t pos = 0;
 pos++;

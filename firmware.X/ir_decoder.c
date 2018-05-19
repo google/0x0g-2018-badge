@@ -2,6 +2,7 @@
 #include <xc.h>
 
 #include "ir_decoder.h"
+#include "leds.h" // For debug signalling only
 
 #define MICROS_PER_CYCLE      140
 #define START_MICROS          9000
@@ -28,11 +29,11 @@
 #define BETWEEN(lo, val, hi) \
   (((lo) <= (val)) && ((val) <= (hi)))
 
-#define TIMING_MARGIN 2
+#define TIMING_MARGIN_PERCENT 20
 
 // Is a close to B?
 #define EQUALS_CLOSE(a, b) \
-  BETWEEN((b)-TIMING_MARGIN, (a), (b)+TIMING_MARGIN)
+  BETWEEN(((b)*(100-TIMING_MARGIN_PERCENT)/100), (a), (b)*(100+TIMING_MARGIN_PERCENT)/100)
 
 typedef enum __PACK {
   STATE_IDLE,
@@ -68,6 +69,7 @@ void timer1_interrupt_decoder() {
       return;
     case STATE_START:
       // In the start bit
+      exactly_on(1);
       if (!IR_PIN) {
         state_timer++;
         return;
@@ -83,6 +85,7 @@ void timer1_interrupt_decoder() {
       return;
     case STATE_START_GAP:
       // In the gap
+      exactly_on(2);
       if (IR_PIN) {
         state_timer++;
         return;
@@ -96,6 +99,7 @@ void timer1_interrupt_decoder() {
       decoder_state = STATE_BURST;
       return;
     case STATE_BURST:
+      exactly_on(3);
       if (!IR_PIN) {
         state_timer++;
         return;
@@ -109,6 +113,7 @@ void timer1_interrupt_decoder() {
       }
       return;
     case STATE_GAP:
+      exactly_on(4);
       if (IR_PIN) {
         state_timer++;
         return;
@@ -129,6 +134,7 @@ void timer1_interrupt_decoder() {
       if (bit_count == 32) {
         ir_data_valid = 1;
         decoder_state = STATE_IDLE;
+        exactly_on(5);
       } else {
         decoder_state = STATE_BURST;
       }

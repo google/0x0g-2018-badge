@@ -21,6 +21,7 @@
 volatile uint8_t move_leds = 1;
 
 static void interrupt ISR(void) {
+    /*
     if (INTCONbits.T0IF) {
         timer0_interrupt();
     }
@@ -28,14 +29,15 @@ static void interrupt ISR(void) {
         move_leds ^= 1;
         ir_data_valid = 0;
     }
+    */
     if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
         timer1_interrupt_decoder();
     }
 }
 
 void main(void) {
-    timer0_setup();
-    //setup_ir_decoder();
+    //timer0_setup();
+    setup_ir_decoder();
     
     for(;;){}
 }

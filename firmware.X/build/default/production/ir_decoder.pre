@@ -925,7 +925,12 @@ void timer1_interrupt_decoder();
 extern volatile uint32_t ir_data;
 extern volatile uint8_t ir_data_valid;
 
-# 37 "ir_decoder.c"
+# 4 "leds.h"
+void exactly_on(uint8_t which);
+void timer0_interrupt(void);
+void timer0_setup(void);
+
+# 38 "ir_decoder.c"
 typedef enum __PACK {
 STATE_IDLE,
 STATE_START,
@@ -960,12 +965,13 @@ bit_count = 0;
 return;
 case STATE_START:
 
+exactly_on(1);
 if (!PORTBbits.RB0) {
 state_timer++;
 return;
 }
 
-if (((((9000/140)-2) <= ((state_timer))) && (((state_timer)) <= ((9000/140)+2)))) {
+if ((((((9000/140)*(100-20)/100)) <= ((state_timer))) && (((state_timer)) <= ((9000/140)*(100+20)/100)))) {
 decoder_state = STATE_START_GAP;
 state_timer=0;
 return;
@@ -975,11 +981,12 @@ decoder_state = STATE_IDLE;
 return;
 case STATE_START_GAP:
 
+exactly_on(2);
 if (PORTBbits.RB0) {
 state_timer++;
 return;
 }
-if (!((((4500/140)-2) <= ((state_timer))) && (((state_timer)) <= ((4500/140)+2)))) {
+if (!(((((4500/140)*(100-20)/100)) <= ((state_timer))) && (((state_timer)) <= ((4500/140)*(100+20)/100)))) {
 decoder_state = STATE_IDLE;
 return;
 }
@@ -988,12 +995,13 @@ state_timer = 0;
 decoder_state = STATE_BURST;
 return;
 case STATE_BURST:
+exactly_on(3);
 if (!PORTBbits.RB0) {
 state_timer++;
 return;
 }
 
-if (!((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((562/140)+2)))) {
+if (!(((((562/140)*(100-20)/100)) <= ((state_timer))) && (((state_timer)) <= ((562/140)*(100+20)/100)))) {
 decoder_state = STATE_IDLE;
 } else {
 decoder_state = STATE_GAP;
@@ -1001,14 +1009,15 @@ state_timer = 0;
 }
 return;
 case STATE_GAP:
+exactly_on(4);
 if (PORTBbits.RB0) {
 state_timer++;
 return;
 }
-if (((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((562/140)+2)))) {
+if ((((((562/140)*(100-20)/100)) <= ((state_timer))) && (((state_timer)) <= ((562/140)*(100+20)/100)))) {
 
 ir_data &= ~(1u << (31u-bit_count));
-} else if (((((1675/140)-2) <= ((state_timer))) && (((state_timer)) <= ((1675/140)+2)))) {
+} else if ((((((1675/140)*(100-20)/100)) <= ((state_timer))) && (((state_timer)) <= ((1675/140)*(100+20)/100)))) {
 
 ir_data |= (1u << (31u-bit_count));
 } else {
@@ -1021,6 +1030,7 @@ bit_count++;
 if (bit_count == 32) {
 ir_data_valid = 1;
 decoder_state = STATE_IDLE;
+exactly_on(5);
 } else {
 decoder_state = STATE_BURST;
 }

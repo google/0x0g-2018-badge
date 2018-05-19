@@ -4,12 +4,58 @@
 
 #include "leds.h"
 
+#define LED_RED_LEFT()          leda_on(0, 0)
+#define LED_RED_RIGHT()         leda_on(0, 1)
+#define LED_YELLOW_LEFT()       leda_on(2, 0)
+#define LED_YELLOW_RIGHT()      leda_on(2, 1)
+#define LED_GREEN_LEFT()        ledb_on(3, 0)
+#define LED_GREEN_RIGHT()       leda_on(3, 0)
+#define LED_BLUE_LEFT()         ledb_on(3, 1)
+#define LED_BLUE_RIGHT()        leda_on(3, 1)
+
+static inline void all_off();
+static inline void leda_on(uint8_t pos, uint8_t dir);
+static inline void ledb_on(uint8_t pos, uint8_t dir);
+
+/*
+ * Turn on exactly one LED
+ */
+void exactly_on(uint8_t which) {
+    all_off();
+    switch (which) {
+        case 0:
+            LED_RED_LEFT();
+            break;
+        case 1:
+            LED_YELLOW_LEFT();
+            break;
+        case 2:
+            LED_GREEN_LEFT();
+            break;
+        case 3:
+            LED_BLUE_LEFT();
+            break;
+        case 4:
+            LED_RED_RIGHT();
+            break;
+        case 5:
+            LED_YELLOW_RIGHT();
+            break;
+        case 6:
+            LED_GREEN_RIGHT();
+            break;
+        case 7:
+            LED_BLUE_RIGHT();
+            break;
+    }    
+}
+
 /*
  * Turn all LEDs off
  */
 static inline void all_off() {
-    TRISA |= TRISA0 | TRISA2 | TRISA3;
-    TRISB |= TRISB3;
+    TRISA |= 1 | (1 << 2) | (1 << 3);
+    TRISB |= (1 << 3);
 }
 
 /*
@@ -20,7 +66,7 @@ static inline void leda_on(uint8_t pos, uint8_t dir) {
         PORTA |= (1u<<pos);
     else
         PORTA &= ~(1u<<pos);
-    TRISA &= ~(1u<<pos);   
+    TRISA = ~(1u<<pos);   
 }
 
 /*
@@ -31,17 +77,8 @@ static inline void ledb_on(uint8_t pos, uint8_t dir) {
         PORTB |= (1u<<pos);
     else
         PORTB &= ~(1u<<pos);
-    TRISB &= ~(1u<<pos);
+    TRISB = ~(1u<<pos);
 }
-
-#define LED_RED_LEFT()          leda_on(0, 0)
-#define LED_RED_RIGHT()         leda_on(0, 1)
-#define LED_YELLOW_LEFT()       leda_on(2, 0)
-#define LED_YELLOW_RIGHT()      leda_on(2, 1)
-#define LED_GREEN_LEFT()        ledb_on(3, 0)
-#define LED_GREEN_RIGHT()       leda_on(3, 0)
-#define LED_BLUE_LEFT()         ledb_on(3, 1)
-#define LED_BLUE_RIGHT()        leda_on(3, 1)
 
 void timer0_interrupt(void) {
     static volatile uint8_t pos = 0;
