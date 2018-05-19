@@ -66,7 +66,7 @@ static inline void leda_on(uint8_t pos, uint8_t dir) {
         PORTA |= (1u<<pos);
     else
         PORTA &= ~(1u<<pos);
-    TRISA = ~(1u<<pos);   
+    TRISA &= ~(1u<<pos);   
 }
 
 /*
@@ -77,7 +77,7 @@ static inline void ledb_on(uint8_t pos, uint8_t dir) {
         PORTB |= (1u<<pos);
     else
         PORTB &= ~(1u<<pos);
-    TRISB = ~(1u<<pos);
+    TRISB &= ~(1u<<pos);
 }
 
 void timer0_interrupt(void) {

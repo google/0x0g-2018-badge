@@ -970,7 +970,7 @@ if (dir)
 PORTA |= (1u<<pos);
 else
 PORTA &= ~(1u<<pos);
-TRISA = ~(1u<<pos);
+TRISA &= ~(1u<<pos);
 }
 
 # 75
@@ -979,7 +979,7 @@ if (dir)
 PORTB |= (1u<<pos);
 else
 PORTB &= ~(1u<<pos);
-TRISB = ~(1u<<pos);
+TRISB &= ~(1u<<pos);
 }
 
 void timer0_interrupt(void) {

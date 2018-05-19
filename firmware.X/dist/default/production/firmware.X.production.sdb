@@ -3,7 +3,7 @@
 [d edition pro ]
 [d chip 16F716 ]
 [d frameptr 6 ]
-"51 /firmware.X/ir_decoder.c
+"63 /firmware/firmware.X/ir_decoder.c
 [e E653 __PACK `uc
 STATE_IDLE 0
 STATE_START 1
@@ -15,11 +15,11 @@ STATE_GAP 4
 [v ___ftpack __ftpack `(f  1 e 3 0 ]
 "86 /opt/microchip/xc8/v1.45/sources/common/ftadd.c
 [v ___ftadd __ftadd `(f  1 e 3 0 ]
-"49 /firmware.X/ir_decoder.c
+"61 /firmware/firmware.X/ir_decoder.c
 [v _timer1_interrupt_decoder timer1_interrupt_decoder `(v  1 e 1 0 ]
-"145
+"153
 [v _setup_ir_decoder setup_ir_decoder `(v  1 e 1 0 ]
-"23 /firmware.X/leds.c
+"23 /firmware/firmware.X/leds.c
 [v _exactly_on exactly_on `(v  1 e 1 0 ]
 "56
 [v _all_off all_off `T(v  1 s 1 all_off ]
@@ -27,7 +27,7 @@ STATE_GAP 4
 [v _leda_on leda_on `T(v  1 s 1 leda_on ]
 "75
 [v _ledb_on ledb_on `T(v  1 s 1 ledb_on ]
-"23 /firmware.X/main.c
+"23 /firmware/firmware.X/main.c
 [v _ISR ISR `II(v  1 s 1 ISR ]
 "38
 [v _main main `(v  1 e 1 0 ]
@@ -35,7 +35,7 @@ STATE_GAP 4
 [v _PORTA PORTA `VEuc  1 e 1 @5 ]
 "208
 [v _PORTB PORTB `VEuc  1 e 1 @6 ]
-[s S42 . 1 `uc 1 RB0 1 0 :1:0 
+[s S70 . 1 `uc 1 RB0 1 0 :1:0 
 `uc 1 RB1 1 0 :1:1 
 `uc 1 RB2 1 0 :1:2 
 `uc 1 RB3 1 0 :1:3 
@@ -45,13 +45,13 @@ STATE_GAP 4
 `uc 1 RB7 1 0 :1:7 
 ]
 "236
-[s S51 . 1 `uc 1 . 1 0 :1:0 
+[s S79 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 DT1CK 1 0 :1:1 
 `uc 1 . 1 0 :1:2 
 `uc 1 DCCP 1 0 :1:3 
 ]
-[u S56 . 1 `S42 1 . 1 0 `S51 1 . 1 0 ]
-[v _PORTBbits PORTBbits `VES56  1 e 1 @6 ]
+[u S84 . 1 `S70 1 . 1 0 `S79 1 . 1 0 ]
+[v _PORTBbits PORTBbits `VES84  1 e 1 @6 ]
 [s S154 . 1 `uc 1 RBIF 1 0 :1:0 
 `uc 1 INTF 1 0 :1:1 
 `uc 1 TMR0IF 1 0 :1:2 
@@ -69,34 +69,34 @@ STATE_GAP 4
 ]
 [u S168 . 1 `S154 1 . 1 0 `S163 1 . 1 0 ]
 [v _INTCONbits INTCONbits `VES168  1 e 1 @11 ]
-[s S27 . 1 `uc 1 TMR1IF 1 0 :1:0 
+[s S55 . 1 `uc 1 TMR1IF 1 0 :1:0 
 `uc 1 TMR2IF 1 0 :1:1 
 `uc 1 CCP1IF 1 0 :1:2 
 `uc 1 . 1 0 :3:3 
 `uc 1 ADIF 1 0 :1:6 
 ]
 "474
-[u S33 . 1 `S27 1 . 1 0 ]
-[v _PIR1bits PIR1bits `VES33  1 e 1 @12 ]
+[u S61 . 1 `S55 1 . 1 0 ]
+[v _PIR1bits PIR1bits `VES61  1 e 1 @12 ]
 "506
 [v _TMR1L TMR1L `VEuc  1 e 1 @14 ]
 "513
 [v _TMR1H TMR1H `VEuc  1 e 1 @15 ]
-[s S111 . 1 `uc 1 TMR1ON 1 0 :1:0 
+[s S25 . 1 `uc 1 TMR1ON 1 0 :1:0 
 `uc 1 TMR1CS 1 0 :1:1 
 `uc 1 nT1SYNC 1 0 :1:2 
 `uc 1 T1OSCEN 1 0 :1:3 
 `uc 1 T1CKPS 1 0 :2:4 
 ]
 "541
-[s S117 . 1 `uc 1 . 1 0 :2:0 
+[s S31 . 1 `uc 1 . 1 0 :2:0 
 `uc 1 T1SYNC 1 0 :1:2 
 `uc 1 . 1 0 :1:3 
 `uc 1 T1CKPS0 1 0 :1:4 
 `uc 1 T1CKPS1 1 0 :1:5 
 ]
-[u S123 . 1 `S111 1 . 1 0 `S117 1 . 1 0 ]
-[v _T1CONbits T1CONbits `VES123  1 e 1 @16 ]
+[u S37 . 1 `S25 1 . 1 0 `S31 1 . 1 0 ]
+[v _T1CONbits T1CONbits `VES37  1 e 1 @16 ]
 [s S308 . 1 `uc 1 PS 1 0 :3:0 
 `uc 1 PSA 1 0 :1:3 
 `uc 1 T0SE 1 0 :1:4 
@@ -115,7 +115,7 @@ STATE_GAP 4
 [v _TRISA TRISA `VEuc  1 e 1 @133 ]
 "1145
 [v _TRISB TRISB `VEuc  1 e 1 @134 ]
-[s S79 . 1 `uc 1 TRISB0 1 0 :1:0 
+[s S107 . 1 `uc 1 TRISB0 1 0 :1:0 
 `uc 1 TRISB1 1 0 :1:1 
 `uc 1 TRISB2 1 0 :1:2 
 `uc 1 TRISB3 1 0 :1:3 
@@ -125,13 +125,13 @@ STATE_GAP 4
 `uc 1 TRISB7 1 0 :1:7 
 ]
 "1173
-[s S88 . 1 `uc 1 . 1 0 :1:0 
+[s S116 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 TT1CK 1 0 :1:1 
 `uc 1 . 1 0 :1:2 
 `uc 1 TCCP 1 0 :1:3 
 ]
-[u S93 . 1 `S79 1 . 1 0 `S88 1 . 1 0 ]
-[v _TRISBbits TRISBbits `VES93  1 e 1 @134 ]
+[u S121 . 1 `S107 1 . 1 0 `S116 1 . 1 0 ]
+[v _TRISBbits TRISBbits `VES121  1 e 1 @134 ]
 [s S139 . 1 `uc 1 TMR1IE 1 0 :1:0 
 `uc 1 TMR2IE 1 0 :1:1 
 `uc 1 CCP1IE 1 0 :1:2 
@@ -141,39 +141,39 @@ STATE_GAP 4
 "1313
 [u S145 . 1 `S139 1 . 1 0 ]
 [v _PIE1bits PIE1bits `VES145  1 e 1 @140 ]
-"46 /firmware.X/ir_decoder.c
+"52 /firmware/firmware.X/ir_decoder.c
 [v _ir_data ir_data `VEul  1 e 4 0 ]
-"47
+"53
 [v _ir_data_valid ir_data_valid `VEuc  1 e 1 0 ]
-"21 /firmware.X/main.c
+"21 /firmware/firmware.X/main.c
 [v _move_leds move_leds `VEuc  1 e 1 0 ]
 "38
 [v _main main `(v  1 e 1 0 ]
 {
 "43
 } 0
-"145 /firmware.X/ir_decoder.c
+"153 /firmware/firmware.X/ir_decoder.c
 [v _setup_ir_decoder setup_ir_decoder `(v  1 e 1 0 ]
 {
-"156
+"162
 } 0
-"23 /firmware.X/main.c
+"23 /firmware/firmware.X/main.c
 [v _ISR ISR `II(v  1 s 1 ISR ]
 {
 "36
 } 0
-"49 /firmware.X/ir_decoder.c
+"61 /firmware/firmware.X/ir_decoder.c
 [v _timer1_interrupt_decoder timer1_interrupt_decoder `(v  1 e 1 0 ]
 {
-"51
+"63
 [v timer1_interrupt_decoder@decoder_state decoder_state `VEE653  1 s 1 decoder_state ]
-"52
+"64
 [v timer1_interrupt_decoder@bit_count bit_count `VEuc  1 s 1 bit_count ]
-"53
+"65
 [v timer1_interrupt_decoder@state_timer state_timer `VEuc  1 s 1 state_timer ]
-"143
+"151
 } 0
-"23 /firmware.X/leds.c
+"23 /firmware/firmware.X/leds.c
 [v _exactly_on exactly_on `(v  1 e 1 0 ]
 {
 [v exactly_on@which which `uc  1 a 1 wreg ]

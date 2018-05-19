@@ -930,7 +930,7 @@ void exactly_on(uint8_t which);
 void timer0_interrupt(void);
 void timer0_setup(void);
 
-# 38 "ir_decoder.c"
+# 44 "ir_decoder.c"
 typedef enum __PACK {
 STATE_IDLE,
 STATE_START,
@@ -942,16 +942,17 @@ STATE_GAP,
 volatile uint32_t ir_data;
 volatile uint8_t ir_data_valid = 0;
 
+# 61
 void timer1_interrupt_decoder() {
 
 static volatile ir_decoder_state_t decoder_state = STATE_IDLE;
 static volatile uint8_t bit_count = 0;
 static volatile uint8_t state_timer = 0;
 
-do { TMR1H = 255; TMR1L = (255-140); PIR1bits.TMR1IF = 0; } while(0);
+do { T1CONbits.TMR1ON = 0; TMR1H = 255; TMR1L = (255-140+30); PIR1bits.TMR1IF = 0; T1CONbits.TMR1ON = 1; } while(0);
 
 
-if(ir_data_valid)
+if (ir_data_valid)
 return;
 
 switch (decoder_state) {
@@ -959,8 +960,7 @@ case STATE_IDLE:
 
 if (PORTBbits.RB0)
 return;
-decoder_state = STATE_START;
-state_timer = 1;
+state_timer = 0; decoder_state = (STATE_START);
 bit_count = 0;
 return;
 case STATE_START:
@@ -971,9 +971,8 @@ state_timer++;
 return;
 }
 
-if ((((((9000/140)*(100-20)/100)) <= ((state_timer))) && (((state_timer)) <= ((9000/140)*(100+20)/100)))) {
-decoder_state = STATE_START_GAP;
-state_timer=0;
+if (((((9000/140)-15) <= ((state_timer))) && (((state_timer)) <= ((9000/140)+15)))) {
+state_timer = 0; decoder_state = (STATE_START_GAP);
 return;
 }
 
@@ -986,13 +985,12 @@ if (PORTBbits.RB0) {
 state_timer++;
 return;
 }
-if (!(((((4500/140)*(100-20)/100)) <= ((state_timer))) && (((state_timer)) <= ((4500/140)*(100+20)/100)))) {
+if (!((((4500/140)-15) <= ((state_timer))) && (((state_timer)) <= ((4500/140)+15)))) {
 decoder_state = STATE_IDLE;
 return;
 }
 
-state_timer = 0;
-decoder_state = STATE_BURST;
+state_timer = 0; decoder_state = (STATE_BURST);
 return;
 case STATE_BURST:
 exactly_on(3);
@@ -1001,11 +999,10 @@ state_timer++;
 return;
 }
 
-if (!(((((562/140)*(100-20)/100)) <= ((state_timer))) && (((state_timer)) <= ((562/140)*(100+20)/100)))) {
+if (!((((562/140)-3) <= ((state_timer))) && (((state_timer)) <= ((562/140)+3)))) {
 decoder_state = STATE_IDLE;
 } else {
-decoder_state = STATE_GAP;
-state_timer = 0;
+state_timer = 0; decoder_state = (STATE_GAP);
 }
 return;
 case STATE_GAP:
@@ -1014,12 +1011,12 @@ if (PORTBbits.RB0) {
 state_timer++;
 return;
 }
-if ((((((562/140)*(100-20)/100)) <= ((state_timer))) && (((state_timer)) <= ((562/140)*(100+20)/100)))) {
+if (((((562/140)-3) <= ((state_timer))) && (((state_timer)) <= ((562/140)+3)))) {
 
-ir_data &= ~(1u << (31u-bit_count));
-} else if ((((((1675/140)*(100-20)/100)) <= ((state_timer))) && (((state_timer)) <= ((1675/140)*(100+20)/100)))) {
+ir_data &= ~(1u << (31u - bit_count));
+} else if (((((1675/140)-3) <= ((state_timer))) && (((state_timer)) <= ((1675/140)+3)))) {
 
-ir_data |= (1u << (31u-bit_count));
+ir_data |= (1u << (31u - bit_count));
 } else {
 
 decoder_state = STATE_IDLE;
@@ -1032,7 +1029,7 @@ ir_data_valid = 1;
 decoder_state = STATE_IDLE;
 exactly_on(5);
 } else {
-decoder_state = STATE_BURST;
+state_timer = 0; decoder_state = (STATE_BURST);
 }
 return;
 }
@@ -1042,12 +1039,10 @@ void setup_ir_decoder() {
 
 TRISBbits.TRISB0 = 1;
 
-T1CONbits.T1OSCEN = 1;
 T1CONbits.T1SYNC = 1;
-T1CONbits.TMR1ON = 1;
 PIE1bits.TMR1IE = 1;
 INTCONbits.PEIE = 1;
 INTCONbits.GIE = 1;
-do { TMR1H = 255; TMR1L = (255-140); PIR1bits.TMR1IF = 0; } while(0);
+do { T1CONbits.TMR1ON = 0; TMR1H = 255; TMR1L = (255-140+30); PIR1bits.TMR1IF = 0; T1CONbits.TMR1ON = 1; } while(0);
 }
 

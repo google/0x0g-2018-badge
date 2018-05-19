@@ -802,9 +802,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 "68
 [e =& _PORTA -> ~ << -> 1 `ui _pos `uc ]
 [e :U 76 ]
-[; ;leds.c: 69: TRISA = ~(1u<<pos);
+[; ;leds.c: 69: TRISA &= ~(1u<<pos);
 "69
-[e = _TRISA -> ~ << -> 1 `ui _pos `uc ]
+[e =& _TRISA -> ~ << -> 1 `ui _pos `uc ]
 [; ;leds.c: 70: }
 "70
 [e :UE 74 ]
@@ -831,9 +831,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 "79
 [e =& _PORTB -> ~ << -> 1 `ui _pos `uc ]
 [e :U 79 ]
-[; ;leds.c: 80: TRISB = ~(1u<<pos);
+[; ;leds.c: 80: TRISB &= ~(1u<<pos);
 "80
-[e = _TRISB -> ~ << -> 1 `ui _pos `uc ]
+[e =& _TRISB -> ~ << -> 1 `ui _pos `uc ]
 [; ;leds.c: 81: }
 "81
 [e :UE 77 ]
