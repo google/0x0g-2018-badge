@@ -1,0 +1,17 @@
+### Module positions - created on Monday, June 04, 2018 'AMt' 09:29:27 AM ###
+### Printed by Pcbnew version kicad 4.0.7
+## Unit = mm, Angle = deg.
+## Side : bottom
+# Ref     Val                Package                               PosX       PosY  Side
+C1        100nF              C_0805                             97.0000   -78.0000  bottom
+C2        1uF                C_0805                            103.0000   -78.0000  bottom
+C4        18pF               C_0805                            121.6100   -94.5700  bottom
+C5        18pF               C_0805                            121.6100   -85.0600  bottom
+R1        1k                 R_0805_HandSoldering              106.3500   -75.0500  bottom
+R2        430                R_0805_HandSoldering               80.0500  -113.5000  bottom
+R3        220                R_0805_HandSoldering               80.0500   -86.6400  bottom
+R4        220                R_0805_HandSoldering              119.9100  -113.3200  bottom
+R7        33K                R_0805_HandSoldering               80.0500  -106.0300  bottom
+R8        220                R_0805_HandSoldering               83.6100   -95.2600  bottom
+U1        PIC16F716-I-SO-ND  SOIC-18W_7.5x11.6mm_Pitch1.27mm   100.0000   -92.0000  bottom
+## End
