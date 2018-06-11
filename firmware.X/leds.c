@@ -4,12 +4,17 @@
 
 #include "leds.h"
 
+volatile uint8_t led_pos = 0;
+volatile uint8_t led_mode = LMODE_CHASE_1; // default mode
+
 /*
  * Turn all LEDs off
  */
 static inline void all_off() {
-    TRISA |= TRISA0 | TRISA2 | TRISA3;
-    TRISB |= TRISB3;
+    TRISAbits.TRISA0 = 1;
+    TRISAbits.TRISA2 = 1;
+    TRISAbits.TRISA3 = 1;
+    TRISBbits.TRISB3 = 1;
 }
 
 /*
@@ -44,37 +49,48 @@ static inline void ledb_on(uint8_t pos, uint8_t dir) {
 #define LED_BLUE_RIGHT()        leda_on(3, 1)
 
 void timer0_interrupt(void) {
-    static volatile uint8_t pos = 0;
-    pos++;
-    pos &= 7;
-    all_off();
-    switch (pos) {
-        case 0:
-            LED_RED_LEFT();
+    led_pos++;
+    led_pos &= 7;
+    INTCONbits.T0IF = 0;  // Clear flag
+}
+
+void service_leds(void) {
+    uint8_t temp_pos = led_pos;
+    
+    switch (led_mode) {
+        case LMODE_OFF:
+            all_off();
             break;
-        case 1:
-            LED_YELLOW_LEFT();
-            break;
-        case 2:
-            LED_GREEN_LEFT();
-            break;
-        case 3:
-            LED_BLUE_LEFT();
-            break;
-        case 4:
-            LED_RED_RIGHT();
-            break;
-        case 5:
-            LED_YELLOW_RIGHT();
-            break;
-        case 6:
-            LED_GREEN_RIGHT();
-            break;
-        case 7:
-            LED_BLUE_RIGHT();
+        case LMODE_CHASE_1:
+            all_off();
+            switch (temp_pos) {
+                case 0:
+                    LED_RED_LEFT();
+                    break;
+                case 1:
+                    LED_YELLOW_LEFT();
+                    break;
+                case 2:
+                    LED_GREEN_LEFT();
+                    break;
+                case 3:
+                    LED_BLUE_LEFT();
+                    break;
+                case 4:
+                    LED_RED_RIGHT();
+                    break;
+                case 5:
+                    LED_YELLOW_RIGHT();
+                    break;
+                case 6:
+                    LED_GREEN_RIGHT();
+                    break;
+                case 7:
+                    LED_BLUE_RIGHT();
+                    break;
+            }
             break;
     }
-    INTCONbits.T0IF = 0;  // Clear flag
 }
 
 void timer0_setup() {

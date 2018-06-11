@@ -37,5 +37,7 @@ void main(void) {
     timer0_setup();
     //setup_ir_decoder();
     
-    for(;;){}
+    while (1){
+        service_leds();
+    }
 }
