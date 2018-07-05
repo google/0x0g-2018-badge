@@ -935,6 +935,7 @@ extern volatile uint32_t ir_data;
 extern volatile uint8_t ir_data_valid;
 
 # 4 "leds.h"
+void exactly_on(uint8_t which);
 void timer0_interrupt(void);
 void timer0_setup(void);
 
@@ -943,7 +944,10 @@ volatile uint8_t move_leds = 1;
 
 static void interrupt ISR(void) {
 if (INTCONbits.T0IF) {
+if (move_leds)
 timer0_interrupt();
+else
+INTCONbits.T0IF = 0;
 }
 if (ir_data_valid) {
 move_leds ^= 1;
@@ -956,7 +960,7 @@ timer1_interrupt_decoder();
 
 void main(void) {
 timer0_setup();
-
+setup_ir_decoder();
 
 for(;;){}
 }

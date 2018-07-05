@@ -22,7 +22,10 @@ volatile uint8_t move_leds = 1;
 
 static void interrupt ISR(void) {
     if (INTCONbits.T0IF) {
-        timer0_interrupt();
+        if (move_leds)
+            timer0_interrupt();
+        else
+            INTCONbits.T0IF = 0;
     }
     if (ir_data_valid) {
         move_leds ^= 1;
@@ -35,7 +38,7 @@ static void interrupt ISR(void) {
 
 void main(void) {
     timer0_setup();
-    //setup_ir_decoder();
+    setup_ir_decoder();
     
     while (1){
         service_leds();

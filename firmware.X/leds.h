@@ -8,6 +8,7 @@
 #define LMODE_BLUE_TEAM 4
 #define LMODE_RED_TEAM 5
 
+void exactly_on(uint8_t which);
 void timer0_interrupt(void);
 void timer0_setup(void);
 void service_leds(void);

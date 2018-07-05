@@ -10,7 +10,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [n S15 . . . ]
 "405
 [v _INTCONbits `VS15 ~T0 @X0 0 e@11 ]
-"4 leds.h
+"5 leds.h
 [v _timer0_interrupt `(v ~T0 @X0 0 ef ]
 "12 ir_decoder.h
 [v _ir_data_valid `Vuc ~T0 @X0 0 e ]
@@ -33,8 +33,10 @@ Version 3.2 HI-TECH Software Intermediate Code
 "9 ir_decoder.h
 [v _timer1_interrupt_decoder `(v ~T0 @X0 0 ef ]
 [p mainexit ]
-"5 leds.h
+"6 leds.h
 [v _timer0_setup `(v ~T0 @X0 0 ef ]
+"7 ir_decoder.h
+[v _setup_ir_decoder `(v ~T0 @X0 0 ef ]
 "9 main.c
 [p x FOSC=XT ]
 "10
@@ -664,17 +666,18 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;ir_decoder.h: 9: void timer1_interrupt_decoder();
 [; ;ir_decoder.h: 11: extern volatile uint32_t ir_data;
 [; ;ir_decoder.h: 12: extern volatile uint8_t ir_data_valid;
-[; ;leds.h: 4: void timer0_interrupt(void);
-[; ;leds.h: 5: void timer0_setup(void);
+[; ;leds.h: 4: void exactly_on(uint8_t which);
+[; ;leds.h: 5: void timer0_interrupt(void);
+[; ;leds.h: 6: void timer0_setup(void);
 "21 main.c
 [v _move_leds `Vuc ~T0 @X0 1 e ]
 [i _move_leds
 -> -> 1 `i `uc
 ]
 [; ;main.c: 21: volatile uint8_t move_leds = 1;
-[v F654 `(v ~T0 @X0 1 tf ]
+[v F656 `(v ~T0 @X0 1 tf ]
 "23
-[v _ISR `IF654 ~T0 @X0 1 s ]
+[v _ISR `IF656 ~T0 @X0 1 s ]
 {
 [; ;main.c: 23: static void interrupt ISR(void) {
 [e :U _ISR ]
@@ -683,62 +686,76 @@ Version 3.2 HI-TECH Software Intermediate Code
 "24
 [e $ ! != -> . . _INTCONbits 1 1 `i -> -> -> 0 `i `Vuc `i 63  ]
 {
-[; ;main.c: 25: timer0_interrupt();
+[; ;main.c: 25: if (move_leds)
 "25
-[e ( _timer0_interrupt ..  ]
+[e $ ! != -> _move_leds `i -> -> -> 0 `i `Vuc `i 64  ]
+[; ;main.c: 26: timer0_interrupt();
 "26
+[e ( _timer0_interrupt ..  ]
+[e $U 65  ]
+"27
+[e :U 64 ]
+[; ;main.c: 27: else
+[; ;main.c: 28: INTCONbits.T0IF = 0;
+"28
+[e = . . _INTCONbits 1 1 -> -> 0 `i `uc ]
+[e :U 65 ]
+"29
 }
 [e :U 63 ]
-[; ;main.c: 26: }
-[; ;main.c: 27: if (ir_data_valid) {
-"27
-[e $ ! != -> _ir_data_valid `i -> -> -> 0 `i `Vuc `i 64  ]
-{
-[; ;main.c: 28: move_leds ^= 1;
-"28
-[e =^ _move_leds -> -> 1 `i `uc ]
-[; ;main.c: 29: ir_data_valid = 0;
-"29
-[e = _ir_data_valid -> -> 0 `i `uc ]
+[; ;main.c: 29: }
+[; ;main.c: 30: if (ir_data_valid) {
 "30
-}
-[e :U 64 ]
-[; ;main.c: 30: }
-[; ;main.c: 31: if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
-"31
-[e $ ! && != -> . . _PIR1bits 0 0 `i -> -> -> 0 `i `Vuc `i != -> . . _PIE1bits 0 0 `i -> -> -> 0 `i `Vuc `i 65  ]
+[e $ ! != -> _ir_data_valid `i -> -> -> 0 `i `Vuc `i 66  ]
 {
-[; ;main.c: 32: timer1_interrupt_decoder();
+[; ;main.c: 31: move_leds ^= 1;
+"31
+[e =^ _move_leds -> -> 1 `i `uc ]
+[; ;main.c: 32: ir_data_valid = 0;
 "32
-[e ( _timer1_interrupt_decoder ..  ]
+[e = _ir_data_valid -> -> 0 `i `uc ]
 "33
 }
-[e :U 65 ]
+[e :U 66 ]
 [; ;main.c: 33: }
-[; ;main.c: 34: }
+[; ;main.c: 34: if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
 "34
+[e $ ! && != -> . . _PIR1bits 0 0 `i -> -> -> 0 `i `Vuc `i != -> . . _PIE1bits 0 0 `i -> -> -> 0 `i `Vuc `i 67  ]
+{
+[; ;main.c: 35: timer1_interrupt_decoder();
+"35
+[e ( _timer1_interrupt_decoder ..  ]
+"36
+}
+[e :U 67 ]
+[; ;main.c: 36: }
+[; ;main.c: 37: }
+"37
 [e :UE 62 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
-"36
+"39
 [v _main `(v ~T0 @X0 1 ef ]
 {
-[; ;main.c: 36: void main(void) {
+[; ;main.c: 39: void main(void) {
 [e :U _main ]
 [f ]
-[; ;main.c: 37: timer0_setup();
-"37
-[e ( _timer0_setup ..  ]
-[; ;main.c: 40: for(;;){}
+[; ;main.c: 40: timer0_setup();
 "40
-{
-[e :U 67 ]
-{
-}
-[e $U 67  ]
-[e :U 68 ]
-}
-[; ;main.c: 41: }
+[e ( _timer0_setup ..  ]
+[; ;main.c: 41: setup_ir_decoder();
 "41
-[e :UE 66 ]
+[e ( _setup_ir_decoder ..  ]
+[; ;main.c: 43: for(;;){}
+"43
+{
+[e :U 69 ]
+{
+}
+[e $U 69  ]
+[e :U 70 ]
+}
+[; ;main.c: 44: }
+"44
+[e :UE 68 ]
 }

@@ -1,7 +1,7 @@
 
 
 Microchip Technology PIC LITE Macro Assembler V1.45 build -152302408 
-                                                                                               Wed May 16 21:58:14 2018
+                                                                                               Sat May 19 21:41:44 2018
 
 Microchip Technology Omniscient Code Generator v1.45 (Free mode) build 201711160504
      1                           	processor	16F716
@@ -9,22 +9,22 @@ Microchip Technology Omniscient Code Generator v1.45 (Free mode) build 201711160
      3                           	opt	lm
      4                           	psect	idataBANK0,global,class=CODE,delta=2
      5                           	psect	cinit,global,class=CODE,merge=1,delta=2
-     6                           	psect	bssCOMMON,global,class=COMMON,space=1,delta=1
-     7                           	psect	bssBANK0,global,class=BANK0,space=1,delta=1
-     8                           	psect	dataBANK0,global,class=BANK0,space=1,delta=1
-     9                           	psect	cstackCOMMON,global,class=COMMON,space=1,delta=1
-    10                           	psect	cstackBANK0,global,class=BANK0,space=1,delta=1
-    11                           	psect	maintext,global,class=CODE,split=1,delta=2
-    12                           	psect	text1,local,class=CODE,merge=1,delta=2
-    13                           	psect	text2,local,class=CODE,merge=1,delta=2
+     6                           	psect	bssBANK0,global,class=BANK0,space=1,delta=1
+     7                           	psect	dataBANK0,global,class=BANK0,space=1,delta=1
+     8                           	psect	cstackCOMMON,global,class=COMMON,space=1,delta=1
+     9                           	psect	cstackBANK0,global,class=BANK0,space=1,delta=1
+    10                           	psect	maintext,global,class=CODE,split=1,delta=2
+    11                           	psect	text1,local,class=CODE,merge=1,delta=2
+    12                           	psect	text2,local,class=CODE,merge=1,delta=2
+    13                           	psect	text3,local,class=CODE,merge=1,delta=2
     14                           	psect	intentry,global,class=CODE,delta=2
-    15                           	psect	text3,local,class=CODE,merge=1,delta=2
+    15                           	psect	text4,local,class=CODE,merge=1,delta=2
     16                           	psect	swtext1,local,class=CONST,delta=2
-    17                           	psect	text4,local,class=CODE,merge=1,delta=2
+    17                           	psect	text5,local,class=CODE,merge=1,delta=2
     18                           	psect	swtext2,local,class=CONST,delta=2
-    19                           	psect	text5,local,class=CODE,merge=1,inline,delta=2
-    20                           	psect	text6,local,class=CODE,merge=1,inline,delta=2
-    21                           	psect	text7,local,class=CODE,merge=1,inline,delta=2
+    19                           	psect	text6,local,class=CODE,merge=1,inline,delta=2
+    20                           	psect	text7,local,class=CODE,merge=1,inline,delta=2
+    21                           	psect	text8,local,class=CODE,merge=1,inline,delta=2
     22                           	dabs	1,0x7E,2
     23  0000                     
     24                           ; Version 1.45
@@ -170,1279 +170,1480 @@ Microchip Technology Omniscient Code Generator v1.45 (Free mode) build 201711160
    156  009F                     	;# 
    157                           
    158                           	psect	idataBANK0
-   159  01E2                     __pidataBANK0:	
+   159  0250                     __pidataBANK0:	
    160                           
    161                           ;initializer for _move_leds
-   162  01E2  3401               	retlw	1
+   162  0250  3401               	retlw	1
    163  0006                     _PORTB	set	6
    164  0005                     _PORTA	set	5
    165  000B                     _INTCONbits	set	11
-   166  0010                     _T1CONbits	set	16
-   167  0006                     _PORTBbits	set	6
-   168  000C                     _PIR1bits	set	12
-   169  000E                     _TMR1L	set	14
-   170  000F                     _TMR1H	set	15
+   166  0006                     _PORTBbits	set	6
+   167  000C                     _PIR1bits	set	12
+   168  000E                     _TMR1L	set	14
+   169  000F                     _TMR1H	set	15
+   170  0010                     _T1CONbits	set	16
    171  0081                     _OPTION_REGbits	set	129
    172  0086                     _TRISB	set	134
    173  0085                     _TRISA	set	133
    174  008C                     _PIE1bits	set	140
    175  0086                     _TRISBbits	set	134
-   176  0433                     _TRISB3	set	1075
-   177  042B                     _TRISA3	set	1067
-   178  042A                     _TRISA2	set	1066
-   179  0428                     _TRISA0	set	1064
-   180                           
-   181                           ; #config settings
-   182  0000                     
-   183                           	psect	cinit
-   184  0010                     start_initialization:	
-   185  0010                     __initialization:	
+   176                           
+   177                           ; #config settings
+   178  0000                     
+   179                           	psect	cinit
+   180  0010                     start_initialization:	
+   181  0010                     __initialization:	
+   182                           
+   183                           ; Initialize objects allocated to BANK0
+   184  0010  2250               	fcall	__pidataBANK0	;fetch initializer
+   185  0011  00A9               	movwf	__pdataBANK0& (0+127)
    186                           
-   187                           ; Initialize objects allocated to BANK0
-   188  0010  21E2               	fcall	__pidataBANK0	;fetch initializer
-   189  0011  00A7               	movwf	__pdataBANK0& (0+127)
-   190                           
-   191                           ; Clear objects allocated to BANK0
-   192  0012  01A0               	clrf	__pbssBANK0& (0+127)
-   193  0013  01A1               	clrf	(__pbssBANK0+1)& (0+127)
-   194  0014  01A2               	clrf	(__pbssBANK0+2)& (0+127)
-   195  0015  01A3               	clrf	(__pbssBANK0+3)& (0+127)
-   196  0016  01A4               	clrf	(__pbssBANK0+4)& (0+127)
-   197  0017  01A5               	clrf	(__pbssBANK0+5)& (0+127)
-   198  0018  01A6               	clrf	(__pbssBANK0+6)& (0+127)
+   187                           ; Clear objects allocated to BANK0
+   188  0012  01A0               	clrf	__pbssBANK0& (0+127)
+   189  0013  01A1               	clrf	(__pbssBANK0+1)& (0+127)
+   190  0014  01A2               	clrf	(__pbssBANK0+2)& (0+127)
+   191  0015  01A3               	clrf	(__pbssBANK0+3)& (0+127)
+   192  0016  01A4               	clrf	(__pbssBANK0+4)& (0+127)
+   193  0017  01A5               	clrf	(__pbssBANK0+5)& (0+127)
+   194  0018  01A6               	clrf	(__pbssBANK0+6)& (0+127)
+   195  0019  01A7               	clrf	(__pbssBANK0+7)& (0+127)
+   196  001A  01A8               	clrf	(__pbssBANK0+8)& (0+127)
+   197  001B                     end_of_initialization:	
+   198                           ;End of C runtime variable initialization code
    199                           
-   200                           ; Clear objects allocated to COMMON
-   201  0019  01FC               	clrf	__pbssCOMMON& (0+127)
-   202  001A  01FD               	clrf	(__pbssCOMMON+1)& (0+127)
-   203  001B                     end_of_initialization:	
-   204                           ;End of C runtime variable initialization code
-   205                           
-   206  001B                     __end_of__initialization:	
-   207  001B  0183               	clrf	3
-   208  001C  29E0               	ljmp	_main	;jump to C main() function
-   209                           
-   210                           	psect	bssCOMMON
-   211  007C                     __pbssCOMMON:	
-   212  007C                     timer1_interrupt_decoder@state_timer:	
-   213  007C                     	ds	1
-   214  007D                     timer1_interrupt_decoder@bit_count:	
-   215  007D                     	ds	1
-   216                           
-   217                           	psect	bssBANK0
-   218  0020                     __pbssBANK0:	
-   219  0020                     _ir_data:	
-   220  0020                     	ds	4
-   221  0024                     timer0_interrupt@pos:	
-   222  0024                     	ds	1
-   223  0025                     timer1_interrupt_decoder@decoder_state:	
-   224  0025                     	ds	1
-   225  0026                     _ir_data_valid:	
-   226  0026                     	ds	1
-   227                           
-   228                           	psect	dataBANK0
-   229  0027                     __pdataBANK0:	
-   230  0027                     _move_leds:	
-   231  0027                     	ds	1
+   200  001B                     __end_of__initialization:	
+   201  001B  0183               	clrf	3
+   202  001C  2A4D               	ljmp	_main	;jump to C main() function
+   203                           
+   204                           	psect	bssBANK0
+   205  0020                     __pbssBANK0:	
+   206  0020                     _ir_data:	
+   207  0020                     	ds	4
+   208  0024                     timer0_interrupt@pos:	
+   209  0024                     	ds	1
+   210  0025                     timer1_interrupt_decoder@state_timer:	
+   211  0025                     	ds	1
+   212  0026                     timer1_interrupt_decoder@bit_count:	
+   213  0026                     	ds	1
+   214  0027                     timer1_interrupt_decoder@decoder_state:	
+   215  0027                     	ds	1
+   216  0028                     _ir_data_valid:	
+   217  0028                     	ds	1
+   218                           
+   219                           	psect	dataBANK0
+   220  0029                     __pdataBANK0:	
+   221  0029                     _move_leds:	
+   222  0029                     	ds	1
+   223                           
+   224                           	psect	cstackCOMMON
+   225  0070                     __pcstackCOMMON:	
+   226  0070                     ?_timer0_interrupt:	
+   227  0070                     ?_timer0_setup:	
+   228                           ; 1 bytes @ 0x0
+   229                           
+   230  0070                     ?_all_off:	
+   231                           ; 1 bytes @ 0x0
    232                           
-   233                           	psect	cstackCOMMON
-   234  0070                     __pcstackCOMMON:	
-   235  0070                     ?_timer0_interrupt:	
-   236  0070                     ?_timer0_setup:	
+   233  0070                     ??_all_off:	
+   234                           ; 1 bytes @ 0x0
+   235                           
+   236  0070                     ?_leda_on:	
    237                           ; 1 bytes @ 0x0
    238                           
-   239  0070                     ?_timer1_interrupt_decoder:	
+   239  0070                     ?_ledb_on:	
    240                           ; 1 bytes @ 0x0
    241                           
-   242  0070                     ??_timer1_interrupt_decoder:	
+   242  0070                     ?_timer1_interrupt_decoder:	
    243                           ; 1 bytes @ 0x0
    244                           
-   245  0070                     ?_ISR:	
+   245  0070                     ??_timer1_interrupt_decoder:	
    246                           ; 1 bytes @ 0x0
    247                           
-   248  0070                     ?_main:	
+   248  0070                     ?_setup_ir_decoder:	
    249                           ; 1 bytes @ 0x0
    250                           
-   251  0070                     ?_all_off:	
+   251  0070                     ?_ISR:	
    252                           ; 1 bytes @ 0x0
    253                           
-   254  0070                     ??_all_off:	
+   254  0070                     ?_main:	
    255                           ; 1 bytes @ 0x0
    256                           
-   257  0070                     ?_leda_on:	
+   257  0070                     leda_on@dir:	
    258                           ; 1 bytes @ 0x0
    259                           
-   260  0070                     ?_ledb_on:	
+   260  0070                     ledb_on@dir:	
    261                           ; 1 bytes @ 0x0
    262                           
-   263  0070                     leda_on@dir:	
+   263                           
    264                           ; 1 bytes @ 0x0
-   265                           
-   266  0070                     ledb_on@dir:	
-   267                           ; 1 bytes @ 0x0
-   268                           
+   265  0070                     	ds	1
+   266  0071                     ??_leda_on:	
+   267  0071                     ??_ledb_on:	
+   268                           ; 1 bytes @ 0x1
    269                           
-   270                           ; 1 bytes @ 0x0
-   271  0070                     	ds	1
-   272  0071                     ??_leda_on:	
-   273  0071                     ??_ledb_on:	
-   274                           ; 1 bytes @ 0x1
-   275                           
+   270                           
+   271                           ; 1 bytes @ 0x1
+   272  0071                     	ds	2
+   273  0073                     leda_on@pos:	
+   274  0073                     ledb_on@pos:	
+   275                           ; 1 bytes @ 0x3
    276                           
-   277                           ; 1 bytes @ 0x1
-   278  0071                     	ds	2
-   279  0073                     leda_on@pos:	
-   280  0073                     ledb_on@pos:	
-   281                           ; 1 bytes @ 0x3
-   282                           
-   283                           
-   284                           ; 1 bytes @ 0x3
-   285  0073                     	ds	1
-   286  0074                     ??_timer0_interrupt:	
-   287                           
-   288                           ; 1 bytes @ 0x4
-   289  0074                     	ds	3
-   290  0077                     ??_ISR:	
-   291                           
-   292                           ; 1 bytes @ 0x7
-   293  0077                     	ds	5
-   294                           
-   295                           	psect	cstackBANK0
-   296  0000                     __pcstackBANK0:	
-   297  0000                     ??_timer0_setup:	
-   298  0000                     ??_main:	
-   299                           ; 1 bytes @ 0x0
-   300                           
-   301                           
-   302                           	psect	maintext
-   303  01E0                     __pmaintext:	
+   277                           
+   278                           ; 1 bytes @ 0x3
+   279  0073                     	ds	1
+   280  0074                     ??_timer0_interrupt:	
+   281                           
+   282                           ; 1 bytes @ 0x4
+   283  0074                     	ds	1
+   284  0075                     timer1_interrupt_decoder@k:	
+   285                           
+   286                           ; 2 bytes @ 0x5
+   287  0075                     	ds	2
+   288  0077                     timer1_interrupt_decoder@k_210:	
+   289                           
+   290                           ; 2 bytes @ 0x7
+   291  0077                     	ds	2
+   292  0079                     ??_ISR:	
+   293                           
+   294                           ; 1 bytes @ 0x9
+   295  0079                     	ds	5
+   296                           
+   297                           	psect	cstackBANK0
+   298  0000                     __pcstackBANK0:	
+   299  0000                     ??_timer0_setup:	
+   300  0000                     ??_setup_ir_decoder:	
+   301                           ; 1 bytes @ 0x0
+   302                           
+   303  0000                     ??_main:	
    304                           ; 1 bytes @ 0x0
-   305 ;;
-   306 ;;Main: autosize = 0, tempsize = 0, incstack = 0, save=0
-   307 ;;
-   308 ;; *************** function _main *****************
-   309 ;; Defined at:
-   310 ;;		line 36 in file "main.c"
-   311 ;; Parameters:    Size  Location     Type
-   312 ;;		None
-   313 ;; Auto vars:     Size  Location     Type
-   314 ;;		None
-   315 ;; Return value:  Size  Location     Type
-   316 ;;                  1    wreg      void 
-   317 ;; Registers used:
-   318 ;;		wreg, status,2, status,0, pclath, cstack
-   319 ;; Tracked objects:
-   320 ;;		On entry : B00/0
-   321 ;;		On exit  : 0/0
-   322 ;;		Unchanged: 0/0
-   323 ;; Data sizes:     COMMON   BANK0   BANK1
-   324 ;;      Params:         0       0       0
-   325 ;;      Locals:         0       0       0
-   326 ;;      Temps:          0       0       0
-   327 ;;      Totals:         0       0       0
-   328 ;;Total ram usage:        0 bytes
-   329 ;; Hardware stack levels required when called:    4
-   330 ;; This function calls:
-   331 ;;		_timer0_setup
-   332 ;; This function is called by:
-   333 ;;		Startup code after reset
-   334 ;; This function uses a non-reentrant model
-   335 ;;
-   336                           
-   337                           
-   338                           ;psect for function _main
-   339  01E0                     _main:	
-   340                           
-   341                           ;main.c: 37: timer0_setup();
+   305                           
+   306                           
+   307                           	psect	maintext
+   308  024D                     __pmaintext:	
+   309                           ; 1 bytes @ 0x0
+   310 ;;
+   311 ;;Main: autosize = 0, tempsize = 0, incstack = 0, save=0
+   312 ;;
+   313 ;; *************** function _main *****************
+   314 ;; Defined at:
+   315 ;;		line 39 in file "main.c"
+   316 ;; Parameters:    Size  Location     Type
+   317 ;;		None
+   318 ;; Auto vars:     Size  Location     Type
+   319 ;;		None
+   320 ;; Return value:  Size  Location     Type
+   321 ;;                  1    wreg      void 
+   322 ;; Registers used:
+   323 ;;		wreg, status,2, status,0, pclath, cstack
+   324 ;; Tracked objects:
+   325 ;;		On entry : B00/0
+   326 ;;		On exit  : 0/0
+   327 ;;		Unchanged: 0/0
+   328 ;; Data sizes:     COMMON   BANK0   BANK1
+   329 ;;      Params:         0       0       0
+   330 ;;      Locals:         0       0       0
+   331 ;;      Temps:          0       0       0
+   332 ;;      Totals:         0       0       0
+   333 ;;Total ram usage:        0 bytes
+   334 ;; Hardware stack levels required when called:    4
+   335 ;; This function calls:
+   336 ;;		_setup_ir_decoder
+   337 ;;		_timer0_setup
+   338 ;; This function is called by:
+   339 ;;		Startup code after reset
+   340 ;; This function uses a non-reentrant model
+   341 ;;
    342                           
-   343                           ;incstack = 0
-   344                           ; Regs used in _main: [wreg+status,2+status,0+pclath+cstack]
-   345  01E0  21CA               	fcall	_timer0_setup
-   346  01E1                     l90:	
-   347                           ;main.c: 40: for(;;){}
+   343                           
+   344                           ;psect for function _main
+   345  024D                     _main:	
+   346                           
+   347                           ;main.c: 40: timer0_setup();
    348                           
-   349  01E1  29E1               	goto	l90
-   350  01E2                     __end_of_main:	
-   351                           
-   352                           	psect	text1
-   353  01CA                     __ptext1:	
-   354 ;; *************** function _timer0_setup *****************
-   355 ;; Defined at:
-   356 ;;		line 80 in file "leds.c"
-   357 ;; Parameters:    Size  Location     Type
-   358 ;;		None
-   359 ;; Auto vars:     Size  Location     Type
-   360 ;;		None
-   361 ;; Return value:  Size  Location     Type
-   362 ;;                  1    wreg      void 
-   363 ;; Registers used:
-   364 ;;		wreg, status,2, status,0
-   365 ;; Tracked objects:
-   366 ;;		On entry : 0/0
-   367 ;;		On exit  : 0/0
-   368 ;;		Unchanged: 0/0
-   369 ;; Data sizes:     COMMON   BANK0   BANK1
-   370 ;;      Params:         0       0       0
-   371 ;;      Locals:         0       0       0
-   372 ;;      Temps:          0       0       0
-   373 ;;      Totals:         0       0       0
-   374 ;;Total ram usage:        0 bytes
-   375 ;; Hardware stack levels used:    1
-   376 ;; Hardware stack levels required when called:    3
-   377 ;; This function calls:
-   378 ;;		Nothing
-   379 ;; This function is called by:
-   380 ;;		_main
-   381 ;; This function uses a non-reentrant model
-   382 ;;
-   383                           
-   384                           
-   385                           ;psect for function _timer0_setup
-   386  01CA                     _timer0_setup:	
-   387                           
-   388                           ;leds.c: 81: OPTION_REGbits.PSA = 0;
-   389                           
-   390                           ;incstack = 0
-   391                           ; Regs used in _timer0_setup: [wreg+status,2+status,0]
-   392  01CA  1683               	bsf	3,5	;RP0=1, select bank1
-   393  01CB  1181               	bcf	1,3	;volatile
-   394                           
-   395                           ;leds.c: 82: OPTION_REGbits.PS = 0b111;
-   396  01CC  3007               	movlw	7
-   397  01CD  0481               	iorwf	1,f	;volatile
+   349                           ;incstack = 0
+   350                           ; Regs used in _main: [wreg+status,2+status,0+pclath+cstack]
+   351  024D  2230               	fcall	_timer0_setup
+   352                           
+   353                           ;main.c: 41: setup_ir_decoder();
+   354  024E  221D               	fcall	_setup_ir_decoder
+   355  024F                     l103:	
+   356                           ;main.c: 43: for(;;){}
+   357                           
+   358  024F  2A4F               	goto	l103
+   359  0250                     __end_of_main:	
+   360                           
+   361                           	psect	text1
+   362  0230                     __ptext1:	
+   363 ;; *************** function _timer0_setup *****************
+   364 ;; Defined at:
+   365 ;;		line 117 in file "leds.c"
+   366 ;; Parameters:    Size  Location     Type
+   367 ;;		None
+   368 ;; Auto vars:     Size  Location     Type
+   369 ;;		None
+   370 ;; Return value:  Size  Location     Type
+   371 ;;                  1    wreg      void 
+   372 ;; Registers used:
+   373 ;;		wreg, status,2, status,0
+   374 ;; Tracked objects:
+   375 ;;		On entry : 0/0
+   376 ;;		On exit  : 0/0
+   377 ;;		Unchanged: 0/0
+   378 ;; Data sizes:     COMMON   BANK0   BANK1
+   379 ;;      Params:         0       0       0
+   380 ;;      Locals:         0       0       0
+   381 ;;      Temps:          0       0       0
+   382 ;;      Totals:         0       0       0
+   383 ;;Total ram usage:        0 bytes
+   384 ;; Hardware stack levels used:    1
+   385 ;; Hardware stack levels required when called:    3
+   386 ;; This function calls:
+   387 ;;		Nothing
+   388 ;; This function is called by:
+   389 ;;		_main
+   390 ;; This function uses a non-reentrant model
+   391 ;;
+   392                           
+   393                           
+   394                           ;psect for function _timer0_setup
+   395  0230                     _timer0_setup:	
+   396                           
+   397                           ;leds.c: 118: OPTION_REGbits.PSA = 0;
    398                           
-   399                           ;leds.c: 83: OPTION_REGbits.T0CS = 0;
-   400  01CE  1281               	bcf	1,5	;volatile
-   401                           
-   402                           ;leds.c: 84: INTCONbits.T0IF = 0;
-   403  01CF  110B               	bcf	11,2	;volatile
-   404                           
-   405                           ;leds.c: 85: INTCONbits.T0IE = 1;
-   406  01D0  168B               	bsf	11,5	;volatile
+   399                           ;incstack = 0
+   400                           ; Regs used in _timer0_setup: [wreg+status,2+status,0]
+   401  0230  1683               	bsf	3,5	;RP0=1, select bank1
+   402  0231  1181               	bcf	1,3	;volatile
+   403                           
+   404                           ;leds.c: 119: OPTION_REGbits.PS = 0b111;
+   405  0232  3007               	movlw	7
+   406  0233  0481               	iorwf	1,f	;volatile
    407                           
-   408                           ;leds.c: 86: INTCONbits.GIE = 1;
-   409  01D1  178B               	bsf	11,7	;volatile
-   410  01D2  0008               	return
-   411  01D3                     __end_of_timer0_setup:	
-   412                           
-   413                           	psect	text2
-   414  018F                     __ptext2:	
-   415 ;; *************** function _ISR *****************
-   416 ;; Defined at:
-   417 ;;		line 23 in file "main.c"
-   418 ;; Parameters:    Size  Location     Type
-   419 ;;		None
-   420 ;; Auto vars:     Size  Location     Type
-   421 ;;		None
-   422 ;; Return value:  Size  Location     Type
-   423 ;;                  1    wreg      void 
-   424 ;; Registers used:
-   425 ;;		wreg, fsr0l, fsr0h, status,2, status,0, pclath, cstack
-   426 ;; Tracked objects:
-   427 ;;		On entry : 0/0
-   428 ;;		On exit  : 0/0
-   429 ;;		Unchanged: 0/0
-   430 ;; Data sizes:     COMMON   BANK0   BANK1
-   431 ;;      Params:         0       0       0
-   432 ;;      Locals:         0       0       0
-   433 ;;      Temps:          5       0       0
-   434 ;;      Totals:         5       0       0
-   435 ;;Total ram usage:        5 bytes
-   436 ;; Hardware stack levels used:    1
-   437 ;; Hardware stack levels required when called:    2
-   438 ;; This function calls:
-   439 ;;		_timer0_interrupt
-   440 ;;		_timer1_interrupt_decoder
-   441 ;; This function is called by:
-   442 ;;		Interrupt level 1
-   443 ;; This function uses a non-reentrant model
-   444 ;;
-   445                           
-   446                           
-   447                           ;psect for function _ISR
-   448  018F                     _ISR:	
-   449                           
-   450                           ;main.c: 24: if (INTCONbits.T0IF) {
-   451  018F  1D0B               	btfss	11,2	;volatile
-   452  0190  2992               	goto	i1l907
+   408                           ;leds.c: 120: OPTION_REGbits.T0CS = 0;
+   409  0234  1281               	bcf	1,5	;volatile
+   410                           
+   411                           ;leds.c: 121: INTCONbits.T0IF = 0;
+   412  0235  110B               	bcf	11,2	;volatile
+   413                           
+   414                           ;leds.c: 122: INTCONbits.T0IE = 1;
+   415  0236  168B               	bsf	11,5	;volatile
+   416                           
+   417                           ;leds.c: 123: INTCONbits.GIE = 1;
+   418  0237  178B               	bsf	11,7	;volatile
+   419  0238  0008               	return
+   420  0239                     __end_of_timer0_setup:	
+   421                           
+   422                           	psect	text2
+   423  021D                     __ptext2:	
+   424 ;; *************** function _setup_ir_decoder *****************
+   425 ;; Defined at:
+   426 ;;		line 157 in file "ir_decoder.c"
+   427 ;; Parameters:    Size  Location     Type
+   428 ;;		None
+   429 ;; Auto vars:     Size  Location     Type
+   430 ;;		None
+   431 ;; Return value:  Size  Location     Type
+   432 ;;                  1    wreg      void 
+   433 ;; Registers used:
+   434 ;;		wreg
+   435 ;; Tracked objects:
+   436 ;;		On entry : 0/0
+   437 ;;		On exit  : 0/0
+   438 ;;		Unchanged: 0/0
+   439 ;; Data sizes:     COMMON   BANK0   BANK1
+   440 ;;      Params:         0       0       0
+   441 ;;      Locals:         0       0       0
+   442 ;;      Temps:          0       0       0
+   443 ;;      Totals:         0       0       0
+   444 ;;Total ram usage:        0 bytes
+   445 ;; Hardware stack levels used:    1
+   446 ;; Hardware stack levels required when called:    3
+   447 ;; This function calls:
+   448 ;;		Nothing
+   449 ;; This function is called by:
+   450 ;;		_main
+   451 ;; This function uses a non-reentrant model
+   452 ;;
    453                           
-   454                           ;main.c: 25: timer0_interrupt();
-   455  0191  20EE               	fcall	_timer0_interrupt
-   456  0192                     i1l907:	
+   454                           
+   455                           ;psect for function _setup_ir_decoder
+   456  021D                     _setup_ir_decoder:	
    457                           
-   458                           ;main.c: 26: }
-   459                           ;main.c: 27: if (ir_data_valid) {
-   460  0192  1283               	bcf	3,5	;RP0=0, select bank0
-   461  0193  0826               	movf	_ir_data_valid,w	;volatile
-   462  0194  1903               	btfsc	3,2
-   463  0195  299B               	goto	i1l913
+   458                           ;ir_decoder.c: 159: TRISBbits.TRISB0 = 1;
+   459                           
+   460                           ;incstack = 0
+   461                           ; Regs used in _setup_ir_decoder: [wreg]
+   462  021D  1683               	bsf	3,5	;RP0=1, select bank1
+   463  021E  1406               	bsf	6,0	;volatile
    464                           
-   465                           ;main.c: 28: move_leds ^= 1;
-   466  0196  3001               	movlw	1
-   467  0197  00F7               	movwf	??_ISR
-   468  0198  0877               	movf	??_ISR,w
-   469  0199  06A7               	xorwf	_move_leds,f	;volatile
-   470                           
-   471                           ;main.c: 29: ir_data_valid = 0;
-   472  019A  01A6               	clrf	_ir_data_valid	;volatile
-   473  019B                     i1l913:	
-   474                           
-   475                           ;main.c: 30: }
-   476                           ;main.c: 31: if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
-   477  019B  1C0C               	btfss	12,0	;volatile
-   478  019C  29A1               	goto	i1l85
-   479  019D  1683               	bsf	3,5	;RP0=1, select bank1
-   480  019E  1C0C               	btfss	12,0	;volatile
-   481  019F  29A1               	goto	i1l85
-   482                           
-   483                           ;main.c: 32: timer1_interrupt_decoder();
-   484  01A0  201D               	fcall	_timer1_interrupt_decoder
-   485  01A1                     i1l85:	
-   486  01A1  087B               	movf	??_ISR+4,w
-   487  01A2  1283               	bcf	3,5	;RP0=0, select bank0
-   488  01A3  00FF               	movwf	127
-   489  01A4  087A               	movf	??_ISR+3,w
-   490  01A5  008A               	movwf	10
-   491  01A6  0879               	movf	??_ISR+2,w
-   492  01A7  0084               	movwf	4
-   493  01A8  0E78               	swapf	(??_ISR+1)^(0+-128),w
-   494  01A9  0083               	movwf	3
-   495  01AA  0EFE               	swapf	126,f
-   496  01AB  0E7E               	swapf	126,w
-   497  01AC  0009               	retfie
-   498  01AD                     __end_of_ISR:	
-   499                           
-   500                           	psect	intentry
-   501  0004                     __pintentry:	
-   502                           ;incstack = 0
-   503                           ; Regs used in _ISR: [wreg-fsr0h+status,2+status,0+pclath+cstack]
-   504                           
-   505  0004                     interrupt_function:	
-   506  007E                     saved_w	set	btemp
-   507  0004  00FE               	movwf	btemp
-   508  0005  0E03               	swapf	3,w
-   509  0006  00F8               	movwf	??_ISR+1
-   510  0007  0804               	movf	4,w
-   511  0008  00F9               	movwf	??_ISR+2
-   512  0009  080A               	movf	10,w
-   513  000A  00FA               	movwf	??_ISR+3
-   514  000B  1283               	bcf	3,5	;RP0=0, select bank0
-   515  000C  087F               	movf	btemp+1,w
-   516  000D  00FB               	movwf	??_ISR+4
-   517  000E  298F               	ljmp	_ISR
-   518                           
-   519                           	psect	text3
-   520  001D                     __ptext3:	
-   521 ;; *************** function _timer1_interrupt_decoder *****************
-   522 ;; Defined at:
-   523 ;;		line 48 in file "ir_decoder.c"
-   524 ;; Parameters:    Size  Location     Type
-   525 ;;		None
-   526 ;; Auto vars:     Size  Location     Type
-   527 ;;		None
-   528 ;; Return value:  Size  Location     Type
-   529 ;;                  1    wreg      void 
-   530 ;; Registers used:
-   531 ;;		wreg, fsr0l, fsr0h, status,2, status,0
-   532 ;; Tracked objects:
-   533 ;;		On entry : 0/0
-   534 ;;		On exit  : 0/0
-   535 ;;		Unchanged: 0/0
-   536 ;; Data sizes:     COMMON   BANK0   BANK1
-   537 ;;      Params:         0       0       0
-   538 ;;      Locals:         0       0       0
-   539 ;;      Temps:          7       0       0
-   540 ;;      Totals:         7       0       0
-   541 ;;Total ram usage:        7 bytes
-   542 ;; Hardware stack levels used:    1
-   543 ;; This function calls:
-   544 ;;		Nothing
-   545 ;; This function is called by:
-   546 ;;		_ISR
-   547 ;; This function uses a non-reentrant model
-   548 ;;
-   549                           
+   465                           ;ir_decoder.c: 161: T1CONbits.T1SYNC = 1;
+   466  021F  1283               	bcf	3,5	;RP0=0, select bank0
+   467  0220  1510               	bsf	16,2	;volatile
+   468                           
+   469                           ;ir_decoder.c: 162: PIE1bits.TMR1IE = 1;
+   470  0221  1683               	bsf	3,5	;RP0=1, select bank1
+   471  0222  140C               	bsf	12,0	;volatile
+   472                           
+   473                           ;ir_decoder.c: 163: INTCONbits.PEIE = 1;
+   474  0223  170B               	bsf	11,6	;volatile
+   475                           
+   476                           ;ir_decoder.c: 164: INTCONbits.GIE = 1;
+   477  0224  178B               	bsf	11,7	;volatile
+   478                           
+   479                           ;ir_decoder.c: 165: do { T1CONbits.TMR1ON = 0; TMR1H = 255; TMR1L = (255-140+30); PIR1bi
+      +                          ts.TMR1IF = 0; T1CONbits.TMR1ON = 1; } while(0);
+   480  0225  1283               	bcf	3,5	;RP0=0, select bank0
+   481  0226  1010               	bcf	16,0	;volatile
+   482  0227  30FF               	movlw	255
+   483  0228  008F               	movwf	15	;volatile
+   484  0229  3091               	movlw	145
+   485  022A  008E               	movwf	14	;volatile
+   486  022B  100C               	bcf	12,0	;volatile
+   487  022C  1410               	bsf	16,0	;volatile
+   488                           
+   489                           ;ir_decoder.c: 167: TRISBbits.TRISB2 = 0;
+   490  022D  1683               	bsf	3,5	;RP0=1, select bank1
+   491  022E  1106               	bcf	6,2	;volatile
+   492  022F  0008               	return
+   493  0230                     __end_of_setup_ir_decoder:	
+   494                           
+   495                           	psect	text3
+   496  01FA                     __ptext3:	
+   497 ;; *************** function _ISR *****************
+   498 ;; Defined at:
+   499 ;;		line 23 in file "main.c"
+   500 ;; Parameters:    Size  Location     Type
+   501 ;;		None
+   502 ;; Auto vars:     Size  Location     Type
+   503 ;;		None
+   504 ;; Return value:  Size  Location     Type
+   505 ;;                  1    wreg      void 
+   506 ;; Registers used:
+   507 ;;		wreg, fsr0l, fsr0h, status,2, status,0, btemp+1, pclath, cstack
+   508 ;; Tracked objects:
+   509 ;;		On entry : 0/0
+   510 ;;		On exit  : 0/0
+   511 ;;		Unchanged: 0/0
+   512 ;; Data sizes:     COMMON   BANK0   BANK1
+   513 ;;      Params:         0       0       0
+   514 ;;      Locals:         0       0       0
+   515 ;;      Temps:          5       0       0
+   516 ;;      Totals:         5       0       0
+   517 ;;Total ram usage:        5 bytes
+   518 ;; Hardware stack levels used:    1
+   519 ;; Hardware stack levels required when called:    2
+   520 ;; This function calls:
+   521 ;;		_timer0_interrupt
+   522 ;;		_timer1_interrupt_decoder
+   523 ;; This function is called by:
+   524 ;;		Interrupt level 1
+   525 ;; This function uses a non-reentrant model
+   526 ;;
+   527                           
+   528                           
+   529                           ;psect for function _ISR
+   530  01FA                     _ISR:	
+   531                           
+   532                           ;main.c: 24: if (INTCONbits.T0IF) {
+   533  01FA  1D0B               	btfss	11,2	;volatile
+   534  01FB  2A02               	goto	i1l1023
+   535                           
+   536                           ;main.c: 25: if (move_leds)
+   537  01FC  0829               	movf	_move_leds,w	;volatile
+   538  01FD  1903               	btfsc	3,2
+   539  01FE  2A01               	goto	i1l94
+   540                           
+   541                           ;main.c: 26: timer0_interrupt();
+   542  01FF  2159               	fcall	_timer0_interrupt
+   543  0200  2A02               	goto	i1l1023
+   544  0201                     i1l94:	
+   545                           
+   546                           ;main.c: 27: else
+   547                           ;main.c: 28: INTCONbits.T0IF = 0;
+   548  0201  110B               	bcf	11,2	;volatile
+   549  0202                     i1l1023:	
    550                           
-   551                           ;psect for function _timer1_interrupt_decoder
-   552  001D                     _timer1_interrupt_decoder:	
-   553                           
-   554                           ;incstack = 0
-   555                           ; Regs used in _timer1_interrupt_decoder: [wreg-fsr0h+status,2+status,0]
-   556                           ;ir_decoder.c: 50: static volatile ir_decoder_state_t decoder_state = STATE_IDLE;
-   557                           ;ir_decoder.c: 51: static volatile uint8_t bit_count = 0;
-   558                           ;ir_decoder.c: 52: static volatile uint8_t state_timer = 0;
-   559                           ;ir_decoder.c: 54: do { TMR1H = 255; TMR1L = (255-140); PIR1bits.TMR1IF = 0; } while(0);
-   560  001D  30FF               	movlw	255
-   561  001E  1283               	bcf	3,5	;RP0=0, select bank0
-   562  001F  008F               	movwf	15	;volatile
-   563  0020  3073               	movlw	115
-   564  0021  008E               	movwf	14	;volatile
-   565  0022  100C               	bcf	12,0	;volatile
-   566                           
-   567                           ;ir_decoder.c: 57: if(ir_data_valid)
-   568  0023  0826               	movf	_ir_data_valid,w	;volatile
-   569  0024  1D03               	btfss	3,2
-   570  0025  0008               	return
-   571  0026  28E2               	goto	i1l857
-   572  0027                     i1l34:	
-   573                           ;ir_decoder.c: 61: case STATE_IDLE:
-   574                           
-   575                           ;ir_decoder.c: 60: switch (decoder_state) {
-   576                           
-   577                           ;ir_decoder.c: 58: return;
-   578                           
-   579                           
-   580                           ;ir_decoder.c: 63: if (PORTBbits.RB0)
-   581  0027  1806               	btfsc	6,0	;volatile
-   582  0028  0008               	return
-   583                           
-   584                           ;ir_decoder.c: 65: decoder_state = STATE_START;
-   585                           
-   586                           ;ir_decoder.c: 64: return;
-   587  0029  3001               	movlw	1
-   588  002A  00F0               	movwf	??_timer1_interrupt_decoder
-   589  002B  0870               	movf	??_timer1_interrupt_decoder,w
-   590  002C  00A5               	movwf	timer1_interrupt_decoder@decoder_state	;volatile
-   591                           
-   592                           ;ir_decoder.c: 66: state_timer = 1;
-   593  002D  3001               	movlw	1
-   594  002E  00F0               	movwf	??_timer1_interrupt_decoder
-   595  002F  0870               	movf	??_timer1_interrupt_decoder,w
-   596  0030  00FC               	movwf	timer1_interrupt_decoder@state_timer	;volatile
+   551                           ;main.c: 29: }
+   552                           ;main.c: 30: if (ir_data_valid) {
+   553  0202  1283               	bcf	3,5	;RP0=0, select bank0
+   554  0203  0828               	movf	_ir_data_valid,w	;volatile
+   555  0204  1903               	btfsc	3,2
+   556  0205  2A0B               	goto	i1l1029
+   557                           
+   558                           ;main.c: 31: move_leds ^= 1;
+   559  0206  3001               	movlw	1
+   560  0207  00F9               	movwf	??_ISR
+   561  0208  0879               	movf	??_ISR,w
+   562  0209  06A9               	xorwf	_move_leds,f	;volatile
+   563                           
+   564                           ;main.c: 32: ir_data_valid = 0;
+   565  020A  01A8               	clrf	_ir_data_valid	;volatile
+   566  020B                     i1l1029:	
+   567                           
+   568                           ;main.c: 33: }
+   569                           ;main.c: 34: if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
+   570  020B  1C0C               	btfss	12,0	;volatile
+   571  020C  2A11               	goto	i1l98
+   572  020D  1683               	bsf	3,5	;RP0=1, select bank1
+   573  020E  1C0C               	btfss	12,0	;volatile
+   574  020F  2A11               	goto	i1l98
+   575                           
+   576                           ;main.c: 35: timer1_interrupt_decoder();
+   577  0210  201D               	fcall	_timer1_interrupt_decoder
+   578  0211                     i1l98:	
+   579  0211  087D               	movf	??_ISR+4,w
+   580  0212  1283               	bcf	3,5	;RP0=0, select bank0
+   581  0213  00FF               	movwf	127
+   582  0214  087C               	movf	??_ISR+3,w
+   583  0215  008A               	movwf	10
+   584  0216  087B               	movf	??_ISR+2,w
+   585  0217  0084               	movwf	4
+   586  0218  0E7A               	swapf	(??_ISR+1)^(0+-128),w
+   587  0219  0083               	movwf	3
+   588  021A  0EFE               	swapf	126,f
+   589  021B  0E7E               	swapf	126,w
+   590  021C  0009               	retfie
+   591  021D                     __end_of_ISR:	
+   592                           
+   593                           	psect	intentry
+   594  0004                     __pintentry:	
+   595                           ;incstack = 0
+   596                           ; Regs used in _ISR: [wreg-fsr0h+status,2+status,0+btemp+1+pclath+cstack]
    597                           
-   598                           ;ir_decoder.c: 67: bit_count = 0;
-   599  0031  01FD               	clrf	timer1_interrupt_decoder@bit_count	;volatile
-   600                           
-   601                           ;ir_decoder.c: 68: return;
-   602  0032  0008               	return
-   603  0033                     i1l36:	
-   604                           ;ir_decoder.c: 69: case STATE_START:
-   605                           
-   606                           
-   607                           ;ir_decoder.c: 71: if (!PORTBbits.RB0) {
-   608  0033  1806               	btfsc	6,0	;volatile
-   609  0034  283A               	goto	i1l777
-   610                           
-   611                           ;ir_decoder.c: 72: state_timer++;
-   612  0035  3001               	movlw	1
-   613  0036  00F0               	movwf	??_timer1_interrupt_decoder
-   614  0037  0870               	movf	??_timer1_interrupt_decoder,w
-   615  0038  07FC               	addwf	timer1_interrupt_decoder@state_timer,f	;volatile
-   616                           
-   617                           ;ir_decoder.c: 73: return;
-   618  0039  0008               	return
-   619  003A                     i1l777:	
-   620                           
-   621                           ;ir_decoder.c: 74: }
-   622                           ;ir_decoder.c: 76: if (((((9000/140)-2) <= ((state_timer))) && (((state_timer)) <= ((900
-      +                          0/140)+2)))) {
-   623  003A  303E               	movlw	62
-   624  003B  027C               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
-   625  003C  1C03               	skipc
-   626  003D  2848               	goto	i1l787
-   627  003E  3043               	movlw	67
-   628  003F  027C               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
-   629  0040  1803               	skipnc
-   630  0041  2848               	goto	i1l787
-   631                           
-   632                           ;ir_decoder.c: 77: decoder_state = STATE_START_GAP;
-   633  0042  3002               	movlw	2
-   634  0043  00F0               	movwf	??_timer1_interrupt_decoder
-   635  0044  0870               	movf	??_timer1_interrupt_decoder,w
-   636  0045  00A5               	movwf	timer1_interrupt_decoder@decoder_state	;volatile
-   637                           
-   638                           ;ir_decoder.c: 78: state_timer=0;
-   639  0046  01FC               	clrf	timer1_interrupt_decoder@state_timer	;volatile
-   640                           
-   641                           ;ir_decoder.c: 79: return;
-   642  0047  0008               	return
-   643  0048                     i1l787:	
+   598  0004                     interrupt_function:	
+   599  007E                     saved_w	set	btemp
+   600  0004  00FE               	movwf	btemp
+   601  0005  0E03               	swapf	3,w
+   602  0006  00FA               	movwf	??_ISR+1
+   603  0007  0804               	movf	4,w
+   604  0008  00FB               	movwf	??_ISR+2
+   605  0009  080A               	movf	10,w
+   606  000A  00FC               	movwf	??_ISR+3
+   607  000B  1283               	bcf	3,5	;RP0=0, select bank0
+   608  000C  087F               	movf	btemp+1,w
+   609  000D  00FD               	movwf	??_ISR+4
+   610  000E  29FA               	ljmp	_ISR
+   611                           
+   612                           	psect	text4
+   613  001D                     __ptext4:	
+   614 ;; *************** function _timer1_interrupt_decoder *****************
+   615 ;; Defined at:
+   616 ;;		line 60 in file "ir_decoder.c"
+   617 ;; Parameters:    Size  Location     Type
+   618 ;;		None
+   619 ;; Auto vars:     Size  Location     Type
+   620 ;;  k               2    7[COMMON] int 
+   621 ;;  k               2    5[COMMON] int 
+   622 ;; Return value:  Size  Location     Type
+   623 ;;                  1    wreg      void 
+   624 ;; Registers used:
+   625 ;;		wreg, fsr0l, fsr0h, status,2, status,0, btemp+1
+   626 ;; Tracked objects:
+   627 ;;		On entry : 0/0
+   628 ;;		On exit  : 0/0
+   629 ;;		Unchanged: 0/0
+   630 ;; Data sizes:     COMMON   BANK0   BANK1
+   631 ;;      Params:         0       0       0
+   632 ;;      Locals:         4       0       0
+   633 ;;      Temps:          5       0       0
+   634 ;;      Totals:         9       0       0
+   635 ;;Total ram usage:        9 bytes
+   636 ;; Hardware stack levels used:    1
+   637 ;; This function calls:
+   638 ;;		Nothing
+   639 ;; This function is called by:
+   640 ;;		_ISR
+   641 ;; This function uses a non-reentrant model
+   642 ;;
+   643                           
    644                           
-   645                           ;ir_decoder.c: 80: }
-   646                           ;ir_decoder.c: 82: decoder_state = STATE_IDLE;
-   647  0048  01A5               	clrf	timer1_interrupt_decoder@decoder_state	;volatile
-   648                           
-   649                           ;ir_decoder.c: 83: return;
-   650  0049  0008               	return
-   651  004A                     i1l39:	
-   652                           ;ir_decoder.c: 84: case STATE_START_GAP:
-   653                           
-   654                           
-   655                           ;ir_decoder.c: 86: if (PORTBbits.RB0) {
-   656  004A  1C06               	btfss	6,0	;volatile
-   657  004B  2851               	goto	i1l795
-   658                           
-   659                           ;ir_decoder.c: 87: state_timer++;
-   660  004C  3001               	movlw	1
-   661  004D  00F0               	movwf	??_timer1_interrupt_decoder
-   662  004E  0870               	movf	??_timer1_interrupt_decoder,w
-   663  004F  07FC               	addwf	timer1_interrupt_decoder@state_timer,f	;volatile
-   664                           
-   665                           ;ir_decoder.c: 88: return;
-   666  0050  0008               	return
-   667  0051                     i1l795:	
-   668                           
-   669                           ;ir_decoder.c: 89: }
-   670                           ;ir_decoder.c: 90: if (!((((4500/140)-2) <= ((state_timer))) && (((state_timer)) <= ((45
-      +                          00/140)+2)))) {
-   671  0051  301E               	movlw	30
-   672  0052  027C               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
-   673  0053  1C03               	skipc
-   674  0054  2859               	goto	i1l799
-   675  0055  3023               	movlw	35
-   676  0056  027C               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
-   677  0057  1C03               	skipc
-   678  0058  285B               	goto	i1l803
-   679  0059                     i1l799:	
-   680                           
-   681                           ;ir_decoder.c: 91: decoder_state = STATE_IDLE;
-   682  0059  01A5               	clrf	timer1_interrupt_decoder@decoder_state	;volatile
-   683                           
-   684                           ;ir_decoder.c: 92: return;
-   685  005A  0008               	return
-   686  005B                     i1l803:	
-   687                           
-   688                           ;ir_decoder.c: 93: }
-   689                           ;ir_decoder.c: 95: state_timer = 0;
-   690  005B  01FC               	clrf	timer1_interrupt_decoder@state_timer	;volatile
+   645                           ;psect for function _timer1_interrupt_decoder
+   646  001D                     _timer1_interrupt_decoder:	
+   647                           
+   648                           ;incstack = 0
+   649                           ; Regs used in _timer1_interrupt_decoder: [wreg-fsr0h+status,2+status,0+btemp+1]
+   650                           ;ir_decoder.c: 62: static volatile ir_decoder_state_t decoder_state = STATE_IDLE;
+   651                           ;ir_decoder.c: 63: static volatile uint8_t bit_count = 0;
+   652                           ;ir_decoder.c: 64: static volatile uint8_t state_timer = 0;
+   653                           ;ir_decoder.c: 66: do { T1CONbits.TMR1ON = 0; TMR1H = 255; TMR1L = (255-140+30); PIR1bit
+      +                          s.TMR1IF = 0; T1CONbits.TMR1ON = 1; } while(0);
+   654  001D  1283               	bcf	3,5	;RP0=0, select bank0
+   655  001E  1010               	bcf	16,0	;volatile
+   656  001F  30FF               	movlw	255
+   657  0020  008F               	movwf	15	;volatile
+   658  0021  3091               	movlw	145
+   659  0022  008E               	movwf	14	;volatile
+   660  0023  100C               	bcf	12,0	;volatile
+   661  0024  1410               	bsf	16,0	;volatile
+   662                           
+   663                           ;ir_decoder.c: 69: if (ir_data_valid)
+   664  0025  0828               	movf	_ir_data_valid,w	;volatile
+   665  0026  1D03               	btfss	3,2
+   666  0027  0008               	return
+   667  0028  294D               	goto	i1l961
+   668  0029                     i1l36:	
+   669                           ;ir_decoder.c: 73: case STATE_IDLE:
+   670                           
+   671                           ;ir_decoder.c: 72: switch (decoder_state) {
+   672                           
+   673                           ;ir_decoder.c: 70: return;
+   674                           
+   675                           
+   676                           ;ir_decoder.c: 75: if (PORTBbits.RB0)
+   677  0029  1806               	btfsc	6,0	;volatile
+   678  002A  0008               	return
+   679                           
+   680                           ;ir_decoder.c: 77: state_timer = 1; decoder_state = (STATE_START);
+   681                           
+   682                           ;ir_decoder.c: 76: return;
+   683  002B  3001               	movlw	1
+   684  002C  00F0               	movwf	??_timer1_interrupt_decoder
+   685  002D  0870               	movf	??_timer1_interrupt_decoder,w
+   686  002E  00A5               	movwf	timer1_interrupt_decoder@state_timer	;volatile
+   687  002F  3001               	movlw	1
+   688  0030  00F0               	movwf	??_timer1_interrupt_decoder
+   689  0031  0870               	movf	??_timer1_interrupt_decoder,w
+   690  0032  00A7               	movwf	timer1_interrupt_decoder@decoder_state	;volatile
    691                           
-   692                           ;ir_decoder.c: 96: decoder_state = STATE_BURST;
-   693  005C  3003               	movlw	3
-   694  005D  00F0               	movwf	??_timer1_interrupt_decoder
-   695  005E  0870               	movf	??_timer1_interrupt_decoder,w
-   696  005F  00A5               	movwf	timer1_interrupt_decoder@decoder_state	;volatile
-   697                           
-   698                           ;ir_decoder.c: 97: return;
-   699  0060  0008               	return
-   700  0061                     i1l44:	
-   701                           ;ir_decoder.c: 98: case STATE_BURST:
-   702                           
-   703                           
-   704                           ;ir_decoder.c: 99: if (!PORTBbits.RB0) {
-   705  0061  1806               	btfsc	6,0	;volatile
-   706  0062  2868               	goto	i1l813
-   707                           
-   708                           ;ir_decoder.c: 100: state_timer++;
-   709  0063  3001               	movlw	1
-   710  0064  00F0               	movwf	??_timer1_interrupt_decoder
-   711  0065  0870               	movf	??_timer1_interrupt_decoder,w
-   712  0066  07FC               	addwf	timer1_interrupt_decoder@state_timer,f	;volatile
-   713                           
-   714                           ;ir_decoder.c: 101: return;
-   715  0067  0008               	return
-   716  0068                     i1l813:	
-   717                           
-   718                           ;ir_decoder.c: 102: }
-   719                           ;ir_decoder.c: 104: if (!((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((56
+   692                           ;ir_decoder.c: 78: bit_count = 0;
+   693  0033  01A6               	clrf	timer1_interrupt_decoder@bit_count	;volatile
+   694                           
+   695                           ;ir_decoder.c: 79: return;
+   696  0034  0008               	return
+   697  0035                     i1l38:	
+   698                           ;ir_decoder.c: 80: case STATE_START:
+   699                           
+   700                           
+   701                           ;ir_decoder.c: 82: if (!PORTBbits.RB0) {
+   702  0035  1806               	btfsc	6,0	;volatile
+   703  0036  283C               	goto	i1l861
+   704                           
+   705                           ;ir_decoder.c: 83: state_timer++;
+   706  0037  3001               	movlw	1
+   707  0038  00F0               	movwf	??_timer1_interrupt_decoder
+   708  0039  0870               	movf	??_timer1_interrupt_decoder,w
+   709  003A  07A5               	addwf	timer1_interrupt_decoder@state_timer,f	;volatile
+   710                           
+   711                           ;ir_decoder.c: 84: return;
+   712  003B  0008               	return
+   713  003C                     i1l861:	
+   714                           
+   715                           ;ir_decoder.c: 85: }
+   716                           ;ir_decoder.c: 87: if (((((9000/140)-15) <= ((state_timer))) && (((state_timer)) <= ((90
+      +                          00/140)+15)))) {
+   717  003C  3031               	movlw	49
+   718  003D  0225               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
+   719  003E  1C03               	skipc
+   720  003F  284D               	goto	i1l869
+   721  0040  3050               	movlw	80
+   722  0041  0225               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
+   723  0042  1803               	skipnc
+   724  0043  284D               	goto	i1l869
+   725                           
+   726                           ;ir_decoder.c: 88: state_timer = 1; decoder_state = (STATE_START_GAP);
+   727  0044  3001               	movlw	1
+   728  0045  00F0               	movwf	??_timer1_interrupt_decoder
+   729  0046  0870               	movf	??_timer1_interrupt_decoder,w
+   730  0047  00A5               	movwf	timer1_interrupt_decoder@state_timer	;volatile
+   731  0048  3002               	movlw	2
+   732  0049  00F0               	movwf	??_timer1_interrupt_decoder
+   733  004A  0870               	movf	??_timer1_interrupt_decoder,w
+   734  004B  00A7               	movwf	timer1_interrupt_decoder@decoder_state	;volatile
+   735                           
+   736                           ;ir_decoder.c: 89: return;
+   737  004C  0008               	return
+   738  004D                     i1l869:	
+   739                           
+   740                           ;ir_decoder.c: 90: }
+   741                           ;ir_decoder.c: 92: decoder_state = STATE_IDLE;
+   742  004D  01A7               	clrf	timer1_interrupt_decoder@decoder_state	;volatile
+   743                           
+   744                           ;ir_decoder.c: 93: return;
+   745  004E  0008               	return
+   746  004F                     i1l41:	
+   747                           ;ir_decoder.c: 94: case STATE_START_GAP:
+   748                           
+   749                           
+   750                           ;ir_decoder.c: 96: if (PORTBbits.RB0) {
+   751  004F  1C06               	btfss	6,0	;volatile
+   752  0050  2856               	goto	i1l877
+   753                           
+   754                           ;ir_decoder.c: 97: state_timer++;
+   755  0051  3001               	movlw	1
+   756  0052  00F0               	movwf	??_timer1_interrupt_decoder
+   757  0053  0870               	movf	??_timer1_interrupt_decoder,w
+   758  0054  07A5               	addwf	timer1_interrupt_decoder@state_timer,f	;volatile
+   759                           
+   760                           ;ir_decoder.c: 98: return;
+   761  0055  0008               	return
+   762  0056                     i1l877:	
+   763                           
+   764                           ;ir_decoder.c: 99: }
+   765                           ;ir_decoder.c: 100: if (!((((4500/140)-15) <= ((state_timer))) && (((state_timer)) <= ((
+      +                          4500/140)+15)))) {
+   766  0056  3011               	movlw	17
+   767  0057  0225               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
+   768  0058  1C03               	skipc
+   769  0059  285E               	goto	i1l881
+   770  005A  3030               	movlw	48
+   771  005B  0225               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
+   772  005C  1C03               	skipc
+   773  005D  2860               	goto	i1l885
+   774  005E                     i1l881:	
+   775                           
+   776                           ;ir_decoder.c: 101: decoder_state = STATE_IDLE;
+   777  005E  01A7               	clrf	timer1_interrupt_decoder@decoder_state	;volatile
+   778                           
+   779                           ;ir_decoder.c: 102: return;
+   780  005F  0008               	return
+   781  0060                     i1l885:	
+   782                           
+   783                           ;ir_decoder.c: 103: }
+   784                           ;ir_decoder.c: 105: state_timer = 1; decoder_state = (STATE_BURST);
+   785  0060  3001               	movlw	1
+   786  0061  00F0               	movwf	??_timer1_interrupt_decoder
+   787  0062  0870               	movf	??_timer1_interrupt_decoder,w
+   788  0063  00A5               	movwf	timer1_interrupt_decoder@state_timer	;volatile
+   789  0064  3003               	movlw	3
+   790  0065  00F0               	movwf	??_timer1_interrupt_decoder
+   791  0066  0870               	movf	??_timer1_interrupt_decoder,w
+   792  0067  00A7               	movwf	timer1_interrupt_decoder@decoder_state	;volatile
+   793                           
+   794                           ;ir_decoder.c: 106: return;
+   795  0068  0008               	return
+   796  0069                     i1l46:	
+   797                           ;ir_decoder.c: 107: case STATE_BURST:
+   798                           
+   799                           
+   800                           ;ir_decoder.c: 108: if (!PORTBbits.RB0) {
+   801  0069  1806               	btfsc	6,0	;volatile
+   802  006A  2870               	goto	i1l893
+   803                           
+   804                           ;ir_decoder.c: 109: state_timer++;
+   805  006B  3001               	movlw	1
+   806  006C  00F0               	movwf	??_timer1_interrupt_decoder
+   807  006D  0870               	movf	??_timer1_interrupt_decoder,w
+   808  006E  07A5               	addwf	timer1_interrupt_decoder@state_timer,f	;volatile
+   809                           
+   810                           ;ir_decoder.c: 110: return;
+   811  006F  0008               	return
+   812  0070                     i1l893:	
+   813                           
+   814                           ;ir_decoder.c: 111: }
+   815                           ;ir_decoder.c: 113: if (!((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((56
       +                          2/140)+2)))) {
-   720  0068  3002               	movlw	2
-   721  0069  027C               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
-   722  006A  1C03               	skipc
-   723  006B  2870               	goto	i1l817
-   724  006C  3007               	movlw	7
-   725  006D  027C               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
-   726  006E  1C03               	skipc
-   727  006F  2872               	goto	i1l819
-   728  0070                     i1l817:	
-   729                           
-   730                           ;ir_decoder.c: 105: decoder_state = STATE_IDLE;
-   731  0070  01A5               	clrf	timer1_interrupt_decoder@decoder_state	;volatile
-   732                           
-   733                           ;ir_decoder.c: 106: } else {
-   734  0071  0008               	return
-   735  0072                     i1l819:	
-   736                           
-   737                           ;ir_decoder.c: 107: decoder_state = STATE_GAP;
-   738  0072  3004               	movlw	4
-   739  0073  00F0               	movwf	??_timer1_interrupt_decoder
-   740  0074  0870               	movf	??_timer1_interrupt_decoder,w
-   741  0075  00A5               	movwf	timer1_interrupt_decoder@decoder_state	;volatile
-   742                           
-   743                           ;ir_decoder.c: 108: state_timer = 0;
-   744  0076  01FC               	clrf	timer1_interrupt_decoder@state_timer	;volatile
-   745                           
-   746                           ;ir_decoder.c: 109: }
-   747                           ;ir_decoder.c: 110: return;
-   748  0077  0008               	return
-   749  0078                     i1l50:	
-   750                           ;ir_decoder.c: 111: case STATE_GAP:
-   751                           
-   752                           
-   753                           ;ir_decoder.c: 112: if (PORTBbits.RB0) {
-   754  0078  1C06               	btfss	6,0	;volatile
-   755  0079  287F               	goto	i1l829
-   756                           
-   757                           ;ir_decoder.c: 113: state_timer++;
-   758  007A  3001               	movlw	1
-   759  007B  00F0               	movwf	??_timer1_interrupt_decoder
-   760  007C  0870               	movf	??_timer1_interrupt_decoder,w
-   761  007D  07FC               	addwf	timer1_interrupt_decoder@state_timer,f	;volatile
-   762                           
-   763                           ;ir_decoder.c: 114: return;
-   764  007E  0008               	return
-   765  007F                     i1l829:	
-   766                           
-   767                           ;ir_decoder.c: 115: }
-   768                           ;ir_decoder.c: 116: if (((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((562
+   816  0070  3002               	movlw	2
+   817  0071  0225               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
+   818  0072  1C03               	skipc
+   819  0073  2878               	goto	i1l897
+   820  0074  3007               	movlw	7
+   821  0075  0225               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
+   822  0076  1C03               	skipc
+   823  0077  287A               	goto	i1l899
+   824  0078                     i1l897:	
+   825                           
+   826                           ;ir_decoder.c: 114: decoder_state = STATE_IDLE;
+   827  0078  01A7               	clrf	timer1_interrupt_decoder@decoder_state	;volatile
+   828                           
+   829                           ;ir_decoder.c: 115: } else {
+   830  0079  0008               	return
+   831  007A                     i1l899:	
+   832                           
+   833                           ;ir_decoder.c: 116: state_timer = 1; decoder_state = (STATE_GAP);
+   834  007A  3001               	movlw	1
+   835  007B  00F0               	movwf	??_timer1_interrupt_decoder
+   836  007C  0870               	movf	??_timer1_interrupt_decoder,w
+   837  007D  00A5               	movwf	timer1_interrupt_decoder@state_timer	;volatile
+   838  007E  3004               	movlw	4
+   839  007F  00F0               	movwf	??_timer1_interrupt_decoder
+   840  0080  0870               	movf	??_timer1_interrupt_decoder,w
+   841  0081  00A7               	movwf	timer1_interrupt_decoder@decoder_state	;volatile
+   842                           
+   843                           ;ir_decoder.c: 117: }
+   844                           ;ir_decoder.c: 118: return;
+   845  0082  0008               	return
+   846  0083                     i1l52:	
+   847                           ;ir_decoder.c: 119: case STATE_GAP:
+   848                           
+   849                           
+   850                           ;ir_decoder.c: 120: if (PORTBbits.RB0) {
+   851  0083  1C06               	btfss	6,0	;volatile
+   852  0084  288A               	goto	i1l907
+   853                           
+   854                           ;ir_decoder.c: 121: state_timer++;
+   855  0085  3001               	movlw	1
+   856  0086  00F0               	movwf	??_timer1_interrupt_decoder
+   857  0087  0870               	movf	??_timer1_interrupt_decoder,w
+   858  0088  07A5               	addwf	timer1_interrupt_decoder@state_timer,f	;volatile
+   859                           
+   860                           ;ir_decoder.c: 122: return;
+   861  0089  0008               	return
+   862  008A                     i1l907:	
+   863                           
+   864                           ;ir_decoder.c: 123: }
+   865                           ;ir_decoder.c: 124: if (((((562/140)-2) <= ((state_timer))) && (((state_timer)) <= ((562
       +                          /140)+2)))) {
-   769  007F  3002               	movlw	2
-   770  0080  027C               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
-   771  0081  1C03               	skipc
-   772  0082  28A7               	goto	i1l835
-   773  0083  3007               	movlw	7
-   774  0084  027C               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
-   775  0085  1803               	skipnc
-   776  0086  28A7               	goto	i1l835
-   777                           
-   778                           ;ir_decoder.c: 118: ir_data &= ~(1u << (31u-bit_count));
-   779  0087  037D               	decf	timer1_interrupt_decoder@bit_count,w
-   780  0088  3AFF               	xorlw	255
-   781  0089  3E1F               	addlw	31
-   782  008A  00F0               	movwf	??_timer1_interrupt_decoder
-   783  008B  0AF0               	incf	??_timer1_interrupt_decoder,f
-   784  008C  3001               	movlw	1
-   785  008D  00F1               	movwf	??_timer1_interrupt_decoder+1
-   786  008E  3000               	movlw	0
-   787  008F  00F2               	movwf	??_timer1_interrupt_decoder+2
-   788  0090  2894               	goto	u58_24
-   789  0091                     u58_25:	
-   790  0091  1003               	clrc
-   791  0092  0DF1               	rlf	??_timer1_interrupt_decoder+1,f
-   792  0093  0DF2               	rlf	??_timer1_interrupt_decoder+2,f
-   793  0094                     u58_24:	
-   794  0094  0BF0               	decfsz	??_timer1_interrupt_decoder,f
-   795  0095  2891               	goto	u58_25
-   796  0096  09F1               	comf	??_timer1_interrupt_decoder+1,f
-   797  0097  09F2               	comf	??_timer1_interrupt_decoder+2,f
-   798  0098  0871               	movf	??_timer1_interrupt_decoder+1,w
-   799  0099  00F3               	movwf	??_timer1_interrupt_decoder+3
-   800  009A  0872               	movf	??_timer1_interrupt_decoder+2,w
-   801  009B  00F4               	movwf	??_timer1_interrupt_decoder+4
-   802  009C  01F5               	clrf	??_timer1_interrupt_decoder+5
-   803  009D  01F6               	clrf	??_timer1_interrupt_decoder+6
-   804  009E  0873               	movf	??_timer1_interrupt_decoder+3,w
-   805  009F  05A0               	andwf	_ir_data,f	;volatile
-   806  00A0  0874               	movf	??_timer1_interrupt_decoder+4,w
-   807  00A1  05A1               	andwf	_ir_data+1,f	;volatile
-   808  00A2  0875               	movf	??_timer1_interrupt_decoder+5,w
-   809  00A3  05A2               	andwf	_ir_data+2,f	;volatile
-   810  00A4  0876               	movf	??_timer1_interrupt_decoder+6,w
-   811  00A5  05A3               	andwf	_ir_data+3,f	;volatile
-   812                           
-   813                           ;ir_decoder.c: 119: } else if (((((1675/140)-2) <= ((state_timer))) && (((state_timer)) 
+   866  008A  3002               	movlw	2
+   867  008B  0225               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
+   868  008C  1C03               	skipc
+   869  008D  28B4               	goto	i1l913
+   870  008E  3007               	movlw	7
+   871  008F  0225               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
+   872  0090  1803               	skipnc
+   873  0091  28B4               	goto	i1l913
+   874                           
+   875                           ;ir_decoder.c: 126: ir_data &= ~(1ul << (31ul - bit_count));
+   876  0092  3001               	movlw	1
+   877  0093  00F0               	movwf	??_timer1_interrupt_decoder
+   878  0094  3000               	movlw	0
+   879  0095  00F1               	movwf	??_timer1_interrupt_decoder+1
+   880  0096  3000               	movlw	0
+   881  0097  00F2               	movwf	??_timer1_interrupt_decoder+2
+   882  0098  3000               	movlw	0
+   883  0099  00F3               	movwf	??_timer1_interrupt_decoder+3
+   884  009A  0326               	decf	timer1_interrupt_decoder@bit_count,w
+   885  009B  3AFF               	xorlw	255
+   886  009C  3E1F               	addlw	31
+   887  009D  3E01               	addlw	1
+   888  009E  28A4               	goto	u61_20
+   889  009F                     u61_25:	
+   890  009F  1003               	clrc
+   891  00A0  0DF0               	rlf	??_timer1_interrupt_decoder,f
+   892  00A1  0DF1               	rlf	??_timer1_interrupt_decoder+1,f
+   893  00A2  0DF2               	rlf	??_timer1_interrupt_decoder+2,f
+   894  00A3  0DF3               	rlf	??_timer1_interrupt_decoder+3,f
+   895  00A4                     u61_20:	
+   896  00A4  3EFF               	addlw	-1
+   897  00A5  1D03               	skipz
+   898  00A6  289F               	goto	u61_25
+   899  00A7  09F0               	comf	??_timer1_interrupt_decoder,f
+   900  00A8  09F1               	comf	??_timer1_interrupt_decoder+1,f
+   901  00A9  09F2               	comf	??_timer1_interrupt_decoder+2,f
+   902  00AA  09F3               	comf	??_timer1_interrupt_decoder+3,f
+   903  00AB  0870               	movf	??_timer1_interrupt_decoder,w
+   904  00AC  05A0               	andwf	_ir_data,f	;volatile
+   905  00AD  0871               	movf	??_timer1_interrupt_decoder+1,w
+   906  00AE  05A1               	andwf	_ir_data+1,f	;volatile
+   907  00AF  0872               	movf	??_timer1_interrupt_decoder+2,w
+   908  00B0  05A2               	andwf	_ir_data+2,f	;volatile
+   909  00B1  0873               	movf	??_timer1_interrupt_decoder+3,w
+   910  00B2  05A3               	andwf	_ir_data+3,f	;volatile
+   911                           
+   912                           ;ir_decoder.c: 127: } else if (((((1675/140)-2) <= ((state_timer))) && (((state_timer)) 
       +                          <= ((1675/140)+2)))) {
-   814  00A6  28CF               	goto	i1l845
-   815  00A7                     i1l835:	
-   816  00A7  3009               	movlw	9
-   817  00A8  027C               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
-   818  00A9  1C03               	skipc
-   819  00AA  28CD               	goto	i1l841
-   820  00AB  300E               	movlw	14
-   821  00AC  027C               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
-   822  00AD  1803               	skipnc
-   823  00AE  28CD               	goto	i1l841
-   824                           
-   825                           ;ir_decoder.c: 121: ir_data |= (1u << (31u-bit_count));
-   826  00AF  037D               	decf	timer1_interrupt_decoder@bit_count,w
-   827  00B0  3AFF               	xorlw	255
-   828  00B1  3E1F               	addlw	31
-   829  00B2  00F0               	movwf	??_timer1_interrupt_decoder
-   830  00B3  0AF0               	incf	??_timer1_interrupt_decoder,f
-   831  00B4  3001               	movlw	1
-   832  00B5  00F1               	movwf	??_timer1_interrupt_decoder+1
-   833  00B6  3000               	movlw	0
-   834  00B7  00F2               	movwf	??_timer1_interrupt_decoder+2
-   835  00B8  28BC               	goto	u61_24
-   836  00B9                     u61_25:	
-   837  00B9  1003               	clrc
-   838  00BA  0DF1               	rlf	??_timer1_interrupt_decoder+1,f
-   839  00BB  0DF2               	rlf	??_timer1_interrupt_decoder+2,f
-   840  00BC                     u61_24:	
-   841  00BC  0BF0               	decfsz	??_timer1_interrupt_decoder,f
-   842  00BD  28B9               	goto	u61_25
-   843  00BE  0871               	movf	??_timer1_interrupt_decoder+1,w
-   844  00BF  00F3               	movwf	??_timer1_interrupt_decoder+3
-   845  00C0  0872               	movf	??_timer1_interrupt_decoder+2,w
-   846  00C1  00F4               	movwf	??_timer1_interrupt_decoder+4
-   847  00C2  01F5               	clrf	??_timer1_interrupt_decoder+5
-   848  00C3  01F6               	clrf	??_timer1_interrupt_decoder+6
-   849  00C4  0873               	movf	??_timer1_interrupt_decoder+3,w
-   850  00C5  04A0               	iorwf	_ir_data,f	;volatile
-   851  00C6  0874               	movf	??_timer1_interrupt_decoder+4,w
-   852  00C7  04A1               	iorwf	_ir_data+1,f	;volatile
-   853  00C8  0875               	movf	??_timer1_interrupt_decoder+5,w
-   854  00C9  04A2               	iorwf	_ir_data+2,f	;volatile
-   855  00CA  0876               	movf	??_timer1_interrupt_decoder+6,w
-   856  00CB  04A3               	iorwf	_ir_data+3,f	;volatile
-   857                           
-   858                           ;ir_decoder.c: 122: } else {
-   859  00CC  28CF               	goto	i1l845
-   860  00CD                     i1l841:	
-   861                           
-   862                           ;ir_decoder.c: 124: decoder_state = STATE_IDLE;
-   863  00CD  01A5               	clrf	timer1_interrupt_decoder@decoder_state	;volatile
-   864                           
-   865                           ;ir_decoder.c: 125: return;
-   866  00CE  0008               	return
-   867  00CF                     i1l845:	
-   868                           
-   869                           ;ir_decoder.c: 126: }
-   870                           ;ir_decoder.c: 128: bit_count++;
-   871  00CF  3001               	movlw	1
-   872  00D0  00F0               	movwf	??_timer1_interrupt_decoder
-   873  00D1  0870               	movf	??_timer1_interrupt_decoder,w
-   874  00D2  07FD               	addwf	timer1_interrupt_decoder@bit_count,f	;volatile
-   875                           
-   876                           ;ir_decoder.c: 129: if (bit_count == 32) {
-   877  00D3  3020               	movlw	32
-   878  00D4  067D               	xorwf	timer1_interrupt_decoder@bit_count,w	;volatile
-   879  00D5  1D03               	btfss	3,2
-   880  00D6  28DD               	goto	i1l851
-   881                           
-   882                           ;ir_decoder.c: 130: ir_data_valid = 1;
-   883  00D7  3001               	movlw	1
-   884  00D8  00F0               	movwf	??_timer1_interrupt_decoder
-   885  00D9  0870               	movf	??_timer1_interrupt_decoder,w
-   886  00DA  00A6               	movwf	_ir_data_valid	;volatile
-   887                           
-   888                           ;ir_decoder.c: 131: decoder_state = STATE_IDLE;
-   889  00DB  01A5               	clrf	timer1_interrupt_decoder@decoder_state	;volatile
-   890                           
-   891                           ;ir_decoder.c: 132: } else {
-   892  00DC  0008               	return
-   893  00DD                     i1l851:	
-   894                           
-   895                           ;ir_decoder.c: 133: decoder_state = STATE_BURST;
-   896  00DD  3003               	movlw	3
-   897  00DE  00F0               	movwf	??_timer1_interrupt_decoder
-   898  00DF  0870               	movf	??_timer1_interrupt_decoder,w
-   899  00E0  00A5               	movwf	timer1_interrupt_decoder@decoder_state	;volatile
-   900                           
-   901                           ;ir_decoder.c: 136: }
-   902                           
-   903                           ;ir_decoder.c: 134: }
-   904                           ;ir_decoder.c: 135: return;
-   905  00E1  0008               	return
-   906  00E2                     i1l857:	
-   907  00E2  0825               	movf	timer1_interrupt_decoder@decoder_state,w	;volatile
-   908                           
-   909                           ; Switch size 1, requested type "space"
-   910                           ; Number of cases is 5, Range of values is 0 to 4
-   911                           ; switch strategies available:
-   912                           ; Name         Instructions Cycles
-   913                           ; direct_byte           11     6 (fixed)
-   914                           ; simple_byte           16     9 (average)
-   915                           ; jumptable            260     6 (fixed)
-   916                           ;	Chosen strategy is direct_byte
-   917  00E3  0084               	movwf	4
-   918  00E4  3005               	movlw	5
-   919  00E5  0204               	subwf	4,w
-   920  00E6  1803               	skipnc
-   921  00E7  0008               	return
-   922  00E8  3001               	movlw	high i1S961
-   923  00E9  008A               	movwf	10
-   924  00EA  30DB               	movlw	low i1S961
-   925  00EB  0704               	addwf	4,w
-   926  00EC  0082               	movwf	2
-   927  00ED  0008               	return
-   928  00EE                     __end_of_timer1_interrupt_decoder:	
-   929                           
-   930                           	psect	swtext1
-   931  01DB                     __pswtext1:	
-   932  01DB                     i1S961:	
-   933  01DB  2827               	ljmp	i1l34
-   934  01DC  2833               	ljmp	i1l36
-   935  01DD  284A               	ljmp	i1l39
-   936  01DE  2861               	ljmp	i1l44
-   937  01DF  2878               	ljmp	i1l50
-   938                           
-   939                           	psect	text4
-   940  00EE                     __ptext4:	
-   941 ;; *************** function _timer0_interrupt *****************
-   942 ;; Defined at:
-   943 ;;		line 46 in file "leds.c"
-   944 ;; Parameters:    Size  Location     Type
-   945 ;;		None
-   946 ;; Auto vars:     Size  Location     Type
-   947 ;;		None
-   948 ;; Return value:  Size  Location     Type
-   949 ;;                  1    wreg      void 
-   950 ;; Registers used:
-   951 ;;		wreg, fsr0l, fsr0h, status,2, status,0, pclath, cstack
-   952 ;; Tracked objects:
-   953 ;;		On entry : 0/0
-   954 ;;		On exit  : 0/0
-   955 ;;		Unchanged: 0/0
-   956 ;; Data sizes:     COMMON   BANK0   BANK1
-   957 ;;      Params:         0       0       0
-   958 ;;      Locals:         0       0       0
-   959 ;;      Temps:          1       0       0
-   960 ;;      Totals:         1       0       0
-   961 ;;Total ram usage:        1 bytes
-   962 ;; Hardware stack levels used:    1
-   963 ;; Hardware stack levels required when called:    1
-   964 ;; This function calls:
-   965 ;;		_all_off
-   966 ;;		_leda_on
-   967 ;;		_ledb_on
-   968 ;; This function is called by:
-   969 ;;		_ISR
-   970 ;; This function uses a non-reentrant model
-   971 ;;
-   972                           
-   973                           
-   974                           ;psect for function _timer0_interrupt
-   975  00EE                     _timer0_interrupt:	
-   976                           
-   977                           ;leds.c: 47: static volatile uint8_t pos = 0;
-   978                           ;leds.c: 48: pos++;
-   979                           
-   980                           ;incstack = 0
-   981                           ; Regs used in _timer0_interrupt: [wreg-fsr0h+status,2+status,0+pclath+cstack]
-   982  00EE  3001               	movlw	1
-   983  00EF  00F4               	movwf	??_timer0_interrupt
-   984  00F0  0874               	movf	??_timer0_interrupt,w
-   985  00F1  1283               	bcf	3,5	;RP0=0, select bank0
-   986  00F2  07A4               	addwf	timer0_interrupt@pos,f	;volatile
-   987                           
-   988                           ;leds.c: 49: pos &= 7;
-   989  00F3  3007               	movlw	7
-   990  00F4  00F4               	movwf	??_timer0_interrupt
-   991  00F5  0874               	movf	??_timer0_interrupt,w
-   992  00F6  05A4               	andwf	timer0_interrupt@pos,f	;volatile
-   993                           
-   994                           ;leds.c: 50: all_off();
-   995  00F7  21AD               	fcall	_all_off
+   913  00B3  28DC               	goto	i1l923
+   914  00B4                     i1l913:	
+   915  00B4  3009               	movlw	9
+   916  00B5  0225               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
+   917  00B6  1C03               	skipc
+   918  00B7  28DA               	goto	i1l919
+   919  00B8  300E               	movlw	14
+   920  00B9  0225               	subwf	timer1_interrupt_decoder@state_timer,w	;volatile
+   921  00BA  1803               	skipnc
+   922  00BB  28DA               	goto	i1l919
+   923                           
+   924                           ;ir_decoder.c: 129: ir_data |= (1ul << (31ul - bit_count));
+   925  00BC  3001               	movlw	1
+   926  00BD  00F0               	movwf	??_timer1_interrupt_decoder
+   927  00BE  3000               	movlw	0
+   928  00BF  00F1               	movwf	??_timer1_interrupt_decoder+1
+   929  00C0  3000               	movlw	0
+   930  00C1  00F2               	movwf	??_timer1_interrupt_decoder+2
+   931  00C2  3000               	movlw	0
+   932  00C3  00F3               	movwf	??_timer1_interrupt_decoder+3
+   933  00C4  0326               	decf	timer1_interrupt_decoder@bit_count,w
+   934  00C5  3AFF               	xorlw	255
+   935  00C6  3E1F               	addlw	31
+   936  00C7  3E01               	addlw	1
+   937  00C8  28CE               	goto	u64_20
+   938  00C9                     u64_25:	
+   939  00C9  1003               	clrc
+   940  00CA  0DF0               	rlf	??_timer1_interrupt_decoder,f
+   941  00CB  0DF1               	rlf	??_timer1_interrupt_decoder+1,f
+   942  00CC  0DF2               	rlf	??_timer1_interrupt_decoder+2,f
+   943  00CD  0DF3               	rlf	??_timer1_interrupt_decoder+3,f
+   944  00CE                     u64_20:	
+   945  00CE  3EFF               	addlw	-1
+   946  00CF  1D03               	skipz
+   947  00D0  28C9               	goto	u64_25
+   948  00D1  0870               	movf	??_timer1_interrupt_decoder,w
+   949  00D2  04A0               	iorwf	_ir_data,f	;volatile
+   950  00D3  0871               	movf	??_timer1_interrupt_decoder+1,w
+   951  00D4  04A1               	iorwf	_ir_data+1,f	;volatile
+   952  00D5  0872               	movf	??_timer1_interrupt_decoder+2,w
+   953  00D6  04A2               	iorwf	_ir_data+2,f	;volatile
+   954  00D7  0873               	movf	??_timer1_interrupt_decoder+3,w
+   955  00D8  04A3               	iorwf	_ir_data+3,f	;volatile
+   956                           
+   957                           ;ir_decoder.c: 130: } else {
+   958  00D9  28DC               	goto	i1l923
+   959  00DA                     i1l919:	
+   960                           
+   961                           ;ir_decoder.c: 132: decoder_state = STATE_IDLE;
+   962  00DA  01A7               	clrf	timer1_interrupt_decoder@decoder_state	;volatile
+   963                           
+   964                           ;ir_decoder.c: 133: return;
+   965  00DB  0008               	return
+   966  00DC                     i1l923:	
+   967                           
+   968                           ;ir_decoder.c: 134: }
+   969                           ;ir_decoder.c: 135: bit_count++;
+   970  00DC  3001               	movlw	1
+   971  00DD  00F0               	movwf	??_timer1_interrupt_decoder
+   972  00DE  0870               	movf	??_timer1_interrupt_decoder,w
+   973  00DF  07A6               	addwf	timer1_interrupt_decoder@bit_count,f	;volatile
+   974                           
+   975                           ;ir_decoder.c: 136: if (bit_count == 32) {
+   976  00E0  3020               	movlw	32
+   977  00E1  0626               	xorwf	timer1_interrupt_decoder@bit_count,w	;volatile
+   978  00E2  1D03               	btfss	3,2
+   979  00E3  2944               	goto	i1l955
+   980                           
+   981                           ;ir_decoder.c: 137: T1CONbits.TMR1ON = 0;
+   982  00E4  1010               	bcf	16,0	;volatile
+   983                           
+   984                           ;ir_decoder.c: 138: ir_data_valid = 1;
+   985  00E5  3001               	movlw	1
+   986  00E6  00F0               	movwf	??_timer1_interrupt_decoder
+   987  00E7  0870               	movf	??_timer1_interrupt_decoder,w
+   988  00E8  00A8               	movwf	_ir_data_valid	;volatile
+   989  00E9                     i1l951:	
+   990                           ;ir_decoder.c: 140: while(bit_count) {
+   991                           
+   992  00E9  1283               	bcf	3,5	;RP0=0, select bank0
+   993  00EA  0826               	movf	timer1_interrupt_decoder@bit_count,w	;volatile
+   994  00EB  1903               	btfsc	3,2
+   995  00EC  2941               	goto	i1l65
    996                           
-   997                           ;leds.c: 51: switch (pos) {
-   998  00F8  291D               	goto	i1l885
-   999  00F9                     i1l867:	
-  1000                           ;leds.c: 52: case 0:
-  1001                           
-  1002                           
-  1003                           ;leds.c: 53: leda_on(0, 0);
-  1004  00F9  01F0               	clrf	leda_on@dir
-  1005  00FA  3000               	movlw	0
-  1006  00FB  215D               	fcall	_leda_on
-  1007                           
-  1008                           ;leds.c: 54: break;
-  1009  00FC  2929               	goto	i1l132
-  1010  00FD                     i1l869:	
-  1011                           ;leds.c: 55: case 1:
-  1012                           
-  1013                           
-  1014                           ;leds.c: 56: leda_on(2, 0);
-  1015  00FD  01F0               	clrf	leda_on@dir
-  1016  00FE  3002               	movlw	2
-  1017  00FF  215D               	fcall	_leda_on
-  1018                           
-  1019                           ;leds.c: 57: break;
-  1020  0100  2929               	goto	i1l132
-  1021  0101                     i1l871:	
-  1022                           ;leds.c: 58: case 2:
-  1023                           
-  1024                           
-  1025                           ;leds.c: 59: ledb_on(3, 0);
-  1026  0101  01F0               	clrf	ledb_on@dir
-  1027  0102  3003               	movlw	3
-  1028  0103  212B               	fcall	_ledb_on
-  1029                           
-  1030                           ;leds.c: 60: break;
-  1031  0104  2929               	goto	i1l132
-  1032  0105                     i1l873:	
-  1033                           ;leds.c: 61: case 3:
-  1034                           
-  1035                           
-  1036                           ;leds.c: 62: ledb_on(3, 1);
-  1037  0105  01F0               	clrf	ledb_on@dir
-  1038  0106  0AF0               	incf	ledb_on@dir,f
-  1039  0107  3003               	movlw	3
-  1040  0108  212B               	fcall	_ledb_on
-  1041                           
-  1042                           ;leds.c: 63: break;
-  1043  0109  2929               	goto	i1l132
-  1044  010A                     i1l875:	
-  1045                           ;leds.c: 64: case 4:
-  1046                           
-  1047                           
-  1048                           ;leds.c: 65: leda_on(0, 1);
-  1049  010A  01F0               	clrf	leda_on@dir
-  1050  010B  0AF0               	incf	leda_on@dir,f
-  1051  010C  3000               	movlw	0
-  1052  010D  215D               	fcall	_leda_on
-  1053                           
-  1054                           ;leds.c: 66: break;
-  1055  010E  2929               	goto	i1l132
-  1056  010F                     i1l877:	
-  1057                           ;leds.c: 67: case 5:
-  1058                           
-  1059                           
-  1060                           ;leds.c: 68: leda_on(2, 1);
-  1061  010F  01F0               	clrf	leda_on@dir
-  1062  0110  0AF0               	incf	leda_on@dir,f
-  1063  0111  3002               	movlw	2
-  1064  0112  215D               	fcall	_leda_on
-  1065                           
-  1066                           ;leds.c: 69: break;
-  1067  0113  2929               	goto	i1l132
-  1068  0114                     i1l879:	
-  1069                           ;leds.c: 70: case 6:
-  1070                           
-  1071                           
-  1072                           ;leds.c: 71: leda_on(3, 0);
-  1073  0114  01F0               	clrf	leda_on@dir
-  1074  0115  3003               	movlw	3
-  1075  0116  215D               	fcall	_leda_on
-  1076                           
-  1077                           ;leds.c: 72: break;
-  1078  0117  2929               	goto	i1l132
-  1079  0118                     i1l881:	
-  1080                           ;leds.c: 73: case 7:
-  1081                           
-  1082                           
-  1083                           ;leds.c: 74: leda_on(3, 1);
-  1084  0118  01F0               	clrf	leda_on@dir
-  1085  0119  0AF0               	incf	leda_on@dir,f
-  1086  011A  3003               	movlw	3
-  1087  011B  215D               	fcall	_leda_on
-  1088                           
-  1089                           ;leds.c: 76: }
+   997                           ;ir_decoder.c: 141: PORTBbits.RB2 = 1;
+   998  00ED  1506               	bsf	6,2	;volatile
+   999                           
+  1000                           ;ir_decoder.c: 142: for(int k=0;k<25;k++)
+  1001  00EE  01F5               	clrf	timer1_interrupt_decoder@k
+  1002  00EF  01F6               	clrf	timer1_interrupt_decoder@k+1
+  1003  00F0  0876               	movf	timer1_interrupt_decoder@k+1,w
+  1004  00F1  3A80               	xorlw	128
+  1005  00F2  00FF               	movwf	127
+  1006  00F3  3080               	movlw	128
+  1007  00F4  027F               	subwf	127,w
+  1008  00F5  1D03               	skipz
+  1009  00F6  28F9               	goto	u66_25
+  1010  00F7  3019               	movlw	25
+  1011  00F8  0275               	subwf	timer1_interrupt_decoder@k,w
+  1012  00F9                     u66_25:	
+  1013  00F9  1803               	btfsc	3,0
+  1014  00FA  290D               	goto	i1l939
+  1015  00FB                     i1l61:	
+  1016                           
+  1017                           ;ir_decoder.c: 143: __nop();
+  1018  00FB  0000               	nop
+  1019  00FC  3001               	movlw	1
+  1020  00FD  07F5               	addwf	timer1_interrupt_decoder@k,f
+  1021  00FE  1803               	skipnc
+  1022  00FF  0AF6               	incf	timer1_interrupt_decoder@k+1,f
+  1023  0100  3000               	movlw	0
+  1024  0101  07F6               	addwf	timer1_interrupt_decoder@k+1,f
+  1025  0102  0876               	movf	timer1_interrupt_decoder@k+1,w
+  1026  0103  3A80               	xorlw	128
+  1027  0104  00FF               	movwf	127
+  1028  0105  3080               	movlw	128
+  1029  0106  027F               	subwf	127,w
+  1030  0107  1D03               	skipz
+  1031  0108  290B               	goto	u67_25
+  1032  0109  3019               	movlw	25
+  1033  010A  0275               	subwf	timer1_interrupt_decoder@k,w
+  1034  010B                     u67_25:	
+  1035  010B  1C03               	skipc
+  1036  010C  28FB               	goto	i1l61
+  1037  010D                     i1l939:	
+  1038                           
+  1039                           ;ir_decoder.c: 144: PORTBbits.RB2 = ((ir_data>>(--bit_count)) & 1);
+  1040  010D  1283               	bcf	3,5	;RP0=0, select bank0
+  1041  010E  0820               	movf	_ir_data,w	;volatile
+  1042  010F  00F0               	movwf	??_timer1_interrupt_decoder
+  1043  0110  0821               	movf	_ir_data+1,w	;volatile
+  1044  0111  00F1               	movwf	??_timer1_interrupt_decoder+1
+  1045  0112  0822               	movf	_ir_data+2,w	;volatile
+  1046  0113  00F2               	movwf	??_timer1_interrupt_decoder+2
+  1047  0114  0823               	movf	_ir_data+3,w	;volatile
+  1048  0115  00F3               	movwf	??_timer1_interrupt_decoder+3
+  1049  0116  3001               	movlw	1
+  1050  0117  02A6               	subwf	timer1_interrupt_decoder@bit_count,f	;volatile
+  1051  0118  0A26               	incf	timer1_interrupt_decoder@bit_count,w	;volatile
+  1052  0119  291F               	goto	u68_20
+  1053  011A                     u68_25:	
+  1054  011A  1003               	clrc
+  1055  011B  0CF3               	rrf	??_timer1_interrupt_decoder+3,f
+  1056  011C  0CF2               	rrf	??_timer1_interrupt_decoder+2,f
+  1057  011D  0CF1               	rrf	??_timer1_interrupt_decoder+1,f
+  1058  011E  0CF0               	rrf	??_timer1_interrupt_decoder,f
+  1059  011F                     u68_20:	
+  1060  011F  3EFF               	addlw	-1
+  1061  0120  1D03               	skipz
+  1062  0121  291A               	goto	u68_25
+  1063  0122  0870               	movf	??_timer1_interrupt_decoder,w
+  1064  0123  3901               	andlw	1
+  1065  0124  00F4               	movwf	??_timer1_interrupt_decoder+4
+  1066  0125  0DF4               	rlf	??_timer1_interrupt_decoder+4,f
+  1067  0126  0DF4               	rlf	??_timer1_interrupt_decoder+4,f
+  1068  0127  0806               	movf	6,w	;volatile
+  1069  0128  0674               	xorwf	??_timer1_interrupt_decoder+4,w
+  1070  0129  39FB               	andlw	-5
+  1071  012A  0674               	xorwf	??_timer1_interrupt_decoder+4,w
+  1072  012B  0086               	movwf	6	;volatile
+  1073                           
+  1074                           ;ir_decoder.c: 145: for(int k=0;k<100;k++)
+  1075  012C  01F7               	clrf	timer1_interrupt_decoder@k_210
+  1076  012D  01F8               	clrf	timer1_interrupt_decoder@k_210+1
+  1077  012E                     L1:	
+  1078  012E  0878               	movf	timer1_interrupt_decoder@k_210+1,w
+  1079  012F  3A80               	xorlw	128
+  1080  0130  00FF               	movwf	127
+  1081  0131  3080               	movlw	128
+  1082  0132  027F               	subwf	127,w
+  1083  0133  1D03               	skipz
+  1084  0134  2937               	goto	u69_25
+  1085  0135  3064               	movlw	100
+  1086  0136  0277               	subwf	timer1_interrupt_decoder@k_210,w
+  1087  0137                     u69_25:	
+  1088  0137  1803               	btfsc	3,0
+  1089  0138  28E9               	goto	i1l951
   1090                           
-  1091                           ;leds.c: 75: break;
-  1092  011C  2929               	goto	i1l132
-  1093  011D                     i1l885:	
-  1094  011D  1283               	bcf	3,5	;RP0=0, select bank0
-  1095  011E  0824               	movf	timer0_interrupt@pos,w	;volatile
-  1096                           
-  1097                           ; Switch size 1, requested type "space"
-  1098                           ; Number of cases is 8, Range of values is 0 to 7
-  1099                           ; switch strategies available:
-  1100                           ; Name         Instructions Cycles
-  1101                           ; direct_byte           14     6 (fixed)
-  1102                           ; simple_byte           25    13 (average)
-  1103                           ; jumptable            260     6 (fixed)
-  1104                           ;	Chosen strategy is direct_byte
-  1105  011F  0084               	movwf	4
-  1106  0120  3008               	movlw	8
-  1107  0121  0204               	subwf	4,w
-  1108  0122  1803               	skipnc
-  1109  0123  2929               	goto	i1l132
-  1110  0124  3001               	movlw	high i1S963
-  1111  0125  008A               	movwf	10
-  1112  0126  30D3               	movlw	low i1S963
-  1113  0127  0704               	addwf	4,w
-  1114  0128  0082               	movwf	2
-  1115  0129                     i1l132:	
-  1116                           
-  1117                           ;leds.c: 77: INTCONbits.T0IF = 0;
-  1118  0129  110B               	bcf	11,2	;volatile
-  1119  012A  0008               	return
-  1120  012B                     __end_of_timer0_interrupt:	
-  1121                           
-  1122                           	psect	swtext2
-  1123  01D3                     __pswtext2:	
-  1124  01D3                     i1S963:	
-  1125  01D3  28F9               	ljmp	i1l867
-  1126  01D4  28FD               	ljmp	i1l869
-  1127  01D5  2901               	ljmp	i1l871
-  1128  01D6  2905               	ljmp	i1l873
-  1129  01D7  290A               	ljmp	i1l875
-  1130  01D8  290F               	ljmp	i1l877
-  1131  01D9  2914               	ljmp	i1l879
-  1132  01DA  2918               	ljmp	i1l881
-  1133                           
-  1134                           	psect	text5
-  1135  012B                     __ptext5:	
-  1136 ;; *************** function _ledb_on *****************
-  1137 ;; Defined at:
-  1138 ;;		line 29 in file "leds.c"
-  1139 ;; Parameters:    Size  Location     Type
-  1140 ;;  pos             1    wreg     unsigned char 
-  1141 ;;  dir             1    0[COMMON] unsigned char 
-  1142 ;; Auto vars:     Size  Location     Type
-  1143 ;;  pos             1    3[COMMON] unsigned char 
-  1144 ;; Return value:  Size  Location     Type
-  1145 ;;                  1    wreg      void 
-  1146 ;; Registers used:
-  1147 ;;		wreg, status,2, status,0
-  1148 ;; Tracked objects:
-  1149 ;;		On entry : 0/0
-  1150 ;;		On exit  : 0/0
-  1151 ;;		Unchanged: 0/0
-  1152 ;; Data sizes:     COMMON   BANK0   BANK1
-  1153 ;;      Params:         1       0       0
-  1154 ;;      Locals:         1       0       0
-  1155 ;;      Temps:          2       0       0
-  1156 ;;      Totals:         4       0       0
-  1157 ;;Total ram usage:        4 bytes
-  1158 ;; Hardware stack levels used:    1
-  1159 ;; This function calls:
-  1160 ;;		Nothing
-  1161 ;; This function is called by:
-  1162 ;;		_timer0_interrupt
-  1163 ;; This function uses a non-reentrant model
-  1164 ;;
-  1165                           
-  1166                           
-  1167                           ;psect for function _ledb_on
-  1168  012B                     _ledb_on:	
-  1169                           
-  1170                           ;incstack = 0
-  1171                           ; Regs used in _ledb_on: [wreg+status,2+status,0]
-  1172                           ;ledb_on@pos stored from wreg
-  1173  012B  00F3               	movwf	ledb_on@pos
-  1174                           
-  1175                           ;leds.c: 30: if (dir)
-  1176  012C  0870               	movf	ledb_on@dir,w
-  1177  012D  1903               	btfsc	3,2
-  1178  012E  293E               	goto	i1l755
-  1179                           
-  1180                           ;leds.c: 31: PORTB |= (1u<<pos);
-  1181  012F  3001               	movlw	1
-  1182  0130  00F1               	movwf	??_ledb_on
-  1183  0131  0A73               	incf	ledb_on@pos,w
-  1184  0132  2935               	goto	u41_24
-  1185  0133                     u41_25:	
-  1186  0133  1003               	clrc
-  1187  0134  0DF1               	rlf	??_ledb_on,f
-  1188  0135                     u41_24:	
-  1189  0135  3EFF               	addlw	-1
-  1190  0136  1D03               	skipz
-  1191  0137  2933               	goto	u41_25
-  1192  0138  0871               	movf	??_ledb_on,w
-  1193  0139  00F2               	movwf	??_ledb_on+1
-  1194  013A  0872               	movf	??_ledb_on+1,w
-  1195  013B  1283               	bcf	3,5	;RP0=0, select bank0
-  1196  013C  0486               	iorwf	6,f	;volatile
-  1197  013D  294D               	goto	i1l124
-  1198  013E                     i1l755:	
-  1199                           
-  1200                           ;leds.c: 32: else
-  1201                           ;leds.c: 33: PORTB &= ~(1u<<pos);
-  1202  013E  3001               	movlw	1
-  1203  013F  00F1               	movwf	??_ledb_on
-  1204  0140  0A73               	incf	ledb_on@pos,w
-  1205  0141  2944               	goto	u42_24
-  1206  0142                     u42_25:	
-  1207  0142  1003               	clrc
-  1208  0143  0DF1               	rlf	??_ledb_on,f
-  1209  0144                     u42_24:	
-  1210  0144  3EFF               	addlw	-1
-  1211  0145  1D03               	skipz
-  1212  0146  2942               	goto	u42_25
-  1213  0147  0871               	movf	??_ledb_on,w
-  1214  0148  3AFF               	xorlw	255
-  1215  0149  00F2               	movwf	??_ledb_on+1
-  1216  014A  0872               	movf	??_ledb_on+1,w
-  1217  014B  1283               	bcf	3,5	;RP0=0, select bank0
-  1218  014C  0586               	andwf	6,f	;volatile
-  1219  014D                     i1l124:	
-  1220                           
-  1221                           ;leds.c: 34: TRISB &= ~(1u<<pos);
-  1222  014D  3001               	movlw	1
-  1223  014E  00F1               	movwf	??_ledb_on
-  1224  014F  0A73               	incf	ledb_on@pos,w
-  1225  0150  2953               	goto	u43_24
-  1226  0151                     u43_25:	
-  1227  0151  1003               	clrc
-  1228  0152  0DF1               	rlf	??_ledb_on,f
-  1229  0153                     u43_24:	
-  1230  0153  3EFF               	addlw	-1
-  1231  0154  1D03               	skipz
-  1232  0155  2951               	goto	u43_25
-  1233  0156  0871               	movf	??_ledb_on,w
-  1234  0157  3AFF               	xorlw	255
-  1235  0158  00F2               	movwf	??_ledb_on+1
-  1236  0159  0872               	movf	??_ledb_on+1,w
-  1237  015A  1683               	bsf	3,5	;RP0=1, select bank1
-  1238  015B  0586               	andwf	6,f	;volatile
-  1239  015C  0008               	return
-  1240  015D                     __end_of_ledb_on:	
-  1241                           
-  1242                           	psect	text6
-  1243  015D                     __ptext6:	
-  1244 ;; *************** function _leda_on *****************
-  1245 ;; Defined at:
-  1246 ;;		line 18 in file "leds.c"
-  1247 ;; Parameters:    Size  Location     Type
-  1248 ;;  pos             1    wreg     unsigned char 
-  1249 ;;  dir             1    0[COMMON] unsigned char 
-  1250 ;; Auto vars:     Size  Location     Type
-  1251 ;;  pos             1    3[COMMON] unsigned char 
-  1252 ;; Return value:  Size  Location     Type
-  1253 ;;                  1    wreg      void 
-  1254 ;; Registers used:
-  1255 ;;		wreg, status,2, status,0
-  1256 ;; Tracked objects:
-  1257 ;;		On entry : 0/0
-  1258 ;;		On exit  : 0/0
-  1259 ;;		Unchanged: 0/0
-  1260 ;; Data sizes:     COMMON   BANK0   BANK1
-  1261 ;;      Params:         1       0       0
-  1262 ;;      Locals:         1       0       0
-  1263 ;;      Temps:          2       0       0
-  1264 ;;      Totals:         4       0       0
-  1265 ;;Total ram usage:        4 bytes
-  1266 ;; Hardware stack levels used:    1
-  1267 ;; This function calls:
-  1268 ;;		Nothing
-  1269 ;; This function is called by:
-  1270 ;;		_timer0_interrupt
-  1271 ;; This function uses a non-reentrant model
-  1272 ;;
-  1273                           
-  1274                           
-  1275                           ;psect for function _leda_on
-  1276  015D                     _leda_on:	
-  1277                           
-  1278                           ;incstack = 0
-  1279                           ; Regs used in _leda_on: [wreg+status,2+status,0]
-  1280                           ;leda_on@pos stored from wreg
-  1281  015D  00F3               	movwf	leda_on@pos
-  1282                           
-  1283                           ;leds.c: 19: if (dir)
-  1284  015E  0870               	movf	leda_on@dir,w
-  1285  015F  1903               	btfsc	3,2
-  1286  0160  2970               	goto	i1l749
+  1091                           ;ir_decoder.c: 146: __nop();
+  1092  0139  0000               	nop
+  1093  013A  3001               	movlw	1
+  1094  013B  07F7               	addwf	timer1_interrupt_decoder@k_210,f
+  1095  013C  1803               	skipnc
+  1096  013D  0AF8               	incf	timer1_interrupt_decoder@k_210+1,f
+  1097  013E  3000               	movlw	0
+  1098  013F  07F8               	addwf	timer1_interrupt_decoder@k_210+1,f
+  1099  0140  292E               	goto	L1
+  1100  0141                     i1l65:	
+  1101                           
+  1102                           ;ir_decoder.c: 147: }
+  1103                           ;ir_decoder.c: 148: T1CONbits.TMR1ON = 1;
+  1104  0141  1410               	bsf	16,0	;volatile
+  1105                           
+  1106                           ;ir_decoder.c: 149: decoder_state = STATE_IDLE;
+  1107  0142  01A7               	clrf	timer1_interrupt_decoder@decoder_state	;volatile
+  1108                           
+  1109                           ;ir_decoder.c: 150: } else {
+  1110  0143  0008               	return
+  1111  0144                     i1l955:	
+  1112                           
+  1113                           ;ir_decoder.c: 151: state_timer = 1; decoder_state = (STATE_BURST);
+  1114  0144  3001               	movlw	1
+  1115  0145  00F0               	movwf	??_timer1_interrupt_decoder
+  1116  0146  0870               	movf	??_timer1_interrupt_decoder,w
+  1117  0147  00A5               	movwf	timer1_interrupt_decoder@state_timer	;volatile
+  1118  0148  3003               	movlw	3
+  1119  0149  00F0               	movwf	??_timer1_interrupt_decoder
+  1120  014A  0870               	movf	??_timer1_interrupt_decoder,w
+  1121  014B  00A7               	movwf	timer1_interrupt_decoder@decoder_state	;volatile
+  1122                           
+  1123                           ;ir_decoder.c: 154: }
+  1124                           
+  1125                           ;ir_decoder.c: 152: }
+  1126                           ;ir_decoder.c: 153: return;
+  1127  014C  0008               	return
+  1128  014D                     i1l961:	
+  1129  014D  0827               	movf	timer1_interrupt_decoder@decoder_state,w	;volatile
+  1130                           
+  1131                           ; Switch size 1, requested type "space"
+  1132                           ; Number of cases is 5, Range of values is 0 to 4
+  1133                           ; switch strategies available:
+  1134                           ; Name         Instructions Cycles
+  1135                           ; direct_byte           11     6 (fixed)
+  1136                           ; simple_byte           16     9 (average)
+  1137                           ; jumptable            260     6 (fixed)
+  1138                           ;	Chosen strategy is direct_byte
+  1139  014E  0084               	movwf	4
+  1140  014F  3005               	movlw	5
+  1141  0150  0204               	subwf	4,w
+  1142  0151  1803               	skipnc
+  1143  0152  0008               	return
+  1144  0153  3002               	movlw	high i1S1103
+  1145  0154  008A               	movwf	10
+  1146  0155  3048               	movlw	low i1S1103
+  1147  0156  0704               	addwf	4,w
+  1148  0157  0082               	movwf	2
+  1149  0158  0008               	return
+  1150  0159                     __end_of_timer1_interrupt_decoder:	
+  1151                           
+  1152                           	psect	swtext1
+  1153  0248                     __pswtext1:	
+  1154  0248                     i1S1103:	
+  1155  0248  2829               	ljmp	i1l36
+  1156  0249  2835               	ljmp	i1l38
+  1157  024A  284F               	ljmp	i1l41
+  1158  024B  2869               	ljmp	i1l46
+  1159  024C  2883               	ljmp	i1l52
+  1160                           
+  1161                           	psect	text5
+  1162  0159                     __ptext5:	
+  1163 ;; *************** function _timer0_interrupt *****************
+  1164 ;; Defined at:
+  1165 ;;		line 83 in file "leds.c"
+  1166 ;; Parameters:    Size  Location     Type
+  1167 ;;		None
+  1168 ;; Auto vars:     Size  Location     Type
+  1169 ;;		None
+  1170 ;; Return value:  Size  Location     Type
+  1171 ;;                  1    wreg      void 
+  1172 ;; Registers used:
+  1173 ;;		wreg, fsr0l, fsr0h, status,2, status,0, pclath, cstack
+  1174 ;; Tracked objects:
+  1175 ;;		On entry : 0/0
+  1176 ;;		On exit  : 0/0
+  1177 ;;		Unchanged: 0/0
+  1178 ;; Data sizes:     COMMON   BANK0   BANK1
+  1179 ;;      Params:         0       0       0
+  1180 ;;      Locals:         0       0       0
+  1181 ;;      Temps:          1       0       0
+  1182 ;;      Totals:         1       0       0
+  1183 ;;Total ram usage:        1 bytes
+  1184 ;; Hardware stack levels used:    1
+  1185 ;; Hardware stack levels required when called:    1
+  1186 ;; This function calls:
+  1187 ;;		_all_off
+  1188 ;;		_leda_on
+  1189 ;;		_ledb_on
+  1190 ;; This function is called by:
+  1191 ;;		_ISR
+  1192 ;; This function uses a non-reentrant model
+  1193 ;;
+  1194                           
+  1195                           
+  1196                           ;psect for function _timer0_interrupt
+  1197  0159                     _timer0_interrupt:	
+  1198                           
+  1199                           ;leds.c: 84: static volatile uint8_t pos = 0;
+  1200                           ;leds.c: 85: pos++;
+  1201                           
+  1202                           ;incstack = 0
+  1203                           ; Regs used in _timer0_interrupt: [wreg-fsr0h+status,2+status,0+pclath+cstack]
+  1204  0159  3001               	movlw	1
+  1205  015A  00F4               	movwf	??_timer0_interrupt
+  1206  015B  0874               	movf	??_timer0_interrupt,w
+  1207  015C  1283               	bcf	3,5	;RP0=0, select bank0
+  1208  015D  07A4               	addwf	timer0_interrupt@pos,f	;volatile
+  1209                           
+  1210                           ;leds.c: 86: pos &= 7;
+  1211  015E  3007               	movlw	7
+  1212  015F  00F4               	movwf	??_timer0_interrupt
+  1213  0160  0874               	movf	??_timer0_interrupt,w
+  1214  0161  05A4               	andwf	timer0_interrupt@pos,f	;volatile
+  1215                           
+  1216                           ;leds.c: 87: all_off();
+  1217  0162  2241               	fcall	_all_off
+  1218                           
+  1219                           ;leds.c: 88: switch (pos) {
+  1220  0163  2988               	goto	i1l999
+  1221  0164                     i1l981:	
+  1222                           ;leds.c: 89: case 0:
+  1223                           
+  1224                           
+  1225                           ;leds.c: 90: leda_on(0, 0);
+  1226  0164  01F0               	clrf	leda_on@dir
+  1227  0165  3000               	movlw	0
+  1228  0166  21C8               	fcall	_leda_on
+  1229                           
+  1230                           ;leds.c: 91: break;
+  1231  0167  2994               	goto	i1l156
+  1232  0168                     i1l983:	
+  1233                           ;leds.c: 92: case 1:
+  1234                           
+  1235                           
+  1236                           ;leds.c: 93: leda_on(2, 0);
+  1237  0168  01F0               	clrf	leda_on@dir
+  1238  0169  3002               	movlw	2
+  1239  016A  21C8               	fcall	_leda_on
+  1240                           
+  1241                           ;leds.c: 94: break;
+  1242  016B  2994               	goto	i1l156
+  1243  016C                     i1l985:	
+  1244                           ;leds.c: 95: case 2:
+  1245                           
+  1246                           
+  1247                           ;leds.c: 96: ledb_on(3, 0);
+  1248  016C  01F0               	clrf	ledb_on@dir
+  1249  016D  3003               	movlw	3
+  1250  016E  2196               	fcall	_ledb_on
+  1251                           
+  1252                           ;leds.c: 97: break;
+  1253  016F  2994               	goto	i1l156
+  1254  0170                     i1l987:	
+  1255                           ;leds.c: 98: case 3:
+  1256                           
+  1257                           
+  1258                           ;leds.c: 99: ledb_on(3, 1);
+  1259  0170  01F0               	clrf	ledb_on@dir
+  1260  0171  0AF0               	incf	ledb_on@dir,f
+  1261  0172  3003               	movlw	3
+  1262  0173  2196               	fcall	_ledb_on
+  1263                           
+  1264                           ;leds.c: 100: break;
+  1265  0174  2994               	goto	i1l156
+  1266  0175                     i1l989:	
+  1267                           ;leds.c: 101: case 4:
+  1268                           
+  1269                           
+  1270                           ;leds.c: 102: leda_on(0, 1);
+  1271  0175  01F0               	clrf	leda_on@dir
+  1272  0176  0AF0               	incf	leda_on@dir,f
+  1273  0177  3000               	movlw	0
+  1274  0178  21C8               	fcall	_leda_on
+  1275                           
+  1276                           ;leds.c: 103: break;
+  1277  0179  2994               	goto	i1l156
+  1278  017A                     i1l991:	
+  1279                           ;leds.c: 104: case 5:
+  1280                           
+  1281                           
+  1282                           ;leds.c: 105: leda_on(2, 1);
+  1283  017A  01F0               	clrf	leda_on@dir
+  1284  017B  0AF0               	incf	leda_on@dir,f
+  1285  017C  3002               	movlw	2
+  1286  017D  21C8               	fcall	_leda_on
   1287                           
-  1288                           ;leds.c: 20: PORTA |= (1u<<pos);
-  1289  0161  3001               	movlw	1
-  1290  0162  00F1               	movwf	??_leda_on
-  1291  0163  0A73               	incf	leda_on@pos,w
-  1292  0164  2967               	goto	u37_24
-  1293  0165                     u37_25:	
-  1294  0165  1003               	clrc
-  1295  0166  0DF1               	rlf	??_leda_on,f
-  1296  0167                     u37_24:	
-  1297  0167  3EFF               	addlw	-1
-  1298  0168  1D03               	skipz
-  1299  0169  2965               	goto	u37_25
-  1300  016A  0871               	movf	??_leda_on,w
-  1301  016B  00F2               	movwf	??_leda_on+1
-  1302  016C  0872               	movf	??_leda_on+1,w
-  1303  016D  1283               	bcf	3,5	;RP0=0, select bank0
-  1304  016E  0485               	iorwf	5,f	;volatile
-  1305  016F  297F               	goto	i1l119
-  1306  0170                     i1l749:	
-  1307                           
-  1308                           ;leds.c: 21: else
-  1309                           ;leds.c: 22: PORTA &= ~(1u<<pos);
-  1310  0170  3001               	movlw	1
-  1311  0171  00F1               	movwf	??_leda_on
-  1312  0172  0A73               	incf	leda_on@pos,w
-  1313  0173  2976               	goto	u38_24
-  1314  0174                     u38_25:	
-  1315  0174  1003               	clrc
-  1316  0175  0DF1               	rlf	??_leda_on,f
-  1317  0176                     u38_24:	
-  1318  0176  3EFF               	addlw	-1
-  1319  0177  1D03               	skipz
-  1320  0178  2974               	goto	u38_25
-  1321  0179  0871               	movf	??_leda_on,w
-  1322  017A  3AFF               	xorlw	255
-  1323  017B  00F2               	movwf	??_leda_on+1
-  1324  017C  0872               	movf	??_leda_on+1,w
-  1325  017D  1283               	bcf	3,5	;RP0=0, select bank0
-  1326  017E  0585               	andwf	5,f	;volatile
-  1327  017F                     i1l119:	
-  1328                           
-  1329                           ;leds.c: 23: TRISA &= ~(1u<<pos);
-  1330  017F  3001               	movlw	1
-  1331  0180  00F1               	movwf	??_leda_on
-  1332  0181  0A73               	incf	leda_on@pos,w
-  1333  0182  2985               	goto	u39_24
-  1334  0183                     u39_25:	
-  1335  0183  1003               	clrc
-  1336  0184  0DF1               	rlf	??_leda_on,f
-  1337  0185                     u39_24:	
-  1338  0185  3EFF               	addlw	-1
-  1339  0186  1D03               	skipz
-  1340  0187  2983               	goto	u39_25
-  1341  0188  0871               	movf	??_leda_on,w
-  1342  0189  3AFF               	xorlw	255
-  1343  018A  00F2               	movwf	??_leda_on+1
-  1344  018B  0872               	movf	??_leda_on+1,w
-  1345  018C  1683               	bsf	3,5	;RP0=1, select bank1
-  1346  018D  0585               	andwf	5,f	;volatile
-  1347  018E  0008               	return
-  1348  018F                     __end_of_leda_on:	
-  1349                           
-  1350                           	psect	text7
-  1351  01AD                     __ptext7:	
-  1352 ;; *************** function _all_off *****************
-  1353 ;; Defined at:
-  1354 ;;		line 10 in file "leds.c"
-  1355 ;; Parameters:    Size  Location     Type
-  1356 ;;		None
-  1357 ;; Auto vars:     Size  Location     Type
-  1358 ;;		None
-  1359 ;; Return value:  Size  Location     Type
-  1360 ;;                  1    wreg      void 
-  1361 ;; Registers used:
-  1362 ;;		wreg, status,2, status,0
-  1363 ;; Tracked objects:
-  1364 ;;		On entry : 0/0
-  1365 ;;		On exit  : 0/0
-  1366 ;;		Unchanged: 0/0
-  1367 ;; Data sizes:     COMMON   BANK0   BANK1
-  1368 ;;      Params:         0       0       0
-  1369 ;;      Locals:         0       0       0
-  1370 ;;      Temps:          2       0       0
-  1371 ;;      Totals:         2       0       0
-  1372 ;;Total ram usage:        2 bytes
-  1373 ;; Hardware stack levels used:    1
-  1374 ;; This function calls:
-  1375 ;;		Nothing
-  1376 ;; This function is called by:
-  1377 ;;		_timer0_interrupt
-  1378 ;; This function uses a non-reentrant model
-  1379 ;;
-  1380                           
-  1381                           
-  1382                           ;psect for function _all_off
-  1383  01AD                     _all_off:	
-  1384                           
-  1385                           ;leds.c: 11: TRISA |= TRISA0 | TRISA2 | TRISA3;
-  1386                           
-  1387                           ;incstack = 0
-  1388                           ; Regs used in _all_off: [wreg+status,2+status,0]
-  1389  01AD  1683               	bsf	3,5	;RP0=1, select bank1
-  1390  01AE  1D85               	btfss	5,3	;volatile
-  1391  01AF  29B2               	goto	u34_20
-  1392  01B0  3001               	movlw	1
-  1393  01B1  29B3               	goto	u34_22
-  1394  01B2                     u34_20:	
-  1395  01B2  3000               	movlw	0
-  1396  01B3                     u34_22:	
-  1397  01B3  00F0               	movwf	??_all_off
-  1398  01B4  3000               	movlw	0
-  1399  01B5  1805               	btfsc	5,0	;volatile
-  1400  01B6  3801               	iorlw	1
-  1401  01B7  1905               	btfsc	5,2	;volatile
-  1402  01B8  3801               	iorlw	1
-  1403  01B9  3800               	iorlw	0
-  1404  01BA  1903               	btfsc	3,2
-  1405  01BB  29BE               	goto	u35_20
-  1406  01BC  3001               	movlw	1
-  1407  01BD  29BF               	goto	u35_22
-  1408  01BE                     u35_20:	
-  1409  01BE  3000               	movlw	0
-  1410  01BF                     u35_22:	
-  1411  01BF  0470               	iorwf	??_all_off,w
-  1412  01C0  00F1               	movwf	??_all_off+1
-  1413  01C1  0871               	movf	??_all_off+1,w
-  1414  01C2  0485               	iorwf	5,f	;volatile
-  1415                           
-  1416                           ;leds.c: 12: TRISB |= TRISB3;
-  1417  01C3  3000               	movlw	0
-  1418  01C4  1986               	btfsc	6,3	;volatile
-  1419  01C5  3001               	movlw	1
-  1420  01C6  00F0               	movwf	??_all_off
-  1421  01C7  0870               	movf	??_all_off,w
-  1422  01C8  0486               	iorwf	6,f	;volatile
-  1423  01C9  0008               	return
-  1424  01CA                     __end_of_all_off:	
-  1425  007E                     btemp	set	126	;btemp
-  1426  007E                     wtemp0	set	126
+  1288                           ;leds.c: 106: break;
+  1289  017E  2994               	goto	i1l156
+  1290  017F                     i1l993:	
+  1291                           ;leds.c: 107: case 6:
+  1292                           
+  1293                           
+  1294                           ;leds.c: 108: leda_on(3, 0);
+  1295  017F  01F0               	clrf	leda_on@dir
+  1296  0180  3003               	movlw	3
+  1297  0181  21C8               	fcall	_leda_on
+  1298                           
+  1299                           ;leds.c: 109: break;
+  1300  0182  2994               	goto	i1l156
+  1301  0183                     i1l995:	
+  1302                           ;leds.c: 110: case 7:
+  1303                           
+  1304                           
+  1305                           ;leds.c: 111: leda_on(3, 1);
+  1306  0183  01F0               	clrf	leda_on@dir
+  1307  0184  0AF0               	incf	leda_on@dir,f
+  1308  0185  3003               	movlw	3
+  1309  0186  21C8               	fcall	_leda_on
+  1310                           
+  1311                           ;leds.c: 113: }
+  1312                           
+  1313                           ;leds.c: 112: break;
+  1314  0187  2994               	goto	i1l156
+  1315  0188                     i1l999:	
+  1316  0188  1283               	bcf	3,5	;RP0=0, select bank0
+  1317  0189  0824               	movf	timer0_interrupt@pos,w	;volatile
+  1318                           
+  1319                           ; Switch size 1, requested type "space"
+  1320                           ; Number of cases is 8, Range of values is 0 to 7
+  1321                           ; switch strategies available:
+  1322                           ; Name         Instructions Cycles
+  1323                           ; direct_byte           14     6 (fixed)
+  1324                           ; simple_byte           25    13 (average)
+  1325                           ; jumptable            260     6 (fixed)
+  1326                           ;	Chosen strategy is direct_byte
+  1327  018A  0084               	movwf	4
+  1328  018B  3008               	movlw	8
+  1329  018C  0204               	subwf	4,w
+  1330  018D  1803               	skipnc
+  1331  018E  2994               	goto	i1l156
+  1332  018F  3002               	movlw	high i1S1105
+  1333  0190  008A               	movwf	10
+  1334  0191  3039               	movlw	low i1S1105
+  1335  0192  0704               	addwf	4,w
+  1336  0193  0082               	movwf	2
+  1337  0194                     i1l156:	
+  1338                           
+  1339                           ;leds.c: 114: INTCONbits.T0IF = 0;
+  1340  0194  110B               	bcf	11,2	;volatile
+  1341  0195  0008               	return
+  1342  0196                     __end_of_timer0_interrupt:	
+  1343                           
+  1344                           	psect	swtext2
+  1345  0239                     __pswtext2:	
+  1346  0239                     i1S1105:	
+  1347  0239  2964               	ljmp	i1l981
+  1348  023A  2968               	ljmp	i1l983
+  1349  023B  296C               	ljmp	i1l985
+  1350  023C  2970               	ljmp	i1l987
+  1351  023D  2975               	ljmp	i1l989
+  1352  023E  297A               	ljmp	i1l991
+  1353  023F  297F               	ljmp	i1l993
+  1354  0240  2983               	ljmp	i1l995
+  1355                           
+  1356                           	psect	text6
+  1357  0196                     __ptext6:	
+  1358 ;; *************** function _ledb_on *****************
+  1359 ;; Defined at:
+  1360 ;;		line 75 in file "leds.c"
+  1361 ;; Parameters:    Size  Location     Type
+  1362 ;;  pos             1    wreg     unsigned char 
+  1363 ;;  dir             1    0[COMMON] unsigned char 
+  1364 ;; Auto vars:     Size  Location     Type
+  1365 ;;  pos             1    3[COMMON] unsigned char 
+  1366 ;; Return value:  Size  Location     Type
+  1367 ;;                  1    wreg      void 
+  1368 ;; Registers used:
+  1369 ;;		wreg, status,2, status,0
+  1370 ;; Tracked objects:
+  1371 ;;		On entry : 0/0
+  1372 ;;		On exit  : 0/0
+  1373 ;;		Unchanged: 0/0
+  1374 ;; Data sizes:     COMMON   BANK0   BANK1
+  1375 ;;      Params:         1       0       0
+  1376 ;;      Locals:         1       0       0
+  1377 ;;      Temps:          2       0       0
+  1378 ;;      Totals:         4       0       0
+  1379 ;;Total ram usage:        4 bytes
+  1380 ;; Hardware stack levels used:    1
+  1381 ;; This function calls:
+  1382 ;;		Nothing
+  1383 ;; This function is called by:
+  1384 ;;		_timer0_interrupt
+  1385 ;;		_exactly_on
+  1386 ;; This function uses a non-reentrant model
+  1387 ;;
+  1388                           
+  1389                           
+  1390                           ;psect for function _ledb_on
+  1391  0196                     _ledb_on:	
+  1392                           
+  1393                           ;incstack = 0
+  1394                           ; Regs used in _ledb_on: [wreg+status,2+status,0]
+  1395                           ;ledb_on@pos stored from wreg
+  1396  0196  00F3               	movwf	ledb_on@pos
+  1397                           
+  1398                           ;leds.c: 76: if (dir)
+  1399  0197  0870               	movf	ledb_on@dir,w
+  1400  0198  1903               	btfsc	3,2
+  1401  0199  29A9               	goto	i1l837
+  1402                           
+  1403                           ;leds.c: 77: PORTB |= (1u<<pos);
+  1404  019A  3001               	movlw	1
+  1405  019B  00F1               	movwf	??_ledb_on
+  1406  019C  0A73               	incf	ledb_on@pos,w
+  1407  019D  29A0               	goto	u44_24
+  1408  019E                     u44_25:	
+  1409  019E  1003               	clrc
+  1410  019F  0DF1               	rlf	??_ledb_on,f
+  1411  01A0                     u44_24:	
+  1412  01A0  3EFF               	addlw	-1
+  1413  01A1  1D03               	skipz
+  1414  01A2  299E               	goto	u44_25
+  1415  01A3  0871               	movf	??_ledb_on,w
+  1416  01A4  00F2               	movwf	??_ledb_on+1
+  1417  01A5  0872               	movf	??_ledb_on+1,w
+  1418  01A6  1283               	bcf	3,5	;RP0=0, select bank0
+  1419  01A7  0486               	iorwf	6,f	;volatile
+  1420  01A8  29B8               	goto	i1l148
+  1421  01A9                     i1l837:	
+  1422                           
+  1423                           ;leds.c: 78: else
+  1424                           ;leds.c: 79: PORTB &= ~(1u<<pos);
+  1425  01A9  3001               	movlw	1
+  1426  01AA  00F1               	movwf	??_ledb_on
+  1427  01AB  0A73               	incf	ledb_on@pos,w
+  1428  01AC  29AF               	goto	u45_24
+  1429  01AD                     u45_25:	
+  1430  01AD  1003               	clrc
+  1431  01AE  0DF1               	rlf	??_ledb_on,f
+  1432  01AF                     u45_24:	
+  1433  01AF  3EFF               	addlw	-1
+  1434  01B0  1D03               	skipz
+  1435  01B1  29AD               	goto	u45_25
+  1436  01B2  0871               	movf	??_ledb_on,w
+  1437  01B3  3AFF               	xorlw	255
+  1438  01B4  00F2               	movwf	??_ledb_on+1
+  1439  01B5  0872               	movf	??_ledb_on+1,w
+  1440  01B6  1283               	bcf	3,5	;RP0=0, select bank0
+  1441  01B7  0586               	andwf	6,f	;volatile
+  1442  01B8                     i1l148:	
+  1443                           
+  1444                           ;leds.c: 80: TRISB &= ~(1u<<pos);
+  1445  01B8  3001               	movlw	1
+  1446  01B9  00F1               	movwf	??_ledb_on
+  1447  01BA  0A73               	incf	ledb_on@pos,w
+  1448  01BB  29BE               	goto	u46_24
+  1449  01BC                     u46_25:	
+  1450  01BC  1003               	clrc
+  1451  01BD  0DF1               	rlf	??_ledb_on,f
+  1452  01BE                     u46_24:	
+  1453  01BE  3EFF               	addlw	-1
+  1454  01BF  1D03               	skipz
+  1455  01C0  29BC               	goto	u46_25
+  1456  01C1  0871               	movf	??_ledb_on,w
+  1457  01C2  3AFF               	xorlw	255
+  1458  01C3  00F2               	movwf	??_ledb_on+1
+  1459  01C4  0872               	movf	??_ledb_on+1,w
+  1460  01C5  1683               	bsf	3,5	;RP0=1, select bank1
+  1461  01C6  0586               	andwf	6,f	;volatile
+  1462  01C7  0008               	return
+  1463  01C8                     __end_of_ledb_on:	
+  1464                           
+  1465                           	psect	text7
+  1466  01C8                     __ptext7:	
+  1467 ;; *************** function _leda_on *****************
+  1468 ;; Defined at:
+  1469 ;;		line 64 in file "leds.c"
+  1470 ;; Parameters:    Size  Location     Type
+  1471 ;;  pos             1    wreg     unsigned char 
+  1472 ;;  dir             1    0[COMMON] unsigned char 
+  1473 ;; Auto vars:     Size  Location     Type
+  1474 ;;  pos             1    3[COMMON] unsigned char 
+  1475 ;; Return value:  Size  Location     Type
+  1476 ;;                  1    wreg      void 
+  1477 ;; Registers used:
+  1478 ;;		wreg, status,2, status,0
+  1479 ;; Tracked objects:
+  1480 ;;		On entry : 0/0
+  1481 ;;		On exit  : 0/0
+  1482 ;;		Unchanged: 0/0
+  1483 ;; Data sizes:     COMMON   BANK0   BANK1
+  1484 ;;      Params:         1       0       0
+  1485 ;;      Locals:         1       0       0
+  1486 ;;      Temps:          2       0       0
+  1487 ;;      Totals:         4       0       0
+  1488 ;;Total ram usage:        4 bytes
+  1489 ;; Hardware stack levels used:    1
+  1490 ;; This function calls:
+  1491 ;;		Nothing
+  1492 ;; This function is called by:
+  1493 ;;		_timer0_interrupt
+  1494 ;;		_exactly_on
+  1495 ;; This function uses a non-reentrant model
+  1496 ;;
+  1497                           
+  1498                           
+  1499                           ;psect for function _leda_on
+  1500  01C8                     _leda_on:	
+  1501                           
+  1502                           ;incstack = 0
+  1503                           ; Regs used in _leda_on: [wreg+status,2+status,0]
+  1504                           ;leda_on@pos stored from wreg
+  1505  01C8  00F3               	movwf	leda_on@pos
+  1506                           
+  1507                           ;leds.c: 65: if (dir)
+  1508  01C9  0870               	movf	leda_on@dir,w
+  1509  01CA  1903               	btfsc	3,2
+  1510  01CB  29DB               	goto	i1l831
+  1511                           
+  1512                           ;leds.c: 66: PORTA |= (1u<<pos);
+  1513  01CC  3001               	movlw	1
+  1514  01CD  00F1               	movwf	??_leda_on
+  1515  01CE  0A73               	incf	leda_on@pos,w
+  1516  01CF  29D2               	goto	u40_24
+  1517  01D0                     u40_25:	
+  1518  01D0  1003               	clrc
+  1519  01D1  0DF1               	rlf	??_leda_on,f
+  1520  01D2                     u40_24:	
+  1521  01D2  3EFF               	addlw	-1
+  1522  01D3  1D03               	skipz
+  1523  01D4  29D0               	goto	u40_25
+  1524  01D5  0871               	movf	??_leda_on,w
+  1525  01D6  00F2               	movwf	??_leda_on+1
+  1526  01D7  0872               	movf	??_leda_on+1,w
+  1527  01D8  1283               	bcf	3,5	;RP0=0, select bank0
+  1528  01D9  0485               	iorwf	5,f	;volatile
+  1529  01DA  29EA               	goto	i1l143
+  1530  01DB                     i1l831:	
+  1531                           
+  1532                           ;leds.c: 67: else
+  1533                           ;leds.c: 68: PORTA &= ~(1u<<pos);
+  1534  01DB  3001               	movlw	1
+  1535  01DC  00F1               	movwf	??_leda_on
+  1536  01DD  0A73               	incf	leda_on@pos,w
+  1537  01DE  29E1               	goto	u41_24
+  1538  01DF                     u41_25:	
+  1539  01DF  1003               	clrc
+  1540  01E0  0DF1               	rlf	??_leda_on,f
+  1541  01E1                     u41_24:	
+  1542  01E1  3EFF               	addlw	-1
+  1543  01E2  1D03               	skipz
+  1544  01E3  29DF               	goto	u41_25
+  1545  01E4  0871               	movf	??_leda_on,w
+  1546  01E5  3AFF               	xorlw	255
+  1547  01E6  00F2               	movwf	??_leda_on+1
+  1548  01E7  0872               	movf	??_leda_on+1,w
+  1549  01E8  1283               	bcf	3,5	;RP0=0, select bank0
+  1550  01E9  0585               	andwf	5,f	;volatile
+  1551  01EA                     i1l143:	
+  1552                           
+  1553                           ;leds.c: 69: TRISA &= ~(1u<<pos);
+  1554  01EA  3001               	movlw	1
+  1555  01EB  00F1               	movwf	??_leda_on
+  1556  01EC  0A73               	incf	leda_on@pos,w
+  1557  01ED  29F0               	goto	u42_24
+  1558  01EE                     u42_25:	
+  1559  01EE  1003               	clrc
+  1560  01EF  0DF1               	rlf	??_leda_on,f
+  1561  01F0                     u42_24:	
+  1562  01F0  3EFF               	addlw	-1
+  1563  01F1  1D03               	skipz
+  1564  01F2  29EE               	goto	u42_25
+  1565  01F3  0871               	movf	??_leda_on,w
+  1566  01F4  3AFF               	xorlw	255
+  1567  01F5  00F2               	movwf	??_leda_on+1
+  1568  01F6  0872               	movf	??_leda_on+1,w
+  1569  01F7  1683               	bsf	3,5	;RP0=1, select bank1
+  1570  01F8  0585               	andwf	5,f	;volatile
+  1571  01F9  0008               	return
+  1572  01FA                     __end_of_leda_on:	
+  1573                           
+  1574                           	psect	text8
+  1575  0241                     __ptext8:	
+  1576 ;; *************** function _all_off *****************
+  1577 ;; Defined at:
+  1578 ;;		line 56 in file "leds.c"
+  1579 ;; Parameters:    Size  Location     Type
+  1580 ;;		None
+  1581 ;; Auto vars:     Size  Location     Type
+  1582 ;;		None
+  1583 ;; Return value:  Size  Location     Type
+  1584 ;;                  1    wreg      void 
+  1585 ;; Registers used:
+  1586 ;;		wreg, status,2, status,0
+  1587 ;; Tracked objects:
+  1588 ;;		On entry : 0/0
+  1589 ;;		On exit  : 0/0
+  1590 ;;		Unchanged: 0/0
+  1591 ;; Data sizes:     COMMON   BANK0   BANK1
+  1592 ;;      Params:         0       0       0
+  1593 ;;      Locals:         0       0       0
+  1594 ;;      Temps:          1       0       0
+  1595 ;;      Totals:         1       0       0
+  1596 ;;Total ram usage:        1 bytes
+  1597 ;; Hardware stack levels used:    1
+  1598 ;; This function calls:
+  1599 ;;		Nothing
+  1600 ;; This function is called by:
+  1601 ;;		_timer0_interrupt
+  1602 ;;		_exactly_on
+  1603 ;; This function uses a non-reentrant model
+  1604 ;;
+  1605                           
+  1606                           
+  1607                           ;psect for function _all_off
+  1608  0241                     _all_off:	
+  1609                           
+  1610                           ;leds.c: 57: TRISA |= 1 | (1 << 2) | (1 << 3);
+  1611                           
+  1612                           ;incstack = 0
+  1613                           ; Regs used in _all_off: [wreg+status,2+status,0]
+  1614  0241  300D               	movlw	13
+  1615  0242  00F0               	movwf	??_all_off
+  1616  0243  0870               	movf	??_all_off,w
+  1617  0244  1683               	bsf	3,5	;RP0=1, select bank1
+  1618  0245  0485               	iorwf	5,f	;volatile
+  1619                           
+  1620                           ;leds.c: 58: TRISB |= (1 << 3);
+  1621  0246  1586               	bsf	6,3	;volatile
+  1622  0247  0008               	return
+  1623  0248                     __end_of_all_off:	
+  1624  007E                     btemp	set	126	;btemp
+  1625  007E                     wtemp0	set	126
 
 
 Data Sizes:
@@ -1455,8 +1656,8 @@ Data Sizes:
 
 Auto Spaces:
     Space          Size  Autos    Used
-    COMMON           14     12      14
-    BANK0            80      0       8
+    COMMON           14     14      14
+    BANK0            80      0      10
     BANK1            32      0       0
 
 Pointer List with Targets:
@@ -1495,36 +1696,39 @@ Call Graph Tables:
  (Depth) Function   	        Calls       Base Space   Used Autos Params    Refs
  ---------------------------------------------------------------------------------
  (0) _main                                                 0     0      0       0
+                   _setup_ir_decoder
                        _timer0_setup
  ---------------------------------------------------------------------------------
  (1) _timer0_setup                                         0     0      0       0
+ ---------------------------------------------------------------------------------
+ (1) _setup_ir_decoder                                     0     0      0       0
  ---------------------------------------------------------------------------------
  Estimated maximum stack depth 1
  ---------------------------------------------------------------------------------
  (Depth) Function   	        Calls       Base Space   Used Autos Params    Refs
  ---------------------------------------------------------------------------------
- (2) _ISR                                                  5     5      0     520
-                                              7 COMMON     5     5      0
+ (2) _ISR                                                  5     5      0     956
+                                              9 COMMON     5     5      0
                    _timer0_interrupt
            _timer1_interrupt_decoder
  ---------------------------------------------------------------------------------
- (3) _timer1_interrupt_decoder                             7     7      0       0
-                                              0 COMMON     7     7      0
+ (3) _timer1_interrupt_decoder                             9     9      0      92
+                                              0 COMMON     9     9      0
  ---------------------------------------------------------------------------------
- (3) _timer0_interrupt                                     1     1      0     520
+ (3) _timer0_interrupt                                     1     1      0     864
                                               4 COMMON     1     1      0
                             _all_off
                             _leda_on
                             _ledb_on
  ---------------------------------------------------------------------------------
- (4) _ledb_on                                              4     3      1     174
+ (4) _ledb_on                                              4     3      1     260
                                               0 COMMON     4     3      1
  ---------------------------------------------------------------------------------
- (4) _leda_on                                              4     3      1     346
+ (4) _leda_on                                              4     3      1     604
                                               0 COMMON     4     3      1
  ---------------------------------------------------------------------------------
- (4) _all_off                                              2     2      0       0
-                                              0 COMMON     2     2      0
+ (4) _all_off                                              1     1      0       0
+                                              0 COMMON     1     1      0
  ---------------------------------------------------------------------------------
  Estimated maximum stack depth 4
  ---------------------------------------------------------------------------------
@@ -1532,6 +1736,7 @@ Call Graph Tables:
  Call Graph Graphs:
 
  _main (ROOT)
+   _setup_ir_decoder
    _timer0_setup
 
  _ISR (ROOT)
@@ -1547,102 +1752,107 @@ BANK1               20      0       0       5        0.0%
 BITBANK1            20      0       0       7        0.0%
 SFR1                 0      0       0       2        0.0%
 BITSFR1              0      0       0       2        0.0%
-BANK0               50      0       8       4       10.0%
+BANK0               50      0       A       4       12.5%
 BITBANK0            50      0       0       3        0.0%
 SFR0                 0      0       0       1        0.0%
 BITSFR0              0      0       0       1        0.0%
-COMMON               E      C       E       1      100.0%
+COMMON               E      E       E       1      100.0%
 BITCOMMON            E      0       0       0        0.0%
 CODE                 0      0       0       0        0.0%
-DATA                 0      0      16       8        0.0%
-ABS                  0      0      16       6        0.0%
+DATA                 0      0      18       8        0.0%
+ABS                  0      0      18       6        0.0%
 NULL                 0      0       0       0        0.0%
 STACK                0      0       0       2        0.0%
 
 
 Microchip Technology PIC Macro Assembler V1.45 build -152302408 
-Symbol Table                                                                                   Wed May 16 21:58:14 2018
+Symbol Table                                                                                   Sat May 19 21:41:44 2018
 
              _timer1_interrupt_decoder 001D                                      pc 0002  
-                          __CFG_CP$OFF 0000                                     l90 01E1  
-                                   fsr 0004                                    _ISR 018F  
+                          __CFG_CP$OFF 0000                                     fsr 0004  
+                                  l103 024F                                    _ISR 01FA  
                                   fsr0 0004                           __CFG_FOSC$XT 0000  
-                                 ?_ISR 0070                                   i1l50 0078  
-                                 i1l34 0027                                   i1l44 0061  
-                                 i1l36 0033                                   i1l39 004A  
-                                 i1l85 01A1  timer1_interrupt_decoder@decoder_state 0025  
-                                 _main 01E0                                   btemp 007E  
-                                 start 000F                                  ??_ISR 0077  
-                                ?_main 0070                          __CFG_WDTE$OFF 0000  
-                                i1S961 01DB                                  i1S963 01D3  
-                                i1l124 014D                                  i1l132 0129  
-                                i1l119 017F                                  i1l803 005B  
-                                i1l813 0068                                  i1l841 00CD  
-                                i1l817 0070                                  i1l913 019B  
-                                i1l755 013E                                  i1l851 00DD  
-                                i1l835 00A7                                  i1l819 0072  
-                                i1l907 0192                                  i1l749 0170  
-                                i1l845 00CF                                  i1l829 007F  
-                                i1l871 0101                                  i1l881 0118  
-                                i1l873 0105                                  i1l777 003A  
-                                i1l857 00E2                                  i1l875 010A  
-                                i1l867 00F9                                  i1l795 0051  
-                                i1l787 0048                                  i1l877 010F  
-                                i1l869 00FD                                  i1l885 011D  
-                                i1l879 0114                                  i1l799 0059  
-                                _TMR1H 000F                                  u41_24 0135  
-                                u41_25 0133                                  _TMR1L 000E  
-                                u34_20 01B2                                  u34_22 01B3  
-                                u42_24 0144                                  u42_25 0142  
-                                u35_20 01BE                                  _PORTA 0005  
-                                u35_22 01BF                                  _PORTB 0006  
-                                u43_24 0153                                  u43_25 0151  
-                                u37_24 0167                                  u61_24 00BC  
-                                u37_25 0165                                  u61_25 00B9  
-                                u38_24 0176                                  u38_25 0174  
-                                u39_24 0185                                  u39_25 0183  
-                                _TRISA 0085                                  _TRISB 0086  
-                                u58_24 0094                                  u58_25 0091  
-                      __end_of_all_off 01CA                         __CFG_BODENV$40 0000  
-                      __end_of_leda_on 018F                        __end_of_ledb_on 015D  
-                       __CFG_BOREN$OFF 0000                                  pclath 000A  
-                                status 0003                                  wtemp0 007E  
-                      __initialization 0010                           __end_of_main 01E2  
-                               ??_main 0000                          _ir_data_valid 0026  
-                     _timer0_interrupt 00EE                                 _TRISA0 0428  
-                               _TRISA2 042A                                 _TRISA3 042B  
-                               _TRISB3 0433                         __CFG_PWRTE$OFF 0000  
+                                 ?_ISR 0070                                   i1l41 004F  
+                                 i1l52 0083                                   i1l36 0029  
+                                 i1l61 00FB                                   i1l46 0069  
+                                 i1l38 0035                                   i1l65 0141  
+                                 i1l94 0201                                   i1l98 0211  
+timer1_interrupt_decoder@decoder_state 0027                                   _main 024D  
+                                 btemp 007E                                   start 000F  
+                                ??_ISR 0079                                  ?_main 0070  
+                        __CFG_WDTE$OFF 0000                                  i1l143 01EA  
+                                i1l148 01B8                                  i1l156 0194  
+                                i1l831 01DB                                  i1l913 00B4  
+                                i1l923 00DC                                  i1l907 008A  
+                                i1l837 01A9                                  i1l861 003C  
+                                i1l951 00E9                                  i1l919 00DA  
+                                i1l881 005E                                  i1l961 014D  
+                                i1l939 010D                                  i1l955 0144  
+                                i1l981 0164                                  i1l893 0070  
+                                i1l885 0060                                  i1l877 0056  
+                                i1l869 004D                                  i1l991 017A  
+                                i1l983 0168                                  i1l993 017F  
+                                i1l985 016C                                  i1l897 0078  
+                                i1l995 0183                                  i1l987 0170  
+                                i1l899 007A                                  i1l989 0175  
+                                i1l999 0188                                  u40_24 01D2  
+                                u40_25 01D0                                  _TMR1H 000F  
+                                u41_24 01E1                                  u41_25 01DF  
+                                _TMR1L 000E                                  u42_24 01F0  
+                                u42_25 01EE                                  _PORTA 0005  
+                                _PORTB 0006                                  u44_24 01A0  
+                                u44_25 019E                                  u61_20 00A4  
+                                u45_24 01AF                                  u45_25 01AD  
+                                u61_25 009F                                  u46_24 01BE  
+                                u46_25 01BC                                  u64_20 00CE  
+                                u64_25 00C9                                  _TRISA 0085  
+                                _TRISB 0086                                  u66_25 00F9  
+                                u67_25 010B                                  u68_20 011F  
+                                u68_25 011A                                  u69_25 0137  
+                      __end_of_all_off 0248          timer1_interrupt_decoder@k_210 0077  
+                       __CFG_BODENV$40 0000                        __end_of_leda_on 01FA  
+                      __end_of_ledb_on 01C8                         __CFG_BOREN$OFF 0000  
+                                pclath 000A                                  status 0003  
+                                wtemp0 007E                        __initialization 0010  
+                         __end_of_main 0250                                 ??_main 0000  
+                        _ir_data_valid 0028                                 i1S1103 0248  
+                               i1S1105 0239                                 i1l1023 0202  
+                               i1l1029 020B                       _timer0_interrupt 0159  
+            __size_of_setup_ir_decoder 0013                         __CFG_PWRTE$OFF 0000  
                   timer0_interrupt@pos 0024                              ??_all_off 0070  
                             ??_leda_on 0071                              ??_ledb_on 0071  
                                saved_w 007E             ??_timer1_interrupt_decoder 0070  
               __end_of__initialization 001B                         __pcstackCOMMON 0070  
-                         __pidataBANK0 01E2                         _OPTION_REGbits 0081  
-                           __pbssBANK0 0020                             __pmaintext 01E0  
-                           __pintentry 0004                                _all_off 01AD  
-             __end_of_timer0_interrupt 012B      timer1_interrupt_decoder@bit_count 007D  
-                              __ptext1 01CA                                __ptext2 018F  
-                              __ptext3 001D                                __ptext4 00EE  
-                              __ptext5 012B                                __ptext6 015D  
-                              __ptext7 01AD                          ?_timer0_setup 0070  
-                              _leda_on 015D                                _ledb_on 012B  
-                         __size_of_ISR 001E                              _T1CONbits 0010  
+                         __pidataBANK0 0250                         _OPTION_REGbits 0081  
+                           __pbssBANK0 0020                             __pmaintext 024D  
+                           __pintentry 0004                       _setup_ir_decoder 021D  
+                              _all_off 0241               __end_of_timer0_interrupt 0196  
+    timer1_interrupt_decoder@bit_count 0026                                __ptext1 0230  
+                              __ptext2 021D                                __ptext3 01FA  
+                              __ptext4 001D                                __ptext5 0159  
+                              __ptext6 0196                                __ptext7 01C8  
+                              __ptext8 0241                          ?_timer0_setup 0070  
+                              _leda_on 01C8                                _ledb_on 0196  
+                         __size_of_ISR 0023                              _T1CONbits 0010  
                               _ir_data 0020                   end_of_initialization 001B  
-     __end_of_timer1_interrupt_decoder 00EE                         ??_timer0_setup 0000  
+     __end_of_timer1_interrupt_decoder 0159                         ??_timer0_setup 0000  
                             _PORTBbits 0006                              _TRISBbits 0086  
                            leda_on@dir 0070                             leda_on@pos 0073  
                            ledb_on@dir 0070                             ledb_on@pos 0073  
-                  start_initialization 0010                            __end_of_ISR 01AD  
-  timer1_interrupt_decoder@state_timer 007C                            __pdataBANK0 0027  
-    __size_of_timer1_interrupt_decoder 00D1              ?_timer1_interrupt_decoder 0070  
-                          __pbssCOMMON 007C                              ___latbits 0000  
-                        __pcstackBANK0 0000                   __end_of_timer0_setup 01D3  
-                             ?_all_off 0070                              __pswtext1 01DB  
-                            __pswtext2 01D3                      ?_timer0_interrupt 0070  
+                  start_initialization 0010                            __end_of_ISR 021D  
+  timer1_interrupt_decoder@state_timer 0025                            __pdataBANK0 0029  
+    __size_of_timer1_interrupt_decoder 013C              ?_timer1_interrupt_decoder 0070  
+             __end_of_setup_ir_decoder 0230                              ___latbits 0000  
+                        __pcstackBANK0 0000                   __end_of_timer0_setup 0239  
+                             ?_all_off 0070                              __pswtext1 0248  
+                            __pswtext2 0239                      ?_timer0_interrupt 0070  
                              ?_leda_on 0070                               ?_ledb_on 0070  
                    ??_timer0_interrupt 0074                      interrupt_function 0004  
-                             _PIE1bits 008C                              _move_leds 0027  
-                             _PIR1bits 000C                       __size_of_all_off 001D  
+                             _PIE1bits 008C                              _move_leds 0029  
+                             _PIR1bits 000C                       __size_of_all_off 0007  
                      __size_of_leda_on 0032                       __size_of_ledb_on 0032  
-                __size_of_timer0_setup 0009                          __size_of_main 0002  
-                         _timer0_setup 01CA                             _INTCONbits 000B  
-                             intlevel1 0000              __size_of_timer0_interrupt 003D  
+                __size_of_timer0_setup 0009              timer1_interrupt_decoder@k 0075  
+                        __size_of_main 0003                           _timer0_setup 0230  
+                    ?_setup_ir_decoder 0070                             _INTCONbits 000B  
+                   ??_setup_ir_decoder 0000                               intlevel1 0000  
+            __size_of_timer0_interrupt 003D  
