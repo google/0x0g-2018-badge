@@ -1,0 +1,14 @@
+### Module positions - created on Monday, June 04, 2018 'AMt' 09:29:27 AM ###
+### Printed by Pcbnew version kicad 4.0.7
+## Unit = mm, Angle = deg.
+## Side : top
+# Ref     Val       Package                PosX       PosY   Side
+D1        LED       LED_0805            89.2900  -125.8700   top
+D2        LED       LED_0805            74.1300   -89.2900   top
+D3        LED       LED_0805           110.7200   -74.1300   top
+D4        LED       LED_0805            89.2800   -74.1300   top
+D5        LED       LED_0805            74.1300  -110.7200   top
+D6        LED       LED_0805           125.8700  -110.7100   top
+D7        LED       LED_0805           125.8700   -89.2800   top
+D8        LED       LED_0805           110.7100  -125.8700   top
+## End
