@@ -1,14 +1,95 @@
 
-# 1 "main.c"
+# 1 "ir_transmitter.c"
+
+# 13 "/opt/microchip/xc8/v1.45/include/stdint.h"
+typedef signed char int8_t;
+
+# 20
+typedef signed int int16_t;
+
+# 28
+typedef signed short long int int24_t;
+
+# 36
+typedef signed long int int32_t;
+
+# 43
+typedef unsigned char uint8_t;
+
+# 49
+typedef unsigned int uint16_t;
+
+# 56
+typedef unsigned short long int uint24_t;
+
+# 63
+typedef unsigned long int uint32_t;
+
+# 71
+typedef signed char int_least8_t;
+
+# 78
+typedef signed int int_least16_t;
+
+# 90
+typedef signed short long int int_least24_t;
+
+# 98
+typedef signed long int int_least32_t;
+
+# 105
+typedef unsigned char uint_least8_t;
+
+# 111
+typedef unsigned int uint_least16_t;
+
+# 121
+typedef unsigned short long int uint_least24_t;
+
+# 128
+typedef unsigned long int uint_least32_t;
+
+# 137
+typedef signed char int_fast8_t;
+
+# 144
+typedef signed int int_fast16_t;
+
+# 156
+typedef signed short long int int_fast24_t;
+
+# 164
+typedef signed long int int_fast32_t;
+
+# 171
+typedef unsigned char uint_fast8_t;
+
+# 177
+typedef unsigned int uint_fast16_t;
+
+# 187
+typedef unsigned short long int uint_fast24_t;
+
+# 194
+typedef unsigned long int uint_fast32_t;
+
+# 200
+typedef int32_t intmax_t;
 
 
-# 25
-#pragma config FOSC = XT
-#pragma config WDTE = OFF
-#pragma config PWRTE = OFF
-#pragma config BOREN = OFF
-#pragma config BODENV = 40
-#pragma config CP = OFF
+
+
+typedef uint32_t uintmax_t;
+
+
+
+
+typedef int16_t intptr_t;
+
+
+
+
+typedef uint16_t uintptr_t;
 
 # 26 "/opt/microchip/xc8/v1.45/include/htc.h"
 extern const char __xc8_OPTIM_SPEED;
@@ -836,147 +917,35 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 
-# 13 "/opt/microchip/xc8/v1.45/include/stdint.h"
-typedef signed char int8_t;
-
-# 20
-typedef signed int int16_t;
-
-# 28
-typedef signed short long int int24_t;
-
-# 36
-typedef signed long int int32_t;
-
-# 43
-typedef unsigned char uint8_t;
-
-# 49
-typedef unsigned int uint16_t;
-
-# 56
-typedef unsigned short long int uint24_t;
-
-# 63
-typedef unsigned long int uint32_t;
-
-# 71
-typedef signed char int_least8_t;
-
-# 78
-typedef signed int int_least16_t;
-
-# 90
-typedef signed short long int int_least24_t;
-
-# 98
-typedef signed long int int_least32_t;
-
-# 105
-typedef unsigned char uint_least8_t;
-
-# 111
-typedef unsigned int uint_least16_t;
-
-# 121
-typedef unsigned short long int uint_least24_t;
-
-# 128
-typedef unsigned long int uint_least32_t;
-
-# 137
-typedef signed char int_fast8_t;
-
-# 144
-typedef signed int int_fast16_t;
-
-# 156
-typedef signed short long int int_fast24_t;
-
-# 164
-typedef signed long int int_fast32_t;
-
-# 171
-typedef unsigned char uint_fast8_t;
-
-# 177
-typedef unsigned int uint_fast16_t;
-
-# 187
-typedef unsigned short long int uint_fast24_t;
-
-# 194
-typedef unsigned long int uint_fast32_t;
-
-# 200
-typedef int32_t intmax_t;
-
-
-
-
-typedef uint32_t uintmax_t;
-
-
-
-
-typedef int16_t intptr_t;
-
-
-
-
-typedef uint16_t uintptr_t;
-
-# 23 "ir_decoder.h"
-void setup_ir_decoder();
-
-void timer1_interrupt_decoder();
-
-extern volatile uint32_t ir_data;
-extern volatile uint8_t ir_data_valid;
-
 # 27 "ir_transmitter.h"
 void setup_ir_transmitter();
 void transmit_mark();
 void timer1_interrupt_transmitter();
 
-# 27 "leds.h"
-void exactly_on(uint8_t which);
-void timer0_interrupt(void);
-void timer0_setup(void);
-void service_leds(void);
+# 28 "ir_transmitter.c"
+void setup_ir_transmitter() {
 
-# 38 "main.c"
-volatile uint8_t move_leds = 1;
+T2CONbits.TMR2ON = 1;
+PIE1bits.TMR2IE = 0;
+PIR1bits.TMR2IF = 0;
+PR2 = 13;
 
-volatile uint8_t ir_transmitting = 0;
-
-static void interrupt ISR(void) {
-if (INTCONbits.T0IF) {
-if (move_leds)
-timer0_interrupt();
-else
-INTCONbits.T0IF = 0;
-}
-if (PIR1bits.TMR1IF) {
-if (!ir_transmitting) {
-timer1_interrupt_decoder();
-if (ir_data_valid) {
-move_leds ^= 1;
-ir_data_valid = 0;
-}
-} else {
-timer1_interrupt_transmitter();
-}
-}
+TRISB &= ~(1 << 2);;
 }
 
-void main(void) {
-timer0_setup();
-setup_ir_decoder();
-setup_ir_transmitter();
+void transmit_mark() {
 
-while (1){
-transmit_mark();
+INTCONbits.GIE = 0;
 
+
+register uint8_t i;
+for(i=42;i;--i) {
+PORTB ^= 4;
+asm("NOP");
 }
+INTCONbits.GIE = 1;
+}
+
+void timer1_interrupt_transmitter() {
+
 }

@@ -917,7 +917,7 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 
-# 7 "ir_decoder.h"
+# 23 "ir_decoder.h"
 void setup_ir_decoder();
 
 void timer1_interrupt_decoder();
@@ -925,7 +925,7 @@ void timer1_interrupt_decoder();
 extern volatile uint32_t ir_data;
 extern volatile uint8_t ir_data_valid;
 
-# 43 "ir_decoder.c"
+# 59 "ir_decoder.c"
 typedef enum __PACK {
 STATE_IDLE,
 STATE_START,
@@ -937,7 +937,7 @@ STATE_GAP,
 volatile uint32_t ir_data;
 volatile uint8_t ir_data_valid = 0;
 
-# 60
+# 76
 void timer1_interrupt_decoder() {
 
 static volatile ir_decoder_state_t decoder_state = STATE_IDLE;

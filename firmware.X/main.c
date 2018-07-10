@@ -32,9 +32,12 @@
 #include <xc.h>
 
 #include "ir_decoder.h"
+#include "ir_transmitter.h"
 #include "leds.h"
 
 volatile uint8_t move_leds = 1;
+// Transmitting or receiving?
+volatile uint8_t ir_transmitting = 0;
 
 static void interrupt ISR(void) {
     if (INTCONbits.T0IF) {
@@ -43,20 +46,26 @@ static void interrupt ISR(void) {
         else
             INTCONbits.T0IF = 0;
     }
-    if (ir_data_valid) {
-        move_leds ^= 1;
-        ir_data_valid = 0;
-    }
-    if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
-        timer1_interrupt_decoder();
+    if (PIR1bits.TMR1IF) {
+        if (!ir_transmitting) {
+            timer1_interrupt_decoder();
+            if (ir_data_valid) {
+                move_leds ^= 1;
+                ir_data_valid = 0;
+            }
+        } else {
+            timer1_interrupt_transmitter();
+        }
     }
 }
 
 void main(void) {
     timer0_setup();
     setup_ir_decoder();
+    setup_ir_transmitter();
     
     while (1){
-        service_leds();
+        transmit_mark();
+        //service_leds();
     }
 }

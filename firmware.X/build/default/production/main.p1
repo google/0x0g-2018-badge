@@ -10,10 +10,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 [n S15 . . . ]
 "405
 [v _INTCONbits `VS15 ~T0 @X0 0 e@11 ]
-"5 leds.h
+"28 leds.h
 [v _timer0_interrupt `(v ~T0 @X0 0 ef ]
-"12 ir_decoder.h
-[v _ir_data_valid `Vuc ~T0 @X0 0 e ]
 "466 /opt/microchip/xc8/v1.45/include/pic16f716.h
 [s S19 :1 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
 [n S19 . TMR1IF TMR2IF CCP1IF . ADIF ]
@@ -22,32 +20,32 @@ Version 3.2 HI-TECH Software Intermediate Code
 [n S18 . . ]
 "474
 [v _PIR1bits `VS18 ~T0 @X0 0 e@12 ]
-"1305
-[s S54 :1 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
-[n S54 . TMR1IE TMR2IE CCP1IE . ADIE ]
-"1304
-[u S53 `S54 1 ]
-[n S53 . . ]
-"1313
-[v _PIE1bits `VS53 ~T0 @X0 0 e@140 ]
-"9 ir_decoder.h
+"25 ir_decoder.h
 [v _timer1_interrupt_decoder `(v ~T0 @X0 0 ef ]
+"28
+[v _ir_data_valid `Vuc ~T0 @X0 0 e ]
+"29 ir_transmitter.h
+[v _timer1_interrupt_transmitter `(v ~T0 @X0 0 ef ]
 [p mainexit ]
-"6 leds.h
+"29 leds.h
 [v _timer0_setup `(v ~T0 @X0 0 ef ]
-"7 ir_decoder.h
+"23 ir_decoder.h
 [v _setup_ir_decoder `(v ~T0 @X0 0 ef ]
-"9 main.c
+"27 ir_transmitter.h
+[v _setup_ir_transmitter `(v ~T0 @X0 0 ef ]
+"28
+[v _transmit_mark `(v ~T0 @X0 0 ef ]
+"25 main.c
 [p x FOSC=XT ]
-"10
+"26
 [p x WDTE=OFF ]
-"11
+"27
 [p x PWRTE=OFF ]
-"12
+"28
 [p x BOREN=OFF ]
-"13
+"29
 [p x BODENV=40 ]
-"14
+"30
 [p x CP=OFF ]
 [; ;htc.h: 26: extern const char __xc8_OPTIM_SPEED;
 [; ;htc.h: 28: extern double __fpnormalize(double);
@@ -662,100 +660,135 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;stdint.h: 205: typedef uint32_t uintmax_t;
 [; ;stdint.h: 210: typedef int16_t intptr_t;
 [; ;stdint.h: 215: typedef uint16_t uintptr_t;
-[; ;ir_decoder.h: 7: void setup_ir_decoder();
-[; ;ir_decoder.h: 9: void timer1_interrupt_decoder();
-[; ;ir_decoder.h: 11: extern volatile uint32_t ir_data;
-[; ;ir_decoder.h: 12: extern volatile uint8_t ir_data_valid;
-[; ;leds.h: 4: void exactly_on(uint8_t which);
-[; ;leds.h: 5: void timer0_interrupt(void);
-[; ;leds.h: 6: void timer0_setup(void);
-"21 main.c
+[; ;ir_decoder.h: 23: void setup_ir_decoder();
+[; ;ir_decoder.h: 25: void timer1_interrupt_decoder();
+[; ;ir_decoder.h: 27: extern volatile uint32_t ir_data;
+[; ;ir_decoder.h: 28: extern volatile uint8_t ir_data_valid;
+[; ;ir_transmitter.h: 27: void setup_ir_transmitter();
+[; ;ir_transmitter.h: 28: void transmit_mark();
+[; ;ir_transmitter.h: 29: void timer1_interrupt_transmitter();
+[; ;leds.h: 27: void exactly_on(uint8_t which);
+[; ;leds.h: 28: void timer0_interrupt(void);
+[; ;leds.h: 29: void timer0_setup(void);
+[; ;leds.h: 30: void service_leds(void);
+"38 main.c
 [v _move_leds `Vuc ~T0 @X0 1 e ]
 [i _move_leds
 -> -> 1 `i `uc
 ]
-[; ;main.c: 21: volatile uint8_t move_leds = 1;
-[v F656 `(v ~T0 @X0 1 tf ]
-"23
-[v _ISR `IF656 ~T0 @X0 1 s ]
+[; ;main.c: 38: volatile uint8_t move_leds = 1;
+"40
+[v _ir_transmitting `Vuc ~T0 @X0 1 e ]
+[i _ir_transmitting
+-> -> 0 `i `uc
+]
+[; ;main.c: 40: volatile uint8_t ir_transmitting = 0;
+[v F662 `(v ~T0 @X0 1 tf ]
+"42
+[v _ISR `IF662 ~T0 @X0 1 s ]
 {
-[; ;main.c: 23: static void interrupt ISR(void) {
+[; ;main.c: 42: static void interrupt ISR(void) {
 [e :U _ISR ]
 [f ]
-[; ;main.c: 24: if (INTCONbits.T0IF) {
-"24
+[; ;main.c: 43: if (INTCONbits.T0IF) {
+"43
 [e $ ! != -> . . _INTCONbits 1 1 `i -> -> -> 0 `i `Vuc `i 63  ]
 {
-[; ;main.c: 25: if (move_leds)
-"25
+[; ;main.c: 44: if (move_leds)
+"44
 [e $ ! != -> _move_leds `i -> -> -> 0 `i `Vuc `i 64  ]
-[; ;main.c: 26: timer0_interrupt();
-"26
+[; ;main.c: 45: timer0_interrupt();
+"45
 [e ( _timer0_interrupt ..  ]
 [e $U 65  ]
-"27
+"46
 [e :U 64 ]
-[; ;main.c: 27: else
-[; ;main.c: 28: INTCONbits.T0IF = 0;
-"28
+[; ;main.c: 46: else
+[; ;main.c: 47: INTCONbits.T0IF = 0;
+"47
 [e = . . _INTCONbits 1 1 -> -> 0 `i `uc ]
 [e :U 65 ]
-"29
+"48
 }
 [e :U 63 ]
-[; ;main.c: 29: }
-[; ;main.c: 30: if (ir_data_valid) {
-"30
-[e $ ! != -> _ir_data_valid `i -> -> -> 0 `i `Vuc `i 66  ]
+[; ;main.c: 48: }
+[; ;main.c: 49: if (PIR1bits.TMR1IF) {
+"49
+[e $ ! != -> . . _PIR1bits 0 0 `i -> -> -> 0 `i `Vuc `i 66  ]
 {
-[; ;main.c: 31: move_leds ^= 1;
-"31
+[; ;main.c: 50: if (!ir_transmitting) {
+"50
+[e $ ! ! != -> _ir_transmitting `i -> -> -> 0 `i `Vuc `i 67  ]
+{
+[; ;main.c: 51: timer1_interrupt_decoder();
+"51
+[e ( _timer1_interrupt_decoder ..  ]
+[; ;main.c: 52: if (ir_data_valid) {
+"52
+[e $ ! != -> _ir_data_valid `i -> -> -> 0 `i `Vuc `i 68  ]
+{
+[; ;main.c: 53: move_leds ^= 1;
+"53
 [e =^ _move_leds -> -> 1 `i `uc ]
-[; ;main.c: 32: ir_data_valid = 0;
-"32
+[; ;main.c: 54: ir_data_valid = 0;
+"54
 [e = _ir_data_valid -> -> 0 `i `uc ]
-"33
+"55
+}
+[e :U 68 ]
+"56
+}
+[; ;main.c: 55: }
+[; ;main.c: 56: } else {
+[e $U 69  ]
+[e :U 67 ]
+{
+[; ;main.c: 57: timer1_interrupt_transmitter();
+"57
+[e ( _timer1_interrupt_transmitter ..  ]
+"58
+}
+[e :U 69 ]
+"59
 }
 [e :U 66 ]
-[; ;main.c: 33: }
-[; ;main.c: 34: if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
-"34
-[e $ ! && != -> . . _PIR1bits 0 0 `i -> -> -> 0 `i `Vuc `i != -> . . _PIE1bits 0 0 `i -> -> -> 0 `i `Vuc `i 67  ]
-{
-[; ;main.c: 35: timer1_interrupt_decoder();
-"35
-[e ( _timer1_interrupt_decoder ..  ]
-"36
-}
-[e :U 67 ]
-[; ;main.c: 36: }
-[; ;main.c: 37: }
-"37
+[; ;main.c: 58: }
+[; ;main.c: 59: }
+[; ;main.c: 60: }
+"60
 [e :UE 62 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
-"39
+"62
 [v _main `(v ~T0 @X0 1 ef ]
 {
-[; ;main.c: 39: void main(void) {
+[; ;main.c: 62: void main(void) {
 [e :U _main ]
 [f ]
-[; ;main.c: 40: timer0_setup();
-"40
+[; ;main.c: 63: timer0_setup();
+"63
 [e ( _timer0_setup ..  ]
-[; ;main.c: 41: setup_ir_decoder();
-"41
+[; ;main.c: 64: setup_ir_decoder();
+"64
 [e ( _setup_ir_decoder ..  ]
-[; ;main.c: 43: for(;;){}
-"43
+[; ;main.c: 65: setup_ir_transmitter();
+"65
+[e ( _setup_ir_transmitter ..  ]
+[; ;main.c: 67: while (1){
+"67
+[e :U 72 ]
 {
-[e :U 69 ]
-{
+[; ;main.c: 68: transmit_mark();
+"68
+[e ( _transmit_mark ..  ]
+"70
 }
-[e $U 69  ]
-[e :U 70 ]
-}
-[; ;main.c: 44: }
-"44
-[e :UE 68 ]
+[e :U 71 ]
+"67
+[e $U 72  ]
+[e :U 73 ]
+[; ;main.c: 70: }
+[; ;main.c: 71: }
+"71
+[e :UE 70 ]
 }

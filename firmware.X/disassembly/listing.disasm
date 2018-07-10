@@ -1,750 +1,984 @@
 Disassembly Listing for firmware_dev
 Generated From:
 /firmware.X/dist/default/production/firmware.X.production.elf
-May 18, 2018 11:31:02 PM
+Jul 10, 2018 11:23:09 PM
 
 ---  /firmware.X/main.c  --------------------------------------------------------------------------------
 1:             /*
-2:              * File:   main.c
-3:              * Author: David
-4:              *
-5:              * Created on May 15, 2018, 3:16 AM
-6:              */
-7:             
-8:             // CONFIG
-9:             #pragma config FOSC = XT        // Oscillator Selection bits (XT oscillator)
-10:            #pragma config WDTE = OFF       // Watchdog Timer Enable bit (WDT enabled)
-11:            #pragma config PWRTE = OFF      // Power-up Timer Enable bit (PWRT disabled)
-12:            #pragma config BOREN = OFF      // Brown-out Reset Enable bit (BOR disabled)
-13:            #pragma config BODENV = 40      // Brown-out Reset Voltage bit (VBOR set to 4.0V)
-14:            #pragma config CP = OFF         // Code Protect (Program memory code protection is disabled)
-15:            
-16:            #include <xc.h>
-17:            
-18:            #include "ir_decoder.h"
-19:            #include "leds.h"
-20:            
-21:            volatile uint8_t move_leds = 1;
-22:            
-23:            static void interrupt ISR(void) {
-0004  00FE     MOVWF 0x7E
-24:                /*
-25:                if (INTCONbits.T0IF) {
-26:                    timer0_interrupt();
-27:                }
-28:                if (ir_data_valid) {
-29:                    move_leds ^= 1;
-30:                    ir_data_valid = 0;
-31:                }
-32:                */
-33:                if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
-0190  1C0C     BTFSS PIR1, 0x0
-0191  2996     GOTO 0x196
-0192  1683     BSF STATUS, 0x5
-0193  1C0C     BTFSS PIR1, 0x0
-0194  2996     GOTO 0x196
-34:                    timer1_interrupt_decoder();
-0195  201D     CALL 0x1D
-35:                }
-36:            }
-0196  1283     BCF STATUS, 0x5
-0197  082A     MOVF 0x2A, W
-0198  00FF     MOVWF 0x7F
-0199  0829     MOVF 0x29, W
-019A  008A     MOVWF PCLATH
-019B  0828     MOVF 0x28, W
-019C  0084     MOVWF FSR
-019D  0E27     SWAPF __pcstackBANK0, W
-019E  0083     MOVWF STATUS
-019F  0EFE     SWAPF 0x7E, F
-01A0  0E7E     SWAPF 0x7E, W
-01A1  0009     RETFIE
-37:            
-38:            void main(void) {
-39:                //timer0_setup();
-40:                setup_ir_decoder();
-01C7  21A2     CALL 0x1A2
-41:                
-42:                for(;;){}
-01C8  29C8     GOTO 0x1C8
-43:            }
----  /firmware.X/leds.c  --------------------------------------------------------------------------------
-1:             #include <stdint.h>
-2:             
-3:             #include <xc.h>
-4:             
-5:             #include "leds.h"
-6:             
-7:             #define LED_RED_LEFT()          leda_on(0, 0)
-8:             #define LED_RED_RIGHT()         leda_on(0, 1)
-9:             #define LED_YELLOW_LEFT()       leda_on(2, 0)
-10:            #define LED_YELLOW_RIGHT()      leda_on(2, 1)
-11:            #define LED_GREEN_LEFT()        ledb_on(3, 0)
-12:            #define LED_GREEN_RIGHT()       leda_on(3, 0)
-13:            #define LED_BLUE_LEFT()         ledb_on(3, 1)
-14:            #define LED_BLUE_RIGHT()        leda_on(3, 1)
-15:            
-16:            static inline void all_off();
-17:            static inline void leda_on(uint8_t pos, uint8_t dir);
-18:            static inline void ledb_on(uint8_t pos, uint8_t dir);
-19:            
-20:            /*
-21:             * Turn on exactly one LED
+2:              * Copyright 2018 Google LLC
+3:              *
+4:              * Licensed under the Apache License, Version 2.0 (the "License");
+5:              * you may not use this file except in compliance with the License.
+6:              * You may obtain a copy of the License at
+7:              *
+8:              *      http://www.apache.org/licenses/LICENSE-2.0
+9:              *
+10:             * Unless required by applicable law or agreed to in writing, software
+11:             * distributed under the License is distributed on an "AS IS" BASIS,
+12:             * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+13:             * See the License for the specific language governing permissions and
+14:             * limitations under the License.
+15:             */
+16:            
+17:            /*
+18:             * File:   main.c
+19:             * Author: David
+20:             *
+21:             * Created on May 15, 2018, 3:16 AM
 22:             */
-23:            void exactly_on(uint8_t which) {
-00FD  00F4     MOVWF which
-24:                all_off();
-00FE  21BB     CALL 0x1BB
-25:                switch (which) {
-00FF  2924     GOTO 0x124
-0124  0874     MOVF which, W
-0125  0084     MOVWF FSR
-0126  3008     MOVLW 0x8
-0127  0204     SUBWF FSR, W
-0128  1803     BTFSC STATUS, 0x0
-0129  0008     RETURN
-012A  3001     MOVLW 0x1
-012B  008A     MOVWF PCLATH
-012C  30B3     MOVLW 0xB3
-012D  0704     ADDWF FSR, W
-012E  0082     MOVWF PCL
-01B3  2900     GOTO 0x100
-26:                    case 0:
-27:                        LED_RED_LEFT();
-0100  01F0     CLRF __pcstackCOMMON
-0101  3000     MOVLW 0x0
-0102  2160     CALL 0x160
-28:                        break;
-0103  0008     RETURN
-29:                    case 1:
-30:                        LED_YELLOW_LEFT();
-0104  01F0     CLRF __pcstackCOMMON
-0105  3002     MOVLW 0x2
-0106  2160     CALL 0x160
-31:                        break;
-0107  0008     RETURN
-32:                    case 2:
-33:                        LED_GREEN_LEFT();
-0108  01F0     CLRF __pcstackCOMMON
-0109  3003     MOVLW 0x3
-010A  2130     CALL 0x130
-34:                        break;
-010B  0008     RETURN
-35:                    case 3:
-36:                        LED_BLUE_LEFT();
-010C  01F0     CLRF __pcstackCOMMON
-010D  0AF0     INCF __pcstackCOMMON, F
-010E  3003     MOVLW 0x3
-010F  2130     CALL 0x130
-37:                        break;
-0110  0008     RETURN
-38:                    case 4:
-39:                        LED_RED_RIGHT();
-0111  01F0     CLRF __pcstackCOMMON
-0112  0AF0     INCF __pcstackCOMMON, F
-0113  3000     MOVLW 0x0
-0114  2160     CALL 0x160
-40:                        break;
-0115  0008     RETURN
-41:                    case 5:
-42:                        LED_YELLOW_RIGHT();
-0116  01F0     CLRF __pcstackCOMMON
-0117  0AF0     INCF __pcstackCOMMON, F
-0118  3002     MOVLW 0x2
-0119  2160     CALL 0x160
-43:                        break;
-011A  0008     RETURN
-44:                    case 6:
-45:                        LED_GREEN_RIGHT();
-011B  01F0     CLRF __pcstackCOMMON
-011C  3003     MOVLW 0x3
-011D  2160     CALL 0x160
-46:                        break;
-011E  0008     RETURN
-47:                    case 7:
-48:                        LED_BLUE_RIGHT();
-011F  01F0     CLRF __pcstackCOMMON
-0120  0AF0     INCF __pcstackCOMMON, F
-0121  3003     MOVLW 0x3
-0122  2160     CALL 0x160
-49:                        break;
-50:                }    
-0123  0008     RETURN
-51:            }
-012F  0008     RETURN
-52:            
-53:            /*
-54:             * Turn all LEDs off
-55:             */
-56:            static inline void all_off() {
-57:                TRISA |= 1 | (1 << 2) | (1 << 3);
-01BB  300D     MOVLW 0xD
-01BC  00F0     MOVWF __pcstackCOMMON
-01BD  0870     MOVF __pcstackCOMMON, W
-01BE  1683     BSF STATUS, 0x5
-01BF  0485     IORWF PORTA, F
-58:                TRISB |= (1 << 3);
-01C0  1586     BSF PORTB, 0x3
-59:            }
-01C1  0008     RETURN
-60:            
-61:            /*
-62:             * Turn a LED on on PORTA
-63:             */
-64:            static inline void leda_on(uint8_t pos, uint8_t dir) {
-0160  00F3     MOVWF pos
-65:                if (dir)
-0161  0870     MOVF __pcstackCOMMON, W
-0162  1903     BTFSC STATUS, 0x2
-0163  2973     GOTO 0x173
-66:                    PORTA |= (1u<<pos);
-0164  3001     MOVLW 0x1
-0165  00F1     MOVWF 0x71
-0166  0A73     INCF pos, W
-0167  296A     GOTO 0x16A
-0168  1003     BCF STATUS, 0x0
-0169  0DF1     RLF 0x71, F
-016A  3EFF     ADDLW 0xFF
-016B  1D03     BTFSS STATUS, 0x2
-016C  2968     GOTO 0x168
-016D  0871     MOVF 0x71, W
-016E  00F2     MOVWF 0x72
-016F  0872     MOVF 0x72, W
-0170  1283     BCF STATUS, 0x5
-0171  0485     IORWF PORTA, F
-0172  2982     GOTO 0x182
-67:                else
-68:                    PORTA &= ~(1u<<pos);
-0173  3001     MOVLW 0x1
-0174  00F1     MOVWF 0x71
-0175  0A73     INCF pos, W
-0176  2979     GOTO 0x179
-0177  1003     BCF STATUS, 0x0
-0178  0DF1     RLF 0x71, F
-0179  3EFF     ADDLW 0xFF
-017A  1D03     BTFSS STATUS, 0x2
-017B  2977     GOTO 0x177
-017C  0871     MOVF 0x71, W
-017D  3AFF     XORLW 0xFF
-017E  00F2     MOVWF 0x72
-017F  0872     MOVF 0x72, W
-0180  1283     BCF STATUS, 0x5
-0181  0585     ANDWF PORTA, F
-69:                TRISA = ~(1u<<pos);   
-0182  3001     MOVLW 0x1
-0183  00F1     MOVWF 0x71
-0184  0A73     INCF pos, W
-0185  2988     GOTO 0x188
-0186  1003     BCF STATUS, 0x0
-0187  0DF1     RLF 0x71, F
-0188  3EFF     ADDLW 0xFF
-0189  1D03     BTFSS STATUS, 0x2
-018A  2986     GOTO 0x186
-018B  0871     MOVF 0x71, W
-018C  3AFF     XORLW 0xFF
-018D  1683     BSF STATUS, 0x5
-018E  0085     MOVWF PORTA
+23:            
+24:            // CONFIG
+25:            #pragma config FOSC = XT        // Oscillator Selection bits (XT oscillator)
+26:            #pragma config WDTE = OFF       // Watchdog Timer Enable bit (WDT enabled)
+27:            #pragma config PWRTE = OFF      // Power-up Timer Enable bit (PWRT disabled)
+28:            #pragma config BOREN = OFF      // Brown-out Reset Enable bit (BOR disabled)
+29:            #pragma config BODENV = 40      // Brown-out Reset Voltage bit (VBOR set to 4.0V)
+30:            #pragma config CP = OFF         // Code Protect (Program memory code protection is disabled)
+31:            
+32:            #include <xc.h>
+33:            
+34:            #include "ir_decoder.h"
+35:            #include "ir_transmitter.h"
+36:            #include "leds.h"
+37:            
+38:            volatile uint8_t move_leds = 1;
+39:            // Transmitting or receiving?
+40:            volatile uint8_t ir_transmitting = 0;
+41:            
+42:            static void interrupt ISR(void) {
+0004  00FE     MOVWF 0x7E
+43:                if (INTCONbits.T0IF) {
+015D  1D0B     BTFSS INTCON, 0x2
+015E  2965     GOTO 0x165
+44:                    if (move_leds)
+015F  082C     MOVF move_leds, W
+0160  1903     BTFSC STATUS, 0x2
+0161  2964     GOTO 0x164
+45:                        timer0_interrupt();
+0162  21BA     CALL 0x1BA
+0163  2965     GOTO 0x165
+46:                    else
+47:                        INTCONbits.T0IF = 0;
+0164  110B     BCF INTCON, 0x2
+48:                }
+49:                if (PIR1bits.TMR1IF) {
+0165  1283     BCF STATUS, 0x5
+0166  1C0C     BTFSS PIR1, 0x0
+0167  2977     GOTO 0x177
+50:                    if (!ir_transmitting) {
+0168  0826     MOVF ir_transmitting, W
+0169  1D03     BTFSS STATUS, 0x2
+016A  2976     GOTO 0x176
+51:                        timer1_interrupt_decoder();
+016B  2021     CALL 0x21
+52:                        if (ir_data_valid) {
+016C  1283     BCF STATUS, 0x5
+016D  082A     MOVF ir_data_valid, W
+016E  1903     BTFSC STATUS, 0x2
+016F  2977     GOTO 0x177
+53:                            move_leds ^= 1;
+0170  3001     MOVLW 0x1
+0171  00F9     MOVWF 0x79
+0172  0879     MOVF 0x79, W
+0173  06AC     XORWF move_leds, F
+54:                            ir_data_valid = 0;
+0174  01AA     CLRF ir_data_valid
+55:                        }
+56:                    } else {
+0175  2977     GOTO 0x177
+57:                        timer1_interrupt_transmitter();
+0176  21DE     CALL 0x1DE
+58:                    }
+59:                }
+60:            }
+0177  087D     MOVF 0x7D, W
+0178  1283     BCF STATUS, 0x5
+0179  00FF     MOVWF 0x7F
+017A  087C     MOVF 0x7C, W
+017B  008A     MOVWF PCLATH
+017C  087B     MOVF 0x7B, W
+017D  0084     MOVWF FSR
+017E  0E7A     SWAPF 0x7A, W
+017F  0083     MOVWF STATUS
+0180  0EFE     SWAPF 0x7E, F
+0181  0E7E     SWAPF 0x7E, W
+0182  0009     RETFIE
+61:            
+62:            void main(void) {
+63:                timer0_setup();
+01D2  21C7     CALL 0x1C7
+64:                setup_ir_decoder();
+01D3  2197     CALL 0x197
+65:                setup_ir_transmitter();
+01D4  21AA     CALL 0x1AA
+66:                
+67:                while (1){
+01D6  29D5     GOTO 0x1D5
+68:                    transmit_mark();
+01D5  2183     CALL 0x183
+01D6  29D5     GOTO 0x1D5
+69:                    //service_leds();
+70:                }
+71:            }
+---  /firmware.X/leds.c  --------------------------------------------------------------------------------
+1:             /*
+2:              * Copyright 2018 Google LLC
+3:              *
+4:              * Licensed under the Apache License, Version 2.0 (the "License");
+5:              * you may not use this file except in compliance with the License.
+6:              * You may obtain a copy of the License at
+7:              *
+8:              *      http://www.apache.org/licenses/LICENSE-2.0
+9:              *
+10:             * Unless required by applicable law or agreed to in writing, software
+11:             * distributed under the License is distributed on an "AS IS" BASIS,
+12:             * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+13:             * See the License for the specific language governing permissions and
+14:             * limitations under the License.
+15:             */
+16:            
+17:            #include <stdint.h>
+18:            
+19:            #include <xc.h>
+20:            
+21:            #include "leds.h"
+22:            
+23:            volatile uint16_t led_pos = 0;
+24:            volatile uint8_t led_mode = LMODE_BLUE_TEAM; // default mode
+25:            
+26:            #define LED_RED_LEFT()          leda_on(0, 0)
+27:            #define LED_RED_RIGHT()         leda_on(0, 1)
+28:            #define LED_YELLOW_LEFT()       leda_on(2, 0)
+29:            #define LED_YELLOW_RIGHT()      leda_on(2, 1)
+30:            #define LED_GREEN_LEFT()        ledb_on(3, 0)
+31:            #define LED_GREEN_RIGHT()       leda_on(3, 0)
+32:            #define LED_BLUE_LEFT()         ledb_on(3, 1)
+33:            #define LED_BLUE_RIGHT()        leda_on(3, 1)
+34:            
+35:            static inline void all_off();
+36:            static inline void leda_on(uint8_t pos, uint8_t dir);
+37:            static inline void ledb_on(uint8_t pos, uint8_t dir);
+38:            
+39:            /*
+40:             * Turn on exactly one LED
+41:             */
+42:            void exactly_on(uint8_t which) {
+43:                all_off();
+44:                switch (which) {
+45:                    case 0:
+46:                        LED_RED_LEFT();
+47:                        break;
+48:                    case 1:
+49:                        LED_YELLOW_LEFT();
+50:                        break;
+51:                    case 2:
+52:                        LED_GREEN_LEFT();
+53:                        break;
+54:                    case 3:
+55:                        LED_BLUE_LEFT();
+56:                        break;
+57:                    case 4:
+58:                        LED_RED_RIGHT();
+59:                        break;
+60:                    case 5:
+61:                        LED_YELLOW_RIGHT();
+62:                        break;
+63:                    case 6:
+64:                        LED_GREEN_RIGHT();
+65:                        break;
+66:                    case 7:
+67:                        LED_BLUE_RIGHT();
+68:                        break;
+69:                }
 70:            }
-018F  0008     RETURN
 71:            
 72:            /*
-73:             * Turn a LED on on PORTB
+73:             * Turn all LEDs off
 74:             */
-75:            static inline void ledb_on(uint8_t pos, uint8_t dir) {
-0130  00F3     MOVWF pos
-76:                if (dir)
-0131  0870     MOVF __pcstackCOMMON, W
-0132  1903     BTFSC STATUS, 0x2
-0133  2943     GOTO 0x143
-77:                    PORTB |= (1u<<pos);
-0134  3001     MOVLW 0x1
-0135  00F1     MOVWF 0x71
-0136  0A73     INCF pos, W
-0137  293A     GOTO 0x13A
-0138  1003     BCF STATUS, 0x0
-0139  0DF1     RLF 0x71, F
-013A  3EFF     ADDLW 0xFF
-013B  1D03     BTFSS STATUS, 0x2
-013C  2938     GOTO 0x138
-013D  0871     MOVF 0x71, W
-013E  00F2     MOVWF 0x72
-013F  0872     MOVF 0x72, W
-0140  1283     BCF STATUS, 0x5
-0141  0486     IORWF PORTB, F
-0142  2952     GOTO 0x152
-78:                else
-79:                    PORTB &= ~(1u<<pos);
-0143  3001     MOVLW 0x1
-0144  00F1     MOVWF 0x71
-0145  0A73     INCF pos, W
-0146  2949     GOTO 0x149
-0147  1003     BCF STATUS, 0x0
-0148  0DF1     RLF 0x71, F
-0149  3EFF     ADDLW 0xFF
-014A  1D03     BTFSS STATUS, 0x2
-014B  2947     GOTO 0x147
-014C  0871     MOVF 0x71, W
-014D  3AFF     XORLW 0xFF
-014E  00F2     MOVWF 0x72
-014F  0872     MOVF 0x72, W
-0150  1283     BCF STATUS, 0x5
-0151  0586     ANDWF PORTB, F
-80:                TRISB = ~(1u<<pos);
-0152  3001     MOVLW 0x1
-0153  00F1     MOVWF 0x71
-0154  0A73     INCF pos, W
-0155  2958     GOTO 0x158
-0156  1003     BCF STATUS, 0x0
-0157  0DF1     RLF 0x71, F
-0158  3EFF     ADDLW 0xFF
-0159  1D03     BTFSS STATUS, 0x2
-015A  2956     GOTO 0x156
-015B  0871     MOVF 0x71, W
-015C  3AFF     XORLW 0xFF
-015D  1683     BSF STATUS, 0x5
-015E  0086     MOVWF PORTB
-81:            }
-015F  0008     RETURN
-82:            
-83:            void timer0_interrupt(void) {
-84:                static volatile uint8_t pos = 0;
-85:                pos++;
-86:                pos &= 7;
-87:                all_off();
-88:                switch (pos) {
-89:                    case 0:
-90:                        LED_RED_LEFT();
-91:                        break;
-92:                    case 1:
-93:                        LED_YELLOW_LEFT();
-94:                        break;
-95:                    case 2:
-96:                        LED_GREEN_LEFT();
-97:                        break;
-98:                    case 3:
-99:                        LED_BLUE_LEFT();
-100:                       break;
-101:                   case 4:
-102:                       LED_RED_RIGHT();
-103:                       break;
-104:                   case 5:
-105:                       LED_YELLOW_RIGHT();
-106:                       break;
-107:                   case 6:
-108:                       LED_GREEN_RIGHT();
-109:                       break;
-110:                   case 7:
-111:                       LED_BLUE_RIGHT();
-112:                       break;
-113:               }
-114:               INTCONbits.T0IF = 0;  // Clear flag
-115:           }
-116:           
-117:           void timer0_setup() {
-118:               OPTION_REGbits.PSA   = 0;      // Prescaler
-119:               OPTION_REGbits.PS    = 0b111;  // 1:256 Prescaler
-120:               OPTION_REGbits.T0CS  = 0;      // Source = oscillator
-121:               INTCONbits.T0IF      = 0;      // Clear flag.
-122:               INTCONbits.T0IE      = 1;      // Enable timer0 interrupts
-123:               INTCONbits.GIE       = 1;      // Enable global interrupts
-124:           }
----  /firmware.X/ir_decoder.c  --------------------------------------------------------------------------
-1:             #include <stdint.h>
-2:             #include <xc.h>
-3:             
-4:             #include "ir_decoder.h"
-5:             #include "leds.h" // For debug signalling only
-6:             
-7:             #define MICROS_PER_CYCLE      140
-8:             #define START_MICROS          9000
-9:             #define START_CYCLES          START_MICROS/MICROS_PER_CYCLE
-10:            #define START_GAP_MICROS      4500
-11:            #define START_GAP_CYCLES      START_GAP_MICROS/MICROS_PER_CYCLE
-12:            #define BURST_MICROS          562
-13:            #define BURST_CYCLES          BURST_MICROS/MICROS_PER_CYCLE
-14:            #define ZERO_GAP_MICROS       562
-15:            #define ZERO_GAP_CYCLES       ZERO_GAP_MICROS/MICROS_PER_CYCLE
-16:            #define ONE_GAP_MICROS        1675
-17:            #define ONE_GAP_CYCLES        ONE_GAP_MICROS/MICROS_PER_CYCLE
-18:            
-19:            // Reset timer 1 to trigger every MICROS_PER_CYCLE at 1MHz timer clock
-20:            #define TIMER1_RESET() \
-21:              do { \
-22:                TMR1H = 255; \
-23:                TMR1L = (255-MICROS_PER_CYCLE); \
-24:                PIR1bits.TMR1IF = 0; \
-25:              } while(0)
-26:            
-27:            #define IR_PIN PORTBbits.RB0
-28:            
-29:            #define BETWEEN(lo, val, hi) \
-30:              (((lo) <= (val)) && ((val) <= (hi)))
-31:            
-32:            #define TIMING_MARGIN_PERCENT 20
-33:            
-34:            // Is a close to B?
-35:            #define EQUALS_CLOSE(a, b) \
-36:              BETWEEN(((b)*(100-TIMING_MARGIN_PERCENT)/100), (a), (b)*(100+TIMING_MARGIN_PERCENT)/100)
+75:            static inline void all_off() {
+76:                TRISA |= 1 | (1 << 2) | (1 << 3);
+77:                TRISB |= (1 << 3);
+78:            }
+79:            
+80:            /*
+81:             * Turn a LED on on PORTA
+82:             */
+83:            static inline void leda_on(uint8_t pos, uint8_t dir) {
+84:                if (dir)
+85:                    PORTA |= (1u<<pos);
+86:                else
+87:                    PORTA &= ~(1u<<pos);
+88:                TRISA &= ~(1u<<pos);
+89:            }
+90:            
+91:            /*
+92:             * Turn a LED on on PORTB
+93:             */
+94:            static inline void ledb_on(uint8_t pos, uint8_t dir) {
+95:                if (dir)
+96:                    PORTB |= (1u<<pos);
+97:                else
+98:                    PORTB &= ~(1u<<pos);
+99:                TRISB &= ~(1u<<pos);
+100:           }
+101:           
+102:           void timer0_interrupt(void) {
+103:               led_pos++;
+01BA  3001     MOVLW 0x1
+01BB  1283     BCF STATUS, 0x5
+01BC  07A4     ADDWF led_pos, F
+01BD  1803     BTFSC STATUS, 0x0
+01BE  0AA5     INCF 0x25, F
+01BF  3000     MOVLW 0x0
+01C0  07A5     ADDWF 0x25, F
+104:               led_pos &= 0b1111111111;
+01C1  30FF     MOVLW 0xFF
+01C2  05A4     ANDWF led_pos, F
+01C3  3003     MOVLW 0x3
+01C4  05A5     ANDWF 0x25, F
+105:               INTCONbits.T0IF = 0;  // Clear flag
+01C5  110B     BCF INTCON, 0x2
+106:           }
+01C6  0008     RETURN
+107:           
+108:           void bits3_chase(uint8_t pos) {
+109:               switch (pos) {
+110:                default:
+111:                case 0:
+112:                    LED_RED_LEFT();
+113:                    break;
+114:                case 1:
+115:                    LED_YELLOW_LEFT();
+116:                    break;
+117:                case 2:
+118:                    LED_GREEN_LEFT();
+119:                    break;
+120:                case 3:
+121:                    LED_BLUE_LEFT();
+122:                    break;
+123:                case 4:
+124:                    LED_RED_RIGHT();
+125:                    break;
+126:                case 5:
+127:                    LED_YELLOW_RIGHT();
+128:                    break;
+129:                case 6:
+130:                    LED_GREEN_RIGHT();
+131:                    break;
+132:                case 7:
+133:                    LED_BLUE_RIGHT();
+134:                    break;
+135:               }
+136:           }
+137:           
+138:           void bits2_double_chase(uint8_t pos, uint8_t side) {
+139:               switch (pos) {
+140:                default:
+141:                case 0:
+142:                    if (side)
+143:                       LED_RED_LEFT();
+144:                    else
+145:                       LED_RED_RIGHT();
+146:                    break;
+147:                case 1:
+148:                    if (side)
+149:                       LED_YELLOW_LEFT();
+150:                    else
+151:                       LED_YELLOW_RIGHT();
+152:                    break;
+153:                case 2:
+154:                    if (side)
+155:                       LED_GREEN_LEFT();
+156:                    else
+157:                       LED_GREEN_RIGHT();
+158:                    break;
+159:                case 3:
+160:                    if (side)
+161:                       LED_BLUE_LEFT();
+162:                    else
+163:                       LED_BLUE_RIGHT();
+164:                    break;
+165:               }
+166:           }
+167:           
+168:           void inline blue_team_led(uint16_t pos) {
+169:               if (pos < 512) {
+170:                   if ((pos%2) == 0)
+171:                       LED_BLUE_RIGHT();
+172:                   else
+173:                       LED_BLUE_LEFT();
+174:               } else {
+175:                   bits2_double_chase((pos - 512) / 128, pos%2);
+176:               }
+177:           }
+178:           
+179:           void inline red_team_led(uint16_t pos) {
+180:               if (pos < 512) {
+181:                   if ((pos%2) == 0)
+182:                       LED_RED_RIGHT();
+183:                   else
+184:                       LED_RED_LEFT();
+185:               } else {
+186:                   bits2_double_chase((pos - 512) / 128, pos%2);
+187:               }
+188:           }
+189:           
+190:           
+191:           void service_leds(void) {
+192:               uint16_t temp_pos = led_pos;
+193:               
+194:               switch (led_mode) {
+195:                   case LMODE_OFF:
+196:                       all_off();
+197:                       break;
+198:                   case LMODE_CHASE_1:
+199:                       all_off();
+200:                       bits3_chase((temp_pos & 0b11111111) / 32);
+201:                       break;
+202:                   case LMODE_CHASE_FAST:
+203:                       all_off();
+204:                       bits3_chase(((temp_pos & 0b11111111) / 16) % 8);
+205:                       break;
+206:                   case LMODE_BLUE_TEAM:
+207:                       all_off();
+208:                       blue_team_led(temp_pos);
+209:                       break;
+210:                   case LMODE_RED_TEAM:
+211:                       all_off();
+212:                       red_team_led(temp_pos);
+213:                       break;
+214:               }
+215:           }
+216:           
+217:           void timer0_setup() {
+218:               OPTION_REGbits.PSA   = 0;      // Prescaler
+01C7  1683     BSF STATUS, 0x5
+01C8  1181     BCF TMR0, 0x3
+219:               OPTION_REGbits.PS    = 0b010;  // 1:???8? Prescaler
+01C9  0801     MOVF TMR0, W
+01CA  39F8     ANDLW 0xF8
+01CB  3802     IORLW 0x2
+01CC  0081     MOVWF TMR0
+220:               OPTION_REGbits.T0CS  = 0;      // Source = oscillator
+01CD  1281     BCF TMR0, 0x5
+221:               INTCONbits.T0IF      = 0;      // Clear flag.
+01CE  110B     BCF INTCON, 0x2
+222:               INTCONbits.T0IE      = 1;      // Enable timer0 interrupts
+01CF  168B     BSF INTCON, 0x5
+223:               INTCONbits.GIE       = 1;      // Enable global interrupts
+01D0  178B     BSF INTCON, 0x7
+224:           }
+01D1  0008     RETURN
+---  /firmware.X/ir_transmitter.c  ----------------------------------------------------------------------
+1:             /*
+2:              * Copyright 2018 Google LLC
+3:              *
+4:              * Licensed under the Apache License, Version 2.0 (the "License");
+5:              * you may not use this file except in compliance with the License.
+6:              * You may obtain a copy of the License at
+7:              *
+8:              *      http://www.apache.org/licenses/LICENSE-2.0
+9:              *
+10:             * Unless required by applicable law or agreed to in writing, software
+11:             * distributed under the License is distributed on an "AS IS" BASIS,
+12:             * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+13:             * See the License for the specific language governing permissions and
+14:             * limitations under the License.
+15:             */
+16:            
+17:            #include <stdint.h>
+18:            #include <xc.h>
+19:            
+20:            #include "ir_transmitter.h"
+21:            
+22:            // Determined by 1MHz/38kHz/2
+23:            #define TIMER2_PERIOD 13
+24:            
+25:            #define TRANSMIT_OFF()      TRISB |= (1 << 2);
+26:            #define TRANSMIT_ON()       TRISB &= ~(1 << 2);
+27:            
+28:            void setup_ir_transmitter() {
+29:                // Setup timer 2 for base carrier
+30:                T2CONbits.TMR2ON = 1;
+01AA  1283     BCF STATUS, 0x5
+01AB  1512     BSF T2CON, 0x2
+31:                PIE1bits.TMR2IE = 0;
+01AC  1683     BSF STATUS, 0x5
+01AD  108C     BCF PIR1, 0x1
+32:                PIR1bits.TMR2IF = 0;
+01AE  1283     BCF STATUS, 0x5
+01AF  108C     BCF PIR1, 0x1
+33:                PR2 = TIMER2_PERIOD;
+01B0  300D     MOVLW 0xD
+01B1  1683     BSF STATUS, 0x5
+01B2  0092     MOVWF T2CON
+34:                // TODO: controlled by timer
+35:                TRANSMIT_ON();
+01B3  30FB     MOVLW 0xFB
+01B4  1283     BCF STATUS, 0x5
+01B5  00AD     MOVWF __pcstackBANK0
+01B6  082D     MOVF __pcstackBANK0, W
+01B7  1683     BSF STATUS, 0x5
+01B8  0586     ANDWF PORTB, F
+36:            }
+01B9  0008     RETURN
 37:            
-38:            typedef enum __PACK {
-39:              STATE_IDLE,
-40:              STATE_START,
-41:              STATE_START_GAP,
-42:              STATE_BURST,
-43:              STATE_GAP,
-44:            } ir_decoder_state_t;
-45:            
-46:            volatile uint32_t ir_data;  // Data when valid
-47:            volatile uint8_t ir_data_valid = 0;  // Reader should reset this
-48:            
-49:            void timer1_interrupt_decoder() {
-50:              /** Call from ISR when (TMR1IF && TMR1IE) */
-51:              static volatile ir_decoder_state_t decoder_state = STATE_IDLE;
-52:              static volatile uint8_t bit_count = 0;
-53:              static volatile uint8_t state_timer = 0;  // Time spent in current state
-54:            
-55:              TIMER1_RESET();
-001D  30FF     MOVLW 0xFF
-001E  1283     BCF STATUS, 0x5
-001F  008F     MOVWF TMR1H
-0020  3073     MOVLW 0x73
-0021  008E     MOVWF TMR1
-0022  100C     BCF PIR1, 0x0
-56:            
-57:              // Wait for previous data to be read
-58:              if(ir_data_valid)
-0023  0826     MOVF ir_data_valid, W
-0024  1D03     BTFSS STATUS, 0x2
-0025  0008     RETURN
-0026  28F1     GOTO 0xF1
-59:                return;
-60:            
-61:              switch (decoder_state) {
-00F1  0825     MOVF decoder_state, W
-00F2  0084     MOVWF FSR
-00F3  3005     MOVLW 0x5
-00F4  0204     SUBWF FSR, W
-00F5  1803     BTFSC STATUS, 0x0
-00F6  0008     RETURN
-00F7  3001     MOVLW 0x1
-00F8  008A     MOVWF PCLATH
-00F9  30C2     MOVLW 0xC2
-00FA  0704     ADDWF FSR, W
-00FB  0082     MOVWF PCL
-01C2  2827     GOTO 0x27
-62:                case STATE_IDLE:
-63:                  // Idling
-64:                  if (IR_PIN) // Still idle
-0027  1806     BTFSC PORTB, 0x0
-0028  0008     RETURN
-65:                    return;
-66:                  decoder_state = STATE_START;
-0029  3001     MOVLW 0x1
-002A  00F5     MOVWF 0x75
-002B  0875     MOVF 0x75, W
-002C  00A5     MOVWF decoder_state
-67:                  state_timer = 1;
-002D  3001     MOVLW 0x1
-002E  00F5     MOVWF 0x75
-002F  0875     MOVF 0x75, W
-0030  00FC     MOVWF __pbssCOMMON
-68:                  bit_count = 0;
-0031  01FD     CLRF bit_count
-69:                  return;
-0032  0008     RETURN
-70:                case STATE_START:
-71:                  // In the start bit
-72:                  exactly_on(1);
+38:            void transmit_mark() {
+39:                // Transmit a 38kHz timer for 562.5us, 21.375 cycles = 42 inversions
+40:                INTCONbits.GIE = 0;
+0183  138B     BCF INTCON, 0x7
+41:                // Called frequently.  Don't do much.
+42:                // Toggle output (RB2))
+43:                register uint8_t i;
+44:                for(i=42;i;--i) {
+0184  302A     MOVLW 0x2A
+0185  1283     BCF STATUS, 0x5
+0186  00AD     MOVWF __pcstackBANK0
+0187  082D     MOVF __pcstackBANK0, W
+0188  00AE     MOVWF i
+0189  082E     MOVF i, W
+018A  1903     BTFSC STATUS, 0x2
+018B  2995     GOTO 0x195
+0191  3001     MOVLW 0x1
+0192  1283     BCF STATUS, 0x5
+0193  02AE     SUBWF i, F
+0194  2989     GOTO 0x189
+45:                  PORTB ^= 4; //rb2
+018C  3004     MOVLW 0x4
+018D  00AD     MOVWF __pcstackBANK0
+018E  082D     MOVF __pcstackBANK0, W
+018F  0686     XORWF PORTB, F
+46:                  asm("NOP");
+0190  0000     NOP
+47:                }
+48:                INTCONbits.GIE = 1;
+0195  178B     BSF INTCON, 0x7
+49:            }
+0196  0008     RETURN
+50:            
+51:            void timer1_interrupt_transmitter() {
+52:                
+53:            }
+01DE  0008     RETURN
+---  /firmware.X/ir_decoder.c  --------------------------------------------------------------------------
+1:             /*
+2:              * Copyright 2018 Google LLC
+3:              *
+4:              * Licensed under the Apache License, Version 2.0 (the "License");
+5:              * you may not use this file except in compliance with the License.
+6:              * You may obtain a copy of the License at
+7:              *
+8:              *      http://www.apache.org/licenses/LICENSE-2.0
+9:              *
+10:             * Unless required by applicable law or agreed to in writing, software
+11:             * distributed under the License is distributed on an "AS IS" BASIS,
+12:             * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+13:             * See the License for the specific language governing permissions and
+14:             * limitations under the License.
+15:             */
+16:            
+17:            #include <stdint.h>
+18:            #include <xc.h>
+19:            
+20:            #include "ir_decoder.h"
+21:            
+22:            #define MICROS_PER_CYCLE        140
+23:            #define RESET_MICROS_PER_CYCLE  30
+24:            #define START_MICROS            9000
+25:            #define START_CYCLES            START_MICROS/MICROS_PER_CYCLE
+26:            #define START_GAP_MICROS        4500
+27:            #define START_GAP_CYCLES        START_GAP_MICROS/MICROS_PER_CYCLE
+28:            #define BURST_MICROS            562
+29:            #define BURST_CYCLES            BURST_MICROS/MICROS_PER_CYCLE
+30:            #define ZERO_GAP_MICROS         562
+31:            #define ZERO_GAP_CYCLES         ZERO_GAP_MICROS/MICROS_PER_CYCLE
+32:            #define ONE_GAP_MICROS          1675
+33:            #define ONE_GAP_CYCLES          ONE_GAP_MICROS/MICROS_PER_CYCLE
+34:            
+35:            // Reset timer 1 to trigger every MICROS_PER_CYCLE at 1MHz timer clock
+36:            #define TIMER1_RESET() \
+37:              do { \
+38:                T1CONbits.TMR1ON = 0; \
+39:                TMR1H = 255; \
+40:                TMR1L = (255-MICROS_PER_CYCLE+RESET_MICROS_PER_CYCLE); \
+41:                PIR1bits.TMR1IF = 0; \
+42:                T1CONbits.TMR1ON = 1; \
+43:              } while(0)
+44:            
+45:            #define IR_PIN PORTBbits.RB0
+46:            
+47:            #define BETWEEN(lo, val, hi) \
+48:              (((lo) <= (val)) && ((val) <= (hi)))
+49:            
+50:            #define TIMING_MARGIN_START 15
+51:            #define TIMING_MARGIN 2
+52:            
+53:            // Is a close to B?
+54:            #define EQUALS_CLOSE(a, b) \
+55:              BETWEEN((b)-TIMING_MARGIN, (a), (b)+TIMING_MARGIN)
+56:            #define EQUALS_WIDE(a, b) \
+57:              BETWEEN((b)-TIMING_MARGIN_START, (a), (b)+TIMING_MARGIN_START)
+58:            
+59:            typedef enum __PACK {
+60:                STATE_IDLE,
+61:                STATE_START,
+62:                STATE_START_GAP,
+63:                STATE_BURST,
+64:                STATE_GAP,
+65:            } ir_decoder_state_t;
+66:            
+67:            volatile uint32_t ir_data; // Data when valid
+68:            volatile uint8_t ir_data_valid = 0; // Reader should reset this
+69:            
+70:            #define TRANSITION_STATE(new) \
+71:                state_timer = 1; \
+72:                decoder_state = (new)
+73:            
+74:            #define RESET_STATE() decoder_state = STATE_IDLE
+75:            
+76:            void timer1_interrupt_decoder() {
+77:                /** Call from ISR when (TMR1IF && TMR1IE) */
+78:                static volatile ir_decoder_state_t decoder_state = STATE_IDLE;
+79:                static volatile uint8_t bit_count = 0;
+80:                static volatile uint8_t state_timer = 0; // Time spent in current state
+81:            
+82:                TIMER1_RESET();
+0021  1283     BCF STATUS, 0x5
+0022  1010     BCF T1CON, 0x0
+0023  30FF     MOVLW 0xFF
+0024  008F     MOVWF TMR1H
+0025  3091     MOVLW 0x91
+0026  008E     MOVWF TMR1
+0027  100C     BCF PIR1, 0x0
+0028  1410     BSF T1CON, 0x0
+83:            
+84:                // Wait for previous data to be read
+85:                if (ir_data_valid)
+0029  082A     MOVF ir_data_valid, W
+002A  1D03     BTFSS STATUS, 0x2
+002B  0008     RETURN
+002C  2951     GOTO 0x151
+86:                    return;
+87:            
+88:                switch (decoder_state) {
+0151  0829     MOVF decoder_state, W
+0152  0084     MOVWF FSR
+0153  3005     MOVLW 0x5
+0154  0204     SUBWF FSR, W
+0155  1803     BTFSC STATUS, 0x0
+0156  0008     RETURN
+0157  3001     MOVLW 0x1
+0158  008A     MOVWF PCLATH
+0159  30D7     MOVLW 0xD7
+015A  0704     ADDWF FSR, W
+015B  0082     MOVWF PCL
+01D7  282D     GOTO 0x2D
+89:                    case STATE_IDLE:
+90:                        // Idling
+91:                        if (IR_PIN) // Still idle
+002D  1806     BTFSC PORTB, 0x0
+002E  0008     RETURN
+92:                            return;
+93:                        TRANSITION_STATE(STATE_START);
+002F  3001     MOVLW 0x1
+0030  00F0     MOVWF __pcstackCOMMON
+0031  0870     MOVF __pcstackCOMMON, W
+0032  00A7     MOVWF state_timer
 0033  3001     MOVLW 0x1
-0034  20FD     CALL 0xFD
-73:                  if (!IR_PIN) {
-0035  1283     BCF STATUS, 0x5
-0036  1806     BTFSC PORTB, 0x0
-0037  283D     GOTO 0x3D
-74:                    state_timer++;
-0038  3001     MOVLW 0x1
-0039  00F5     MOVWF 0x75
-003A  0875     MOVF 0x75, W
-003B  07FC     ADDWF __pbssCOMMON, F
-75:                    return;
-003C  0008     RETURN
-76:                  }
-77:                  // Check start burst length.
-78:                  if (EQUALS_CLOSE(state_timer, START_CYCLES)) {
-003D  3033     MOVLW 0x33
-003E  027C     SUBWF __pbssCOMMON, W
-003F  1C03     BTFSS STATUS, 0x0
-0040  284B     GOTO 0x4B
-0041  304D     MOVLW 0x4D
-0042  027C     SUBWF __pbssCOMMON, W
-0043  1803     BTFSC STATUS, 0x0
-0044  284B     GOTO 0x4B
-79:                    decoder_state = STATE_START_GAP;
-0045  3002     MOVLW 0x2
-0046  00F5     MOVWF 0x75
-0047  0875     MOVF 0x75, W
-0048  00A5     MOVWF decoder_state
-80:                    state_timer=0;
-0049  01FC     CLRF __pbssCOMMON
-81:                    return;
-004A  0008     RETURN
-82:                  }
-83:                  // Not long enough for start burst
-84:                  decoder_state = STATE_IDLE;
-004B  01A5     CLRF decoder_state
-85:                  return;
-004C  0008     RETURN
-86:                case STATE_START_GAP:
-87:                  // In the gap
-88:                  exactly_on(2);
-004D  3002     MOVLW 0x2
-004E  20FD     CALL 0xFD
-89:                  if (IR_PIN) {
-004F  1283     BCF STATUS, 0x5
-0050  1C06     BTFSS PORTB, 0x0
-0051  2857     GOTO 0x57
-90:                    state_timer++;
-0052  3001     MOVLW 0x1
-0053  00F5     MOVWF 0x75
-0054  0875     MOVF 0x75, W
-0055  07FC     ADDWF __pbssCOMMON, F
-91:                    return;
-0056  0008     RETURN
-92:                  }
-93:                  if (!EQUALS_CLOSE(state_timer, START_GAP_CYCLES)) {
-0057  3019     MOVLW 0x19
-0058  027C     SUBWF __pbssCOMMON, W
-0059  1C03     BTFSS STATUS, 0x0
-005A  285F     GOTO 0x5F
-005B  3027     MOVLW 0x27
-005C  027C     SUBWF __pbssCOMMON, W
-005D  1C03     BTFSS STATUS, 0x0
-005E  2861     GOTO 0x61
-94:                    decoder_state = STATE_IDLE;
-005F  01A5     CLRF decoder_state
-95:                    return;
-0060  0008     RETURN
-96:                  }
-97:                  // Have started data burst
-98:                  state_timer = 0;
-0061  01FC     CLRF __pbssCOMMON
-99:                  decoder_state = STATE_BURST;
-0062  3003     MOVLW 0x3
-0063  00F5     MOVWF 0x75
-0064  0875     MOVF 0x75, W
-0065  00A5     MOVWF decoder_state
-100:                 return;
-0066  0008     RETURN
-101:               case STATE_BURST:
-102:                 exactly_on(3);
-0067  3003     MOVLW 0x3
-0068  20FD     CALL 0xFD
-103:                 if (!IR_PIN) {
-0069  1283     BCF STATUS, 0x5
-006A  1806     BTFSC PORTB, 0x0
-006B  2871     GOTO 0x71
-104:                   state_timer++;
-006C  3001     MOVLW 0x1
-006D  00F5     MOVWF 0x75
-006E  0875     MOVF 0x75, W
-006F  07FC     ADDWF __pbssCOMMON, F
-105:                   return;
-0070  0008     RETURN
-106:                 }
-107:                 // Burst is over
-108:                 if (!EQUALS_CLOSE(state_timer, BURST_CYCLES)) {
-0071  3003     MOVLW 0x3
-0072  027C     SUBWF __pbssCOMMON, W
-0073  1C03     BTFSS STATUS, 0x0
-0074  2879     GOTO 0x79
-0075  3005     MOVLW 0x5
-0076  027C     SUBWF __pbssCOMMON, W
-0077  1C03     BTFSS STATUS, 0x0
-0078  287B     GOTO 0x7B
-109:                   decoder_state = STATE_IDLE;
-0079  01A5     CLRF decoder_state
-110:                 } else {
-007A  0008     RETURN
-111:                   decoder_state = STATE_GAP;
-007B  3004     MOVLW 0x4
-007C  00F5     MOVWF 0x75
-007D  0875     MOVF 0x75, W
-007E  00A5     MOVWF decoder_state
-112:                   state_timer = 0;
-007F  01FC     CLRF __pbssCOMMON
-113:                 }
-114:                 return;
-0080  0008     RETURN
-115:               case STATE_GAP:
-116:                 exactly_on(4);
-0081  3004     MOVLW 0x4
-0082  20FD     CALL 0xFD
-117:                 if (IR_PIN) {
-0083  1283     BCF STATUS, 0x5
-0084  1C06     BTFSS PORTB, 0x0
-0085  288B     GOTO 0x8B
-118:                   state_timer++;
-0086  3001     MOVLW 0x1
-0087  00F5     MOVWF 0x75
-0088  0875     MOVF 0x75, W
-0089  07FC     ADDWF __pbssCOMMON, F
-119:                   return;
-008A  0008     RETURN
-120:                 }
-121:                 if (EQUALS_CLOSE(state_timer, ZERO_GAP_CYCLES)) {
-008B  3003     MOVLW 0x3
-008C  027C     SUBWF __pbssCOMMON, W
-008D  1C03     BTFSS STATUS, 0x0
-008E  28B3     GOTO 0xB3
-008F  3005     MOVLW 0x5
-0090  027C     SUBWF __pbssCOMMON, W
-0091  1803     BTFSC STATUS, 0x0
-0092  28B3     GOTO 0xB3
-122:                   // LSB first
-123:                   ir_data &= ~(1u << (31u-bit_count));
-0093  037D     DECF bit_count, W
-0094  3AFF     XORLW 0xFF
-0095  3E1F     ADDLW 0x1F
-0096  00F5     MOVWF 0x75
-0097  0AF5     INCF 0x75, F
-0098  3001     MOVLW 0x1
-0099  00F6     MOVWF 0x76
+0034  00F0     MOVWF __pcstackCOMMON
+0035  0870     MOVF __pcstackCOMMON, W
+0036  00A9     MOVWF decoder_state
+94:                        bit_count = 0;
+0037  01A8     CLRF bit_count
+95:                        return;
+0038  0008     RETURN
+96:                    case STATE_START:
+97:                        // In the start bit
+98:                        if (!IR_PIN) {
+0039  1806     BTFSC PORTB, 0x0
+003A  2840     GOTO 0x40
+99:                            state_timer++;
+003B  3001     MOVLW 0x1
+003C  00F0     MOVWF __pcstackCOMMON
+003D  0870     MOVF __pcstackCOMMON, W
+003E  07A7     ADDWF state_timer, F
+100:                           return;
+003F  0008     RETURN
+101:                       }
+102:                       // Check start burst length.
+103:                       if (EQUALS_WIDE(state_timer, START_CYCLES)) {
+0040  3031     MOVLW 0x31
+0041  0227     SUBWF state_timer, W
+0042  1C03     BTFSS STATUS, 0x0
+0043  2851     GOTO 0x51
+0044  3050     MOVLW 0x50
+0045  0227     SUBWF state_timer, W
+0046  1803     BTFSC STATUS, 0x0
+0047  2851     GOTO 0x51
+104:                           TRANSITION_STATE(STATE_START_GAP);
+0048  3001     MOVLW 0x1
+0049  00F0     MOVWF __pcstackCOMMON
+004A  0870     MOVF __pcstackCOMMON, W
+004B  00A7     MOVWF state_timer
+004C  3002     MOVLW 0x2
+004D  00F0     MOVWF __pcstackCOMMON
+004E  0870     MOVF __pcstackCOMMON, W
+004F  00A9     MOVWF decoder_state
+105:                           return;
+0050  0008     RETURN
+106:                       }
+107:                       // Not long enough for start burst
+108:                       RESET_STATE();
+0051  01A9     CLRF decoder_state
+109:                       return;
+0052  0008     RETURN
+110:                   case STATE_START_GAP:
+111:                       // In the gap
+112:                       if (IR_PIN) {
+0053  1C06     BTFSS PORTB, 0x0
+0054  285A     GOTO 0x5A
+113:                           state_timer++;
+0055  3001     MOVLW 0x1
+0056  00F0     MOVWF __pcstackCOMMON
+0057  0870     MOVF __pcstackCOMMON, W
+0058  07A7     ADDWF state_timer, F
+114:                           return;
+0059  0008     RETURN
+115:                       }
+116:                       if (!EQUALS_WIDE(state_timer, START_GAP_CYCLES)) {
+005A  3011     MOVLW 0x11
+005B  0227     SUBWF state_timer, W
+005C  1C03     BTFSS STATUS, 0x0
+005D  2862     GOTO 0x62
+005E  3030     MOVLW 0x30
+005F  0227     SUBWF state_timer, W
+0060  1C03     BTFSS STATUS, 0x0
+0061  2864     GOTO 0x64
+117:                           RESET_STATE();
+0062  01A9     CLRF decoder_state
+118:                           return;
+0063  0008     RETURN
+119:                       }
+120:                       // Have started data burst
+121:                       TRANSITION_STATE(STATE_BURST);
+0064  3001     MOVLW 0x1
+0065  00F0     MOVWF __pcstackCOMMON
+0066  0870     MOVF __pcstackCOMMON, W
+0067  00A7     MOVWF state_timer
+0068  3003     MOVLW 0x3
+0069  00F0     MOVWF __pcstackCOMMON
+006A  0870     MOVF __pcstackCOMMON, W
+006B  00A9     MOVWF decoder_state
+122:                       return;
+006C  0008     RETURN
+123:                   case STATE_BURST:
+124:                       if (!IR_PIN) {
+006D  1806     BTFSC PORTB, 0x0
+006E  2874     GOTO 0x74
+125:                           state_timer++;
+006F  3001     MOVLW 0x1
+0070  00F0     MOVWF __pcstackCOMMON
+0071  0870     MOVF __pcstackCOMMON, W
+0072  07A7     ADDWF state_timer, F
+126:                           return;
+0073  0008     RETURN
+127:                       }
+128:                       // Burst is over
+129:                       if (!EQUALS_CLOSE(state_timer, BURST_CYCLES)) {
+0074  3002     MOVLW 0x2
+0075  0227     SUBWF state_timer, W
+0076  1C03     BTFSS STATUS, 0x0
+0077  287C     GOTO 0x7C
+0078  3007     MOVLW 0x7
+0079  0227     SUBWF state_timer, W
+007A  1C03     BTFSS STATUS, 0x0
+007B  287E     GOTO 0x7E
+130:                           RESET_STATE();
+007C  01A9     CLRF decoder_state
+131:                       } else {
+007D  0008     RETURN
+132:                           TRANSITION_STATE(STATE_GAP);
+007E  3001     MOVLW 0x1
+007F  00F0     MOVWF __pcstackCOMMON
+0080  0870     MOVF __pcstackCOMMON, W
+0081  00A7     MOVWF state_timer
+0082  3004     MOVLW 0x4
+0083  00F0     MOVWF __pcstackCOMMON
+0084  0870     MOVF __pcstackCOMMON, W
+0085  00A9     MOVWF decoder_state
+133:                       }
+134:                       return;
+0086  0008     RETURN
+135:                   case STATE_GAP:
+136:                       if (IR_PIN) {
+0087  1C06     BTFSS PORTB, 0x0
+0088  288E     GOTO 0x8E
+137:                           state_timer++;
+0089  3001     MOVLW 0x1
+008A  00F0     MOVWF __pcstackCOMMON
+008B  0870     MOVF __pcstackCOMMON, W
+008C  07A7     ADDWF state_timer, F
+138:                           return;
+008D  0008     RETURN
+139:                       }
+140:                       if (EQUALS_CLOSE(state_timer, ZERO_GAP_CYCLES)) {
+008E  3002     MOVLW 0x2
+008F  0227     SUBWF state_timer, W
+0090  1C03     BTFSS STATUS, 0x0
+0091  28B8     GOTO 0xB8
+0092  3007     MOVLW 0x7
+0093  0227     SUBWF state_timer, W
+0094  1803     BTFSC STATUS, 0x0
+0095  28B8     GOTO 0xB8
+141:                           // LSB first
+142:                           ir_data &= ~(1ul << (31ul - bit_count));
+0096  3001     MOVLW 0x1
+0097  00F0     MOVWF __pcstackCOMMON
+0098  3000     MOVLW 0x0
+0099  00F1     MOVWF 0x71
 009A  3000     MOVLW 0x0
-009B  00F7     MOVWF 0x77
-009C  28A0     GOTO 0xA0
-009D  1003     BCF STATUS, 0x0
-009E  0DF6     RLF 0x76, F
-009F  0DF7     RLF 0x77, F
-00A0  0BF5     DECFSZ 0x75, F
-00A1  289D     GOTO 0x9D
-00A2  09F6     COMF 0x76, F
-00A3  09F7     COMF 0x77, F
-00A4  0876     MOVF 0x76, W
-00A5  00F8     MOVWF 0x78
-00A6  0877     MOVF 0x77, W
-00A7  00F9     MOVWF 0x79
-00A8  01FA     CLRF 0x7A
-00A9  01FB     CLRF 0x7B
-00AA  0878     MOVF 0x78, W
-00AB  05A0     ANDWF ir_data, F
-00AC  0879     MOVF 0x79, W
-00AD  05A1     ANDWF 0x21, F
-00AE  087A     MOVF 0x7A, W
-00AF  05A2     ANDWF 0x22, F
-00B0  087B     MOVF 0x7B, W
-00B1  05A3     ANDWF 0x23, F
-124:                 } else if (EQUALS_CLOSE(state_timer, ONE_GAP_CYCLES)) {
-00B2  28DB     GOTO 0xDB
-00B3  3008     MOVLW 0x8
-00B4  027C     SUBWF __pbssCOMMON, W
-00B5  1C03     BTFSS STATUS, 0x0
-00B6  28D9     GOTO 0xD9
-00B7  300E     MOVLW 0xE
-00B8  027C     SUBWF __pbssCOMMON, W
-00B9  1803     BTFSC STATUS, 0x0
-00BA  28D9     GOTO 0xD9
-125:                   // LSB first
-126:                   ir_data |= (1u << (31u-bit_count));
-00BB  037D     DECF bit_count, W
-00BC  3AFF     XORLW 0xFF
-00BD  3E1F     ADDLW 0x1F
-00BE  00F5     MOVWF 0x75
-00BF  0AF5     INCF 0x75, F
+009B  00F2     MOVWF 0x72
+009C  3000     MOVLW 0x0
+009D  00F3     MOVWF 0x73
+009E  0328     DECF bit_count, W
+009F  3AFF     XORLW 0xFF
+00A0  3E1F     ADDLW 0x1F
+00A1  3E01     ADDLW 0x1
+00A2  28A8     GOTO 0xA8
+00A3  1003     BCF STATUS, 0x0
+00A4  0DF0     RLF __pcstackCOMMON, F
+00A5  0DF1     RLF 0x71, F
+00A6  0DF2     RLF 0x72, F
+00A7  0DF3     RLF 0x73, F
+00A8  3EFF     ADDLW 0xFF
+00A9  1D03     BTFSS STATUS, 0x2
+00AA  28A3     GOTO 0xA3
+00AB  09F0     COMF __pcstackCOMMON, F
+00AC  09F1     COMF 0x71, F
+00AD  09F2     COMF 0x72, F
+00AE  09F3     COMF 0x73, F
+00AF  0870     MOVF __pcstackCOMMON, W
+00B0  05A0     ANDWF ir_data, F
+00B1  0871     MOVF 0x71, W
+00B2  05A1     ANDWF 0x21, F
+00B3  0872     MOVF 0x72, W
+00B4  05A2     ANDWF 0x22, F
+00B5  0873     MOVF 0x73, W
+00B6  05A3     ANDWF 0x23, F
+143:                       } else if (EQUALS_CLOSE(state_timer, ONE_GAP_CYCLES)) {
+00B7  28E0     GOTO 0xE0
+00B8  3009     MOVLW 0x9
+00B9  0227     SUBWF state_timer, W
+00BA  1C03     BTFSS STATUS, 0x0
+00BB  28DE     GOTO 0xDE
+00BC  300E     MOVLW 0xE
+00BD  0227     SUBWF state_timer, W
+00BE  1803     BTFSC STATUS, 0x0
+00BF  28DE     GOTO 0xDE
+144:                           // LSB first
+145:                           ir_data |= (1ul << (31ul - bit_count));
 00C0  3001     MOVLW 0x1
-00C1  00F6     MOVWF 0x76
+00C1  00F0     MOVWF __pcstackCOMMON
 00C2  3000     MOVLW 0x0
-00C3  00F7     MOVWF 0x77
-00C4  28C8     GOTO 0xC8
-00C5  1003     BCF STATUS, 0x0
-00C6  0DF6     RLF 0x76, F
-00C7  0DF7     RLF 0x77, F
-00C8  0BF5     DECFSZ 0x75, F
-00C9  28C5     GOTO 0xC5
-00CA  0876     MOVF 0x76, W
-00CB  00F8     MOVWF 0x78
-00CC  0877     MOVF 0x77, W
-00CD  00F9     MOVWF 0x79
-00CE  01FA     CLRF 0x7A
-00CF  01FB     CLRF 0x7B
-00D0  0878     MOVF 0x78, W
-00D1  04A0     IORWF ir_data, F
-00D2  0879     MOVF 0x79, W
-00D3  04A1     IORWF 0x21, F
-00D4  087A     MOVF 0x7A, W
-00D5  04A2     IORWF 0x22, F
-00D6  087B     MOVF 0x7B, W
-00D7  04A3     IORWF 0x23, F
-127:                 } else {
-00D8  28DB     GOTO 0xDB
-128:                   // Gone invalid
-129:                   decoder_state = STATE_IDLE;
-00D9  01A5     CLRF decoder_state
-130:                   return;
-00DA  0008     RETURN
-131:                 }
-132:                 // Found a valid bit
-133:                 bit_count++;
-00DB  3001     MOVLW 0x1
-00DC  00F5     MOVWF 0x75
-00DD  0875     MOVF 0x75, W
-00DE  07FD     ADDWF bit_count, F
-134:                 if (bit_count == 32) {
-00DF  3020     MOVLW 0x20
-00E0  067D     XORWF bit_count, W
-00E1  1D03     BTFSS STATUS, 0x2
-00E2  28EB     GOTO 0xEB
-135:                   ir_data_valid = 1;
-00E3  3001     MOVLW 0x1
-00E4  00F5     MOVWF 0x75
-00E5  0875     MOVF 0x75, W
-00E6  00A6     MOVWF ir_data_valid
-136:                   decoder_state = STATE_IDLE;
-00E7  01A5     CLRF decoder_state
-137:                   exactly_on(5);
-00E8  3005     MOVLW 0x5
-00E9  20FD     CALL 0xFD
-138:                 } else {
-00EA  0008     RETURN
-139:                   decoder_state = STATE_BURST;
-00EB  3003     MOVLW 0x3
-00EC  00F5     MOVWF 0x75
-00ED  0875     MOVF 0x75, W
-00EE  1283     BCF STATUS, 0x5
-00EF  00A5     MOVWF decoder_state
-140:                 }
-141:                 return;
-142:             }
-00F0  0008     RETURN
-143:           }
-00FC  0008     RETURN
-144:           
-145:           void setup_ir_decoder() {
-146:               // Setup IR PIN as input
-147:               TRISBbits.TRISB0 = 1;
-01A2  1683     BSF STATUS, 0x5
-01A3  1406     BSF PORTB, 0x0
-148:               // Setup the timer
-149:               T1CONbits.T1OSCEN = 1;   // bit 3 Timer1 Oscillator Enable Control bit 1 = on
-01A4  1283     BCF STATUS, 0x5
-01A5  1590     BSF T1CON, 0x3
-150:               T1CONbits.T1SYNC = 1;    // bit 2 Timer1 External Clock Input Synchronization Control bit...1 = Do not synchronize external clock input
-01A6  1510     BSF T1CON, 0x2
-151:               T1CONbits.TMR1ON = 1;    // bit 0 enables timer
-01A7  1410     BSF T1CON, 0x0
-152:               PIE1bits.TMR1IE = 1;     // Timer 1 triggers interrupt
-01A8  1683     BSF STATUS, 0x5
-01A9  140C     BSF PIR1, 0x0
-153:               INTCONbits.PEIE = 1;     // Peripheral interrupts
-01AA  170B     BSF INTCON, 0x6
-154:               INTCONbits.GIE = 1;      // Global interrupts.
-01AB  178B     BSF INTCON, 0x7
-155:               TIMER1_RESET();
-01AC  30FF     MOVLW 0xFF
-01AD  1283     BCF STATUS, 0x5
-01AE  008F     MOVWF TMR1H
-01AF  3073     MOVLW 0x73
-01B0  008E     MOVWF TMR1
-01B1  100C     BCF PIR1, 0x0
-01B2  0008     RETURN
-156:           }
-157:           
+00C3  00F1     MOVWF 0x71
+00C4  3000     MOVLW 0x0
+00C5  00F2     MOVWF 0x72
+00C6  3000     MOVLW 0x0
+00C7  00F3     MOVWF 0x73
+00C8  0328     DECF bit_count, W
+00C9  3AFF     XORLW 0xFF
+00CA  3E1F     ADDLW 0x1F
+00CB  3E01     ADDLW 0x1
+00CC  28D2     GOTO 0xD2
+00CD  1003     BCF STATUS, 0x0
+00CE  0DF0     RLF __pcstackCOMMON, F
+00CF  0DF1     RLF 0x71, F
+00D0  0DF2     RLF 0x72, F
+00D1  0DF3     RLF 0x73, F
+00D2  3EFF     ADDLW 0xFF
+00D3  1D03     BTFSS STATUS, 0x2
+00D4  28CD     GOTO 0xCD
+00D5  0870     MOVF __pcstackCOMMON, W
+00D6  04A0     IORWF ir_data, F
+00D7  0871     MOVF 0x71, W
+00D8  04A1     IORWF 0x21, F
+00D9  0872     MOVF 0x72, W
+00DA  04A2     IORWF 0x22, F
+00DB  0873     MOVF 0x73, W
+00DC  04A3     IORWF 0x23, F
+146:                       } else {
+00DD  28E0     GOTO 0xE0
+147:                           // Gone invalid
+148:                           RESET_STATE();
+00DE  01A9     CLRF decoder_state
+149:                           return;
+00DF  0008     RETURN
+150:                       }
+151:                       bit_count++;
+00E0  3001     MOVLW 0x1
+00E1  00F0     MOVWF __pcstackCOMMON
+00E2  0870     MOVF __pcstackCOMMON, W
+00E3  07A8     ADDWF bit_count, F
+152:                       if (bit_count == 32) {
+00E4  3020     MOVLW 0x20
+00E5  0628     XORWF bit_count, W
+00E6  1D03     BTFSS STATUS, 0x2
+00E7  2948     GOTO 0x148
+153:                           T1CONbits.TMR1ON = 0;
+00E8  1010     BCF T1CON, 0x0
+154:                           ir_data_valid = 1;
+00E9  3001     MOVLW 0x1
+00EA  00F0     MOVWF __pcstackCOMMON
+00EB  0870     MOVF __pcstackCOMMON, W
+00EC  00AA     MOVWF ir_data_valid
+155:                           //debug
+156:                           while(bit_count) {
+00ED  1283     BCF STATUS, 0x5
+00EE  0828     MOVF bit_count, W
+00EF  1903     BTFSC STATUS, 0x2
+00F0  2945     GOTO 0x145
+157:                               PORTBbits.RB2 = 1;
+00F1  1506     BSF PORTB, 0x2
+158:                               for(int k=0;k<25;k++)
+00F2  01F5     CLRF k
+00F3  01F6     CLRF 0x76
+00F4  0876     MOVF 0x76, W
+00F5  3A80     XORLW 0x80
+00F6  00FF     MOVWF 0x7F
+00F7  3080     MOVLW 0x80
+00F8  027F     SUBWF 0x7F, W
+00F9  1D03     BTFSS STATUS, 0x2
+00FA  28FD     GOTO 0xFD
+00FB  3019     MOVLW 0x19
+00FC  0275     SUBWF k, W
+00FD  1803     BTFSC STATUS, 0x0
+00FE  2911     GOTO 0x111
+0100  3001     MOVLW 0x1
+0101  07F5     ADDWF k, F
+0102  1803     BTFSC STATUS, 0x0
+0103  0AF6     INCF 0x76, F
+0104  3000     MOVLW 0x0
+0105  07F6     ADDWF 0x76, F
+0106  0876     MOVF 0x76, W
+0107  3A80     XORLW 0x80
+0108  00FF     MOVWF 0x7F
+0109  3080     MOVLW 0x80
+010A  027F     SUBWF 0x7F, W
+010B  1D03     BTFSS STATUS, 0x2
+010C  290F     GOTO 0x10F
+010D  3019     MOVLW 0x19
+010E  0275     SUBWF k, W
+010F  1C03     BTFSS STATUS, 0x0
+0110  28FF     GOTO 0xFF
+159:                                   NOP();
+00FF  0000     NOP
+160:                               PORTBbits.RB2 = ((ir_data>>(--bit_count)) & 1);
+0111  1283     BCF STATUS, 0x5
+0112  0820     MOVF ir_data, W
+0113  00F0     MOVWF __pcstackCOMMON
+0114  0821     MOVF 0x21, W
+0115  00F1     MOVWF 0x71
+0116  0822     MOVF 0x22, W
+0117  00F2     MOVWF 0x72
+0118  0823     MOVF 0x23, W
+0119  00F3     MOVWF 0x73
+011A  3001     MOVLW 0x1
+011B  02A8     SUBWF bit_count, F
+011C  0A28     INCF bit_count, W
+011D  2923     GOTO 0x123
+011E  1003     BCF STATUS, 0x0
+011F  0CF3     RRF 0x73, F
+0120  0CF2     RRF 0x72, F
+0121  0CF1     RRF 0x71, F
+0122  0CF0     RRF __pcstackCOMMON, F
+0123  3EFF     ADDLW 0xFF
+0124  1D03     BTFSS STATUS, 0x2
+0125  291E     GOTO 0x11E
+0126  0870     MOVF __pcstackCOMMON, W
+0127  3901     ANDLW 0x1
+0128  00F4     MOVWF 0x74
+0129  0DF4     RLF 0x74, F
+012A  0DF4     RLF 0x74, F
+012B  0806     MOVF PORTB, W
+012C  0674     XORWF 0x74, W
+012D  39FB     ANDLW 0xFB
+012E  0674     XORWF 0x74, W
+012F  0086     MOVWF PORTB
+161:                               for(int k=0;k<100;k++)
+0130  01F7     CLRF k
+0131  01F8     CLRF 0x78
+0132  0878     MOVF 0x78, W
+0133  3A80     XORLW 0x80
+0134  00FF     MOVWF 0x7F
+0135  3080     MOVLW 0x80
+0136  027F     SUBWF 0x7F, W
+0137  1D03     BTFSS STATUS, 0x2
+0138  293B     GOTO 0x13B
+0139  3064     MOVLW 0x64
+013A  0277     SUBWF k, W
+013B  1803     BTFSC STATUS, 0x0
+013C  28ED     GOTO 0xED
+013E  3001     MOVLW 0x1
+013F  07F7     ADDWF k, F
+0140  1803     BTFSC STATUS, 0x0
+0141  0AF8     INCF 0x78, F
+0142  3000     MOVLW 0x0
+0143  07F8     ADDWF 0x78, F
+0144  2932     GOTO 0x132
+162:                                   NOP();
+013D  0000     NOP
+163:                           }
+164:                           T1CONbits.TMR1ON = 1;
+0145  1410     BSF T1CON, 0x0
+165:                           RESET_STATE();
+0146  01A9     CLRF decoder_state
+166:                       } else {
+0147  0008     RETURN
+167:                           TRANSITION_STATE(STATE_BURST);
+0148  3001     MOVLW 0x1
+0149  00F0     MOVWF __pcstackCOMMON
+014A  0870     MOVF __pcstackCOMMON, W
+014B  00A7     MOVWF state_timer
+014C  3003     MOVLW 0x3
+014D  00F0     MOVWF __pcstackCOMMON
+014E  0870     MOVF __pcstackCOMMON, W
+014F  00A9     MOVWF decoder_state
+168:                       }
+169:                       return;
+170:               }
+0150  0008     RETURN
+171:           }
+015C  0008     RETURN
+172:           
+173:           void setup_ir_decoder() {
+174:               // Setup IR PIN as input
+175:               TRISBbits.TRISB0 = 1;
+0197  1683     BSF STATUS, 0x5
+0198  1406     BSF PORTB, 0x0
+176:               // Setup the timer
+177:               T1CONbits.T1SYNC = 1; // bit 2 Timer1 External Clock Input Synchronization Control bit...1 = Do not synchronize external clock input
+0199  1283     BCF STATUS, 0x5
+019A  1510     BSF T1CON, 0x2
+178:               PIE1bits.TMR1IE = 1; // Timer 1 triggers interrupt
+019B  1683     BSF STATUS, 0x5
+019C  140C     BSF PIR1, 0x0
+179:               INTCONbits.PEIE = 1; // Peripheral interrupts
+019D  170B     BSF INTCON, 0x6
+180:               INTCONbits.GIE = 1; // Global interrupts.
+019E  178B     BSF INTCON, 0x7
+181:               TIMER1_RESET();
+019F  1283     BCF STATUS, 0x5
+01A0  1010     BCF T1CON, 0x0
+01A1  30FF     MOVLW 0xFF
+01A2  008F     MOVWF TMR1H
+01A3  3091     MOVLW 0x91
+01A4  008E     MOVWF TMR1
+01A5  100C     BCF PIR1, 0x0
+01A6  1410     BSF T1CON, 0x0
+182:               // debugging
+183:               TRISBbits.TRISB2 = 0;
+01A7  1683     BSF STATUS, 0x5
+01A8  1106     BCF PORTB, 0x2
+184:           }
+01A9  0008     RETURN
+185:           

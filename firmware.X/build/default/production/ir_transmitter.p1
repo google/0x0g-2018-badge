@@ -1,21 +1,35 @@
 Version 3.2 HI-TECH Software Intermediate Code
-[v F654 `(v ~T0 @X0 1 tf ]
-"35 leds.c
-[v _all_off `TF654 ~T0 @X0 0 s ]
-[v F658 `(v ~T0 @X0 1 tf2`uc`uc ]
-"36
-[v _leda_on `TF658 ~T0 @X0 0 s ]
-[v F662 `(v ~T0 @X0 1 tf2`uc`uc ]
-"37
-[v _ledb_on `TF662 ~T0 @X0 0 s ]
-"1101 /opt/microchip/xc8/v1.45/include/pic16f716.h
-[v _TRISA `Vuc ~T0 @X0 0 e@133 ]
+"599 /opt/microchip/xc8/v1.45/include/pic16f716.h
+[s S24 :2 `uc 1 :1 `uc 1 :4 `uc 1 ]
+[n S24 . T2CKPS TMR2ON TOUTPS ]
+"604
+[s S25 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S25 . T2CKPS0 T2CKPS1 . TOUTPS0 TOUTPS1 TOUTPS2 TOUTPS3 ]
+"598
+[u S23 `S24 1 `S25 1 ]
+[n S23 . . . ]
+"614
+[v _T2CONbits `VS23 ~T0 @X0 0 e@18 ]
+"1305
+[s S54 :1 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
+[n S54 . TMR1IE TMR2IE CCP1IE . ADIE ]
+"1304
+[u S53 `S54 1 ]
+[n S53 . . ]
+"1313
+[v _PIE1bits `VS53 ~T0 @X0 0 e@140 ]
+"466
+[s S19 :1 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
+[n S19 . TMR1IF TMR2IF CCP1IF . ADIF ]
+"465
+[u S18 `S19 1 ]
+[n S18 . . ]
+"474
+[v _PIR1bits `VS18 ~T0 @X0 0 e@12 ]
+"1380
+[v _PR2 `Vuc ~T0 @X0 0 e@146 ]
 "1145
 [v _TRISB `Vuc ~T0 @X0 0 e@134 ]
-"164
-[v _PORTA `Vuc ~T0 @X0 0 e@5 ]
-"208
-[v _PORTB `Vuc ~T0 @X0 0 e@6 ]
 "388
 [s S16 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
 [n S16 . RBIF INTF TMR0IF RBIE INTE TMR0IE PEIE GIE ]
@@ -27,17 +41,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 [n S15 . . . ]
 "405
 [v _INTCONbits `VS15 ~T0 @X0 0 e@11 ]
-"1037
-[s S43 :3 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S43 . PS PSA T0SE T0CS INTEDG nRBPU ]
-"1045
-[s S44 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S44 . PS0 PS1 PS2 ]
-"1036
-[u S42 `S43 1 `S44 1 ]
-[n S42 . . . ]
-"1051
-[v _OPTION_REGbits `VS42 ~T0 @X0 0 e@129 ]
+"208
+[v _PORTB `Vuc ~T0 @X0 0 e@6 ]
 [; ;stdint.h: 13: typedef signed char int8_t;
 [; ;stdint.h: 20: typedef signed int int16_t;
 [; ;stdint.h: 28: typedef signed short long int int24_t;
@@ -651,644 +656,83 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic.h: 193: extern __bank0 unsigned char __resetbits;
 [; ;pic.h: 194: extern __bank0 __bit __powerdown;
 [; ;pic.h: 195: extern __bank0 __bit __timeout;
-[; ;leds.h: 27: void exactly_on(uint8_t which);
-[; ;leds.h: 28: void timer0_interrupt(void);
-[; ;leds.h: 29: void timer0_setup(void);
-[; ;leds.h: 30: void service_leds(void);
-"23 leds.c
-[v _led_pos `Vui ~T0 @X0 1 e ]
-[i _led_pos
--> -> 0 `i `ui
-]
-[; ;leds.c: 23: volatile uint16_t led_pos = 0;
-"24
-[v _led_mode `Vuc ~T0 @X0 1 e ]
-[i _led_mode
--> -> 4 `i `uc
-]
-[; ;leds.c: 24: volatile uint8_t led_mode = 4;
-[; ;leds.c: 35: static inline void all_off();
-[; ;leds.c: 36: static inline void leda_on(uint8_t pos, uint8_t dir);
-[; ;leds.c: 37: static inline void ledb_on(uint8_t pos, uint8_t dir);
-"42
-[v _exactly_on `(v ~T0 @X0 1 ef1`uc ]
+[; ;ir_transmitter.h: 27: void setup_ir_transmitter();
+[; ;ir_transmitter.h: 28: void transmit_mark();
+[; ;ir_transmitter.h: 29: void timer1_interrupt_transmitter();
+"28 ir_transmitter.c
+[v _setup_ir_transmitter `(v ~T0 @X0 1 ef ]
 {
-[; ;leds.c: 42: void exactly_on(uint8_t which) {
-[e :U _exactly_on ]
-[v _which `uc ~T0 @X0 1 r1 ]
+[; ;ir_transmitter.c: 28: void setup_ir_transmitter() {
+[e :U _setup_ir_transmitter ]
 [f ]
-[; ;leds.c: 43: all_off();
-"43
-[e ( _all_off ..  ]
-[; ;leds.c: 44: switch (which) {
-"44
-[e $U 64  ]
-{
-[; ;leds.c: 45: case 0:
-"45
-[e :U 65 ]
-[; ;leds.c: 46: leda_on(0, 0);
-"46
-[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
-[; ;leds.c: 47: break;
-"47
-[e $U 63  ]
-[; ;leds.c: 48: case 1:
-"48
-[e :U 66 ]
-[; ;leds.c: 49: leda_on(2, 0);
-"49
-[e ( _leda_on (2 , -> -> 2 `i `uc -> -> 0 `i `uc ]
-[; ;leds.c: 50: break;
-"50
-[e $U 63  ]
-[; ;leds.c: 51: case 2:
-"51
-[e :U 67 ]
-[; ;leds.c: 52: ledb_on(3, 0);
-"52
-[e ( _ledb_on (2 , -> -> 3 `i `uc -> -> 0 `i `uc ]
-[; ;leds.c: 53: break;
-"53
-[e $U 63  ]
-[; ;leds.c: 54: case 3:
-"54
-[e :U 68 ]
-[; ;leds.c: 55: ledb_on(3, 1);
-"55
-[e ( _ledb_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
-[; ;leds.c: 56: break;
-"56
-[e $U 63  ]
-[; ;leds.c: 57: case 4:
-"57
-[e :U 69 ]
-[; ;leds.c: 58: leda_on(0, 1);
-"58
-[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
-[; ;leds.c: 59: break;
-"59
-[e $U 63  ]
-[; ;leds.c: 60: case 5:
-"60
-[e :U 70 ]
-[; ;leds.c: 61: leda_on(2, 1);
-"61
-[e ( _leda_on (2 , -> -> 2 `i `uc -> -> 1 `i `uc ]
-[; ;leds.c: 62: break;
-"62
-[e $U 63  ]
-[; ;leds.c: 63: case 6:
-"63
-[e :U 71 ]
-[; ;leds.c: 64: leda_on(3, 0);
-"64
-[e ( _leda_on (2 , -> -> 3 `i `uc -> -> 0 `i `uc ]
-[; ;leds.c: 65: break;
-"65
-[e $U 63  ]
-[; ;leds.c: 66: case 7:
-"66
-[e :U 72 ]
-[; ;leds.c: 67: leda_on(3, 1);
-"67
-[e ( _leda_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
-[; ;leds.c: 68: break;
-"68
-[e $U 63  ]
-"69
-}
-[; ;leds.c: 69: }
-[e $U 63  ]
-"44
-[e :U 64 ]
-[e [\ _which , $ -> -> 0 `i `uc 65
- , $ -> -> 1 `i `uc 66
- , $ -> -> 2 `i `uc 67
- , $ -> -> 3 `i `uc 68
- , $ -> -> 4 `i `uc 69
- , $ -> -> 5 `i `uc 70
- , $ -> -> 6 `i `uc 71
- , $ -> -> 7 `i `uc 72
- 63 ]
-"69
-[e :U 63 ]
-[; ;leds.c: 70: }
-"70
+[; ;ir_transmitter.c: 30: T2CONbits.TMR2ON = 1;
+"30
+[e = . . _T2CONbits 0 1 -> -> 1 `i `uc ]
+[; ;ir_transmitter.c: 31: PIE1bits.TMR2IE = 0;
+"31
+[e = . . _PIE1bits 0 1 -> -> 0 `i `uc ]
+[; ;ir_transmitter.c: 32: PIR1bits.TMR2IF = 0;
+"32
+[e = . . _PIR1bits 0 1 -> -> 0 `i `uc ]
+[; ;ir_transmitter.c: 33: PR2 = 13;
+"33
+[e = _PR2 -> -> 13 `i `uc ]
+[; ;ir_transmitter.c: 35: TRISB &= ~(1 << 2);;
+"35
+[e =& _TRISB -> ~ << -> 1 `i -> 2 `i `uc ]
+[; ;ir_transmitter.c: 36: }
+"36
 [e :UE 62 ]
 }
-"75
-[v _all_off `TF654 ~T0 @X0 1 s ]
+"38
+[v _transmit_mark `(v ~T0 @X0 1 ef ]
 {
-[; ;leds.c: 75: static inline void all_off() {
-[e :U _all_off ]
+[; ;ir_transmitter.c: 38: void transmit_mark() {
+[e :U _transmit_mark ]
 [f ]
-[; ;leds.c: 76: TRISA |= 1 | (1 << 2) | (1 << 3);
-"76
-[e =| _TRISA -> | | -> 1 `i << -> 1 `i -> 2 `i << -> 1 `i -> 3 `i `uc ]
-[; ;leds.c: 77: TRISB |= (1 << 3);
-"77
-[e =| _TRISB -> << -> 1 `i -> 3 `i `uc ]
-[; ;leds.c: 78: }
-"78
-[e :UE 73 ]
-}
-"83
-[v _leda_on `TF658 ~T0 @X0 1 s ]
+[; ;ir_transmitter.c: 40: INTCONbits.GIE = 0;
+"40
+[e = . . _INTCONbits 0 7 -> -> 0 `i `uc ]
+"43
+[v _i `uc ~T0 @X0 1 A ]
+[; ;ir_transmitter.c: 43: register uint8_t i;
+[; ;ir_transmitter.c: 44: for(i=42;i;--i) {
+"44
 {
-[; ;leds.c: 83: static inline void leda_on(uint8_t pos, uint8_t dir) {
-[e :U _leda_on ]
-[v _pos `uc ~T0 @X0 1 r1 ]
-[v _dir `uc ~T0 @X0 1 r2 ]
-[f ]
-[; ;leds.c: 84: if (dir)
-"84
-[e $ ! != -> _dir `i -> -> -> 0 `i `uc `i 75  ]
-[; ;leds.c: 85: PORTA |= (1u<<pos);
-"85
-[e =| _PORTA -> << -> 1 `ui _pos `uc ]
-[e $U 76  ]
-"86
-[e :U 75 ]
-[; ;leds.c: 86: else
-[; ;leds.c: 87: PORTA &= ~(1u<<pos);
-"87
-[e =& _PORTA -> ~ << -> 1 `ui _pos `uc ]
-[e :U 76 ]
-[; ;leds.c: 88: TRISA &= ~(1u<<pos);
-"88
-[e =& _TRISA -> ~ << -> 1 `ui _pos `uc ]
-[; ;leds.c: 89: }
-"89
-[e :UE 74 ]
-}
-"94
-[v _ledb_on `TF662 ~T0 @X0 1 s ]
+[e = _i -> -> 42 `i `uc ]
+[e $U 67  ]
+[e :U 64 ]
 {
-[; ;leds.c: 94: static inline void ledb_on(uint8_t pos, uint8_t dir) {
-[e :U _ledb_on ]
-[v _pos `uc ~T0 @X0 1 r1 ]
-[v _dir `uc ~T0 @X0 1 r2 ]
-[f ]
-[; ;leds.c: 95: if (dir)
-"95
-[e $ ! != -> _dir `i -> -> -> 0 `i `uc `i 78  ]
-[; ;leds.c: 96: PORTB |= (1u<<pos);
-"96
-[e =| _PORTB -> << -> 1 `ui _pos `uc ]
-[e $U 79  ]
-"97
-[e :U 78 ]
-[; ;leds.c: 97: else
-[; ;leds.c: 98: PORTB &= ~(1u<<pos);
-"98
-[e =& _PORTB -> ~ << -> 1 `ui _pos `uc ]
-[e :U 79 ]
-[; ;leds.c: 99: TRISB &= ~(1u<<pos);
-"99
-[e =& _TRISB -> ~ << -> 1 `ui _pos `uc ]
-[; ;leds.c: 100: }
-"100
-[e :UE 77 ]
+[; ;ir_transmitter.c: 45: PORTB ^= 4;
+"45
+[e =^ _PORTB -> -> 4 `i `uc ]
+[; ;ir_transmitter.c: 46: asm("NOP");
+"46
+[; <" NOP ;# ">
+"47
 }
-"102
-[v _timer0_interrupt `(v ~T0 @X0 1 ef ]
-{
-[; ;leds.c: 102: void timer0_interrupt(void) {
-[e :U _timer0_interrupt ]
-[f ]
-[; ;leds.c: 103: led_pos++;
-"103
-[e ++ _led_pos -> -> 1 `i `ui ]
-[; ;leds.c: 104: led_pos &= 0b1111111111;
-"104
-[e =& _led_pos -> -> 1023 `i `ui ]
-[; ;leds.c: 105: INTCONbits.T0IF = 0;
-"105
-[e = . . _INTCONbits 1 1 -> -> 0 `i `uc ]
-[; ;leds.c: 106: }
-"106
-[e :UE 80 ]
+"44
+[e =- _i -> -> 1 `i `uc ]
+[e :U 67 ]
+[e $ != -> _i `i -> -> -> 0 `i `uc `i 64  ]
+[e :U 65 ]
+"47
 }
-"108
-[v _bits3_chase `(v ~T0 @X0 1 ef1`uc ]
-{
-[; ;leds.c: 108: void bits3_chase(uint8_t pos) {
-[e :U _bits3_chase ]
-[v _pos `uc ~T0 @X0 1 r1 ]
-[f ]
-[; ;leds.c: 109: switch (pos) {
-"109
-[e $U 83  ]
-{
-[; ;leds.c: 110: default:
-"110
-[e :U 84 ]
-[; ;leds.c: 111: case 0:
-"111
-[e :U 85 ]
-[; ;leds.c: 112: leda_on(0, 0);
-"112
-[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
-[; ;leds.c: 113: break;
-"113
-[e $U 82  ]
-[; ;leds.c: 114: case 1:
-"114
-[e :U 86 ]
-[; ;leds.c: 115: leda_on(2, 0);
-"115
-[e ( _leda_on (2 , -> -> 2 `i `uc -> -> 0 `i `uc ]
-[; ;leds.c: 116: break;
-"116
-[e $U 82  ]
-[; ;leds.c: 117: case 2:
-"117
-[e :U 87 ]
-[; ;leds.c: 118: ledb_on(3, 0);
-"118
-[e ( _ledb_on (2 , -> -> 3 `i `uc -> -> 0 `i `uc ]
-[; ;leds.c: 119: break;
-"119
-[e $U 82  ]
-[; ;leds.c: 120: case 3:
-"120
-[e :U 88 ]
-[; ;leds.c: 121: ledb_on(3, 1);
-"121
-[e ( _ledb_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
-[; ;leds.c: 122: break;
-"122
-[e $U 82  ]
-[; ;leds.c: 123: case 4:
-"123
-[e :U 89 ]
-[; ;leds.c: 124: leda_on(0, 1);
-"124
-[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
-[; ;leds.c: 125: break;
-"125
-[e $U 82  ]
-[; ;leds.c: 126: case 5:
-"126
-[e :U 90 ]
-[; ;leds.c: 127: leda_on(2, 1);
-"127
-[e ( _leda_on (2 , -> -> 2 `i `uc -> -> 1 `i `uc ]
-[; ;leds.c: 128: break;
-"128
-[e $U 82  ]
-[; ;leds.c: 129: case 6:
-"129
-[e :U 91 ]
-[; ;leds.c: 130: leda_on(3, 0);
-"130
-[e ( _leda_on (2 , -> -> 3 `i `uc -> -> 0 `i `uc ]
-[; ;leds.c: 131: break;
-"131
-[e $U 82  ]
-[; ;leds.c: 132: case 7:
-"132
-[e :U 92 ]
-[; ;leds.c: 133: leda_on(3, 1);
-"133
-[e ( _leda_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
-[; ;leds.c: 134: break;
-"134
-[e $U 82  ]
-"135
-}
-[; ;leds.c: 135: }
-[e $U 82  ]
-"109
-[e :U 83 ]
-[e [\ _pos , $ -> -> 0 `i `uc 85
- , $ -> -> 1 `i `uc 86
- , $ -> -> 2 `i `uc 87
- , $ -> -> 3 `i `uc 88
- , $ -> -> 4 `i `uc 89
- , $ -> -> 5 `i `uc 90
- , $ -> -> 6 `i `uc 91
- , $ -> -> 7 `i `uc 92
- 84 ]
-"135
-[e :U 82 ]
-[; ;leds.c: 136: }
-"136
-[e :UE 81 ]
-}
-"138
-[v _bits2_double_chase `(v ~T0 @X0 1 ef2`uc`uc ]
-{
-[; ;leds.c: 138: void bits2_double_chase(uint8_t pos, uint8_t side) {
-[e :U _bits2_double_chase ]
-[v _pos `uc ~T0 @X0 1 r1 ]
-[v _side `uc ~T0 @X0 1 r2 ]
-[f ]
-[; ;leds.c: 139: switch (pos) {
-"139
-[e $U 95  ]
-{
-[; ;leds.c: 140: default:
-"140
-[e :U 96 ]
-[; ;leds.c: 141: case 0:
-"141
-[e :U 97 ]
-[; ;leds.c: 142: if (side)
-"142
-[e $ ! != -> _side `i -> -> -> 0 `i `uc `i 98  ]
-[; ;leds.c: 143: leda_on(0, 0);
-"143
-[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
-[e $U 99  ]
-"144
-[e :U 98 ]
-[; ;leds.c: 144: else
-[; ;leds.c: 145: leda_on(0, 1);
-"145
-[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
-[e :U 99 ]
-[; ;leds.c: 146: break;
-"146
-[e $U 94  ]
-[; ;leds.c: 147: case 1:
-"147
-[e :U 100 ]
-[; ;leds.c: 148: if (side)
-"148
-[e $ ! != -> _side `i -> -> -> 0 `i `uc `i 101  ]
-[; ;leds.c: 149: leda_on(2, 0);
-"149
-[e ( _leda_on (2 , -> -> 2 `i `uc -> -> 0 `i `uc ]
-[e $U 102  ]
-"150
-[e :U 101 ]
-[; ;leds.c: 150: else
-[; ;leds.c: 151: leda_on(2, 1);
-"151
-[e ( _leda_on (2 , -> -> 2 `i `uc -> -> 1 `i `uc ]
-[e :U 102 ]
-[; ;leds.c: 152: break;
-"152
-[e $U 94  ]
-[; ;leds.c: 153: case 2:
-"153
-[e :U 103 ]
-[; ;leds.c: 154: if (side)
-"154
-[e $ ! != -> _side `i -> -> -> 0 `i `uc `i 104  ]
-[; ;leds.c: 155: ledb_on(3, 0);
-"155
-[e ( _ledb_on (2 , -> -> 3 `i `uc -> -> 0 `i `uc ]
-[e $U 105  ]
-"156
-[e :U 104 ]
-[; ;leds.c: 156: else
-[; ;leds.c: 157: leda_on(3, 0);
-"157
-[e ( _leda_on (2 , -> -> 3 `i `uc -> -> 0 `i `uc ]
-[e :U 105 ]
-[; ;leds.c: 158: break;
-"158
-[e $U 94  ]
-[; ;leds.c: 159: case 3:
-"159
-[e :U 106 ]
-[; ;leds.c: 160: if (side)
-"160
-[e $ ! != -> _side `i -> -> -> 0 `i `uc `i 107  ]
-[; ;leds.c: 161: ledb_on(3, 1);
-"161
-[e ( _ledb_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
-[e $U 108  ]
-"162
-[e :U 107 ]
-[; ;leds.c: 162: else
-[; ;leds.c: 163: leda_on(3, 1);
-"163
-[e ( _leda_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
-[e :U 108 ]
-[; ;leds.c: 164: break;
-"164
-[e $U 94  ]
-"165
-}
-[; ;leds.c: 165: }
-[e $U 94  ]
-"139
-[e :U 95 ]
-[e [\ _pos , $ -> -> 0 `i `uc 97
- , $ -> -> 1 `i `uc 100
- , $ -> -> 2 `i `uc 103
- , $ -> -> 3 `i `uc 106
- 96 ]
-"165
-[e :U 94 ]
-[; ;leds.c: 166: }
-"166
-[e :UE 93 ]
-}
-[v F679 `(v ~T0 @X0 1 tf1`ui ]
-"168
-[v _blue_team_led `TF679 ~T0 @X0 1 e ]
-{
-[; ;leds.c: 168: void inline blue_team_led(uint16_t pos) {
-[e :U _blue_team_led ]
-[v _pos `ui ~T0 @X0 1 r1 ]
-[f ]
-[; ;leds.c: 169: if (pos < 512) {
-"169
-[e $ ! < _pos -> -> 512 `i `ui 110  ]
-{
-[; ;leds.c: 170: if ((pos%2) == 0)
-"170
-[e $ ! == % _pos -> -> 2 `i `ui -> -> 0 `i `ui 111  ]
-[; ;leds.c: 171: leda_on(3, 1);
-"171
-[e ( _leda_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
-[e $U 112  ]
-"172
-[e :U 111 ]
-[; ;leds.c: 172: else
-[; ;leds.c: 173: ledb_on(3, 1);
-"173
-[e ( _ledb_on (2 , -> -> 3 `i `uc -> -> 1 `i `uc ]
-[e :U 112 ]
-"174
-}
-[; ;leds.c: 174: } else {
-[e $U 113  ]
-[e :U 110 ]
-{
-[; ;leds.c: 175: bits2_double_chase((pos - 512) / 128, pos%2);
-"175
-[e ( _bits2_double_chase (2 , -> / - _pos -> -> 512 `i `ui -> -> 128 `i `ui `uc -> % _pos -> -> 2 `i `ui `uc ]
-"176
-}
-[e :U 113 ]
-[; ;leds.c: 176: }
-[; ;leds.c: 177: }
-"177
-[e :UE 109 ]
-}
-[v F682 `(v ~T0 @X0 1 tf1`ui ]
-"179
-[v _red_team_led `TF682 ~T0 @X0 1 e ]
-{
-[; ;leds.c: 179: void inline red_team_led(uint16_t pos) {
-[e :U _red_team_led ]
-[v _pos `ui ~T0 @X0 1 r1 ]
-[f ]
-[; ;leds.c: 180: if (pos < 512) {
-"180
-[e $ ! < _pos -> -> 512 `i `ui 115  ]
-{
-[; ;leds.c: 181: if ((pos%2) == 0)
-"181
-[e $ ! == % _pos -> -> 2 `i `ui -> -> 0 `i `ui 116  ]
-[; ;leds.c: 182: leda_on(0, 1);
-"182
-[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 1 `i `uc ]
-[e $U 117  ]
-"183
-[e :U 116 ]
-[; ;leds.c: 183: else
-[; ;leds.c: 184: leda_on(0, 0);
-"184
-[e ( _leda_on (2 , -> -> 0 `i `uc -> -> 0 `i `uc ]
-[e :U 117 ]
-"185
-}
-[; ;leds.c: 185: } else {
-[e $U 118  ]
-[e :U 115 ]
-{
-[; ;leds.c: 186: bits2_double_chase((pos - 512) / 128, pos%2);
-"186
-[e ( _bits2_double_chase (2 , -> / - _pos -> -> 512 `i `ui -> -> 128 `i `ui `uc -> % _pos -> -> 2 `i `ui `uc ]
-"187
-}
-[e :U 118 ]
-[; ;leds.c: 187: }
-[; ;leds.c: 188: }
-"188
-[e :UE 114 ]
-}
-"191
-[v _service_leds `(v ~T0 @X0 1 ef ]
-{
-[; ;leds.c: 191: void service_leds(void) {
-[e :U _service_leds ]
-[f ]
-"192
-[v _temp_pos `ui ~T0 @X0 1 a ]
-[; ;leds.c: 192: uint16_t temp_pos = led_pos;
-[e = _temp_pos _led_pos ]
-[; ;leds.c: 194: switch (led_mode) {
-"194
-[e $U 121  ]
-{
-[; ;leds.c: 195: case 0:
-"195
-[e :U 122 ]
-[; ;leds.c: 196: all_off();
-"196
-[e ( _all_off ..  ]
-[; ;leds.c: 197: break;
-"197
-[e $U 120  ]
-[; ;leds.c: 198: case 1:
-"198
-[e :U 123 ]
-[; ;leds.c: 199: all_off();
-"199
-[e ( _all_off ..  ]
-[; ;leds.c: 200: bits3_chase((temp_pos & 0b11111111) / 32);
-"200
-[e ( _bits3_chase (1 -> / & _temp_pos -> -> 255 `i `ui -> -> 32 `i `ui `uc ]
-[; ;leds.c: 201: break;
-"201
-[e $U 120  ]
-[; ;leds.c: 202: case 3:
-"202
-[e :U 124 ]
-[; ;leds.c: 203: all_off();
-"203
-[e ( _all_off ..  ]
-[; ;leds.c: 204: bits3_chase(((temp_pos & 0b11111111) / 16) % 8);
-"204
-[e ( _bits3_chase (1 -> % / & _temp_pos -> -> 255 `i `ui -> -> 16 `i `ui -> -> 8 `i `ui `uc ]
-[; ;leds.c: 205: break;
-"205
-[e $U 120  ]
-[; ;leds.c: 206: case 4:
-"206
-[e :U 125 ]
-[; ;leds.c: 207: all_off();
-"207
-[e ( _all_off ..  ]
-[; ;leds.c: 208: blue_team_led(temp_pos);
-"208
-[e ( _blue_team_led (1 _temp_pos ]
-[; ;leds.c: 209: break;
-"209
-[e $U 120  ]
-[; ;leds.c: 210: case 5:
-"210
-[e :U 126 ]
-[; ;leds.c: 211: all_off();
-"211
-[e ( _all_off ..  ]
-[; ;leds.c: 212: red_team_led(temp_pos);
-"212
-[e ( _red_team_led (1 _temp_pos ]
-[; ;leds.c: 213: break;
-"213
-[e $U 120  ]
-"214
-}
-[; ;leds.c: 214: }
-[e $U 120  ]
-"194
-[e :U 121 ]
-[e [\ _led_mode , $ -> -> 0 `i `uc 122
- , $ -> -> 1 `i `uc 123
- , $ -> -> 3 `i `uc 124
- , $ -> -> 4 `i `uc 125
- , $ -> -> 5 `i `uc 126
- 120 ]
-"214
-[e :U 120 ]
-[; ;leds.c: 215: }
-"215
-[e :UE 119 ]
-}
-"217
-[v _timer0_setup `(v ~T0 @X0 1 ef ]
-{
-[; ;leds.c: 217: void timer0_setup() {
-[e :U _timer0_setup ]
-[f ]
-[; ;leds.c: 218: OPTION_REGbits.PSA = 0;
-"218
-[e = . . _OPTION_REGbits 0 1 -> -> 0 `i `uc ]
-[; ;leds.c: 219: OPTION_REGbits.PS = 0b010;
-"219
-[e = . . _OPTION_REGbits 0 0 -> -> 2 `i `uc ]
-[; ;leds.c: 220: OPTION_REGbits.T0CS = 0;
-"220
-[e = . . _OPTION_REGbits 0 3 -> -> 0 `i `uc ]
-[; ;leds.c: 221: INTCONbits.T0IF = 0;
-"221
-[e = . . _INTCONbits 1 1 -> -> 0 `i `uc ]
-[; ;leds.c: 222: INTCONbits.T0IE = 1;
-"222
-[e = . . _INTCONbits 1 3 -> -> 1 `i `uc ]
-[; ;leds.c: 223: INTCONbits.GIE = 1;
-"223
+[; ;ir_transmitter.c: 47: }
+[; ;ir_transmitter.c: 48: INTCONbits.GIE = 1;
+"48
 [e = . . _INTCONbits 0 7 -> -> 1 `i `uc ]
-[; ;leds.c: 224: }
-"224
-[e :UE 127 ]
+[; ;ir_transmitter.c: 49: }
+"49
+[e :UE 63 ]
+}
+"51
+[v _timer1_interrupt_transmitter `(v ~T0 @X0 1 ef ]
+{
+[; ;ir_transmitter.c: 51: void timer1_interrupt_transmitter() {
+[e :U _timer1_interrupt_transmitter ]
+[f ]
+[; ;ir_transmitter.c: 53: }
+"53
+[e :UE 68 ]
 }
