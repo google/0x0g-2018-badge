@@ -936,8 +936,7 @@ extern volatile uint8_t ir_data_valid;
 
 # 27 "ir_transmitter.h"
 void setup_ir_transmitter();
-void transmit_mark();
-void timer1_interrupt_transmitter();
+void transmit_word(uint8_t addr, uint8_t command);
 
 # 27 "leds.h"
 void exactly_on(uint8_t which);
@@ -965,7 +964,7 @@ move_leds ^= 1;
 ir_data_valid = 0;
 }
 } else {
-timer1_interrupt_transmitter();
+PIR1bits.TMR1IF = 0;
 }
 }
 }
@@ -976,7 +975,7 @@ setup_ir_decoder();
 setup_ir_transmitter();
 
 while (1){
-transmit_mark();
+transmit_word(0x55,0x55);
 
 }
 }

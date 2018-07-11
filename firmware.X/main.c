@@ -54,7 +54,7 @@ static void interrupt ISR(void) {
                 ir_data_valid = 0;
             }
         } else {
-            timer1_interrupt_transmitter();
+            PIR1bits.TMR1IF = 0;
         }
     }
 }
@@ -65,7 +65,7 @@ void main(void) {
     setup_ir_transmitter();
     
     while (1){
-        transmit_mark();
+        transmit_word(0x55,0x55);
         //service_leds();
     }
 }

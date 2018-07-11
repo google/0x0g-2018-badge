@@ -919,23 +919,49 @@ extern __bank0 __bit __timeout;
 
 # 27 "ir_transmitter.h"
 void setup_ir_transmitter();
+void transmit_word(uint8_t addr, uint8_t command);
+
+# 27 "ir_transmitter.c"
+void transmit_byte(uint8_t data);
 void transmit_mark();
-void timer1_interrupt_transmitter();
+void transmit_space_short();
+void transmit_space_long();
 
-# 28 "ir_transmitter.c"
 void setup_ir_transmitter() {
-
-T2CONbits.TMR2ON = 1;
-PIE1bits.TMR2IE = 0;
-PIR1bits.TMR2IF = 0;
-PR2 = 13;
-
 TRISB &= ~(1 << 2);;
+}
+
+void transmit_word(uint8_t addr, uint8_t command) {
+uint8_t inv_addr = addr ^ 0xFF;
+uint8_t inv_command = command ^ 0xFF;
+INTCONbits.GIE = 0;
+
+register uint8_t i;
+for(i=16;i;--i)
+transmit_mark();
+_delay((unsigned long)((4500)*(1000000/4000000.0)));
+transmit_byte(addr);
+transmit_byte(inv_addr);
+transmit_byte(command);
+transmit_byte(inv_command);
+INTCONbits.GIE = 1;
+}
+
+void transmit_byte(uint8_t data) {
+register uint8_t i;
+for(i=8;i;--i) {
+transmit_mark();
+if(data & 1) {
+transmit_space_long();
+} else {
+transmit_space_short();
+}
+data >>= 1;
+}
 }
 
 void transmit_mark() {
 
-INTCONbits.GIE = 0;
 
 
 register uint8_t i;
@@ -943,9 +969,12 @@ for(i=42;i;--i) {
 PORTB ^= 4;
 asm("NOP");
 }
-INTCONbits.GIE = 1;
 }
 
-void timer1_interrupt_transmitter() {
+void transmit_space_short() {
+_delay((unsigned long)((562)*(1000000/4000000.0)));
+}
 
+void transmit_space_long() {
+_delay((unsigned long)((1687)*(1000000/4000000.0)));
 }

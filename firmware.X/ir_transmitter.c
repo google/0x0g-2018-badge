@@ -14,30 +14,56 @@
  * limitations under the License.
  */
 
+#define _XTAL_FREQ 1000000
+
 #include <stdint.h>
 #include <xc.h>
 
 #include "ir_transmitter.h"
 
-// Determined by 1MHz/38kHz/2
-#define TIMER2_PERIOD 13
-
 #define TRANSMIT_OFF()      TRISB |= (1 << 2);
 #define TRANSMIT_ON()       TRISB &= ~(1 << 2);
 
+void transmit_byte(uint8_t data);
+void transmit_mark();
+void transmit_space_short();
+void transmit_space_long();
+
 void setup_ir_transmitter() {
-    // Setup timer 2 for base carrier
-    T2CONbits.TMR2ON = 1;
-    PIE1bits.TMR2IE = 0;
-    PIR1bits.TMR2IF = 0;
-    PR2 = TIMER2_PERIOD;
-    // TODO: controlled by timer
     TRANSMIT_ON();
+}
+
+void transmit_word(uint8_t addr, uint8_t command) {
+    uint8_t inv_addr = addr ^ 0xFF;
+    uint8_t inv_command = command ^ 0xFF;
+    INTCONbits.GIE = 0;
+    // Start of frame
+    register uint8_t i;
+    for(i=16;i;--i)
+        transmit_mark();
+    __delay_us(4500);
+    transmit_byte(addr);
+    transmit_byte(inv_addr);
+    transmit_byte(command);
+    transmit_byte(inv_command);
+    INTCONbits.GIE = 1;    
+}
+
+void transmit_byte(uint8_t data) {
+    register uint8_t i;
+    for(i=8;i;--i) {
+        transmit_mark();
+        if(data & 1) {
+            transmit_space_long();
+        } else {
+            transmit_space_short();
+        }
+        data >>= 1;
+    }
 }
 
 void transmit_mark() {
     // Transmit a 38kHz timer for 562.5us, 21.375 cycles = 42 inversions
-    INTCONbits.GIE = 0;
     // Called frequently.  Don't do much.
     // Toggle output (RB2))
     register uint8_t i;
@@ -45,9 +71,12 @@ void transmit_mark() {
       PORTB ^= 4; //rb2
       asm("NOP");
     }
-    INTCONbits.GIE = 1;
 }
 
-void timer1_interrupt_transmitter() {
-    
+void transmit_space_short() {
+    __delay_us(562);
+}
+
+void transmit_space_long() {
+    __delay_us(1687);
 }

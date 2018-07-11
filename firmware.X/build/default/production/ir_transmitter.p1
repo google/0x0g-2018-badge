@@ -1,34 +1,5 @@
 Version 3.2 HI-TECH Software Intermediate Code
-"599 /opt/microchip/xc8/v1.45/include/pic16f716.h
-[s S24 :2 `uc 1 :1 `uc 1 :4 `uc 1 ]
-[n S24 . T2CKPS TMR2ON TOUTPS ]
-"604
-[s S25 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S25 . T2CKPS0 T2CKPS1 . TOUTPS0 TOUTPS1 TOUTPS2 TOUTPS3 ]
-"598
-[u S23 `S24 1 `S25 1 ]
-[n S23 . . . ]
-"614
-[v _T2CONbits `VS23 ~T0 @X0 0 e@18 ]
-"1305
-[s S54 :1 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
-[n S54 . TMR1IE TMR2IE CCP1IE . ADIE ]
-"1304
-[u S53 `S54 1 ]
-[n S53 . . ]
-"1313
-[v _PIE1bits `VS53 ~T0 @X0 0 e@140 ]
-"466
-[s S19 :1 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
-[n S19 . TMR1IF TMR2IF CCP1IF . ADIF ]
-"465
-[u S18 `S19 1 ]
-[n S18 . . ]
-"474
-[v _PIR1bits `VS18 ~T0 @X0 0 e@12 ]
-"1380
-[v _PR2 `Vuc ~T0 @X0 0 e@146 ]
-"1145
+"1145 /opt/microchip/xc8/v1.45/include/pic16f716.h
 [v _TRISB `Vuc ~T0 @X0 0 e@134 ]
 "388
 [s S16 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
@@ -41,7 +12,19 @@ Version 3.2 HI-TECH Software Intermediate Code
 [n S15 . . . ]
 "405
 [v _INTCONbits `VS15 ~T0 @X0 0 e@11 ]
-"208
+"28 ir_transmitter.c
+[v _transmit_mark `(v ~T0 @X0 0 ef ]
+[v F636 `(v ~T0 @X0 1 tf1`ul ]
+"153 /opt/microchip/xc8/v1.45/include/pic.h
+[v __delay `JF636 ~T0 @X0 0 e ]
+[p i __delay ]
+"27 ir_transmitter.c
+[v _transmit_byte `(v ~T0 @X0 0 ef1`uc ]
+"30
+[v _transmit_space_long `(v ~T0 @X0 0 ef ]
+"29
+[v _transmit_space_short `(v ~T0 @X0 0 ef ]
+"208 /opt/microchip/xc8/v1.45/include/pic16f716.h
 [v _PORTB `Vuc ~T0 @X0 0 e@6 ]
 [; ;stdint.h: 13: typedef signed char int8_t;
 [; ;stdint.h: 20: typedef signed int int16_t;
@@ -657,82 +640,200 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic.h: 194: extern __bank0 __bit __powerdown;
 [; ;pic.h: 195: extern __bank0 __bit __timeout;
 [; ;ir_transmitter.h: 27: void setup_ir_transmitter();
-[; ;ir_transmitter.h: 28: void transmit_mark();
-[; ;ir_transmitter.h: 29: void timer1_interrupt_transmitter();
-"28 ir_transmitter.c
+[; ;ir_transmitter.h: 28: void transmit_word(uint8_t addr, uint8_t command);
+[; ;ir_transmitter.c: 27: void transmit_byte(uint8_t data);
+[; ;ir_transmitter.c: 28: void transmit_mark();
+[; ;ir_transmitter.c: 29: void transmit_space_short();
+[; ;ir_transmitter.c: 30: void transmit_space_long();
+"32 ir_transmitter.c
 [v _setup_ir_transmitter `(v ~T0 @X0 1 ef ]
 {
-[; ;ir_transmitter.c: 28: void setup_ir_transmitter() {
+[; ;ir_transmitter.c: 32: void setup_ir_transmitter() {
 [e :U _setup_ir_transmitter ]
 [f ]
-[; ;ir_transmitter.c: 30: T2CONbits.TMR2ON = 1;
-"30
-[e = . . _T2CONbits 0 1 -> -> 1 `i `uc ]
-[; ;ir_transmitter.c: 31: PIE1bits.TMR2IE = 0;
-"31
-[e = . . _PIE1bits 0 1 -> -> 0 `i `uc ]
-[; ;ir_transmitter.c: 32: PIR1bits.TMR2IF = 0;
-"32
-[e = . . _PIR1bits 0 1 -> -> 0 `i `uc ]
-[; ;ir_transmitter.c: 33: PR2 = 13;
+[; ;ir_transmitter.c: 33: TRISB &= ~(1 << 2);;
 "33
-[e = _PR2 -> -> 13 `i `uc ]
-[; ;ir_transmitter.c: 35: TRISB &= ~(1 << 2);;
-"35
 [e =& _TRISB -> ~ << -> 1 `i -> 2 `i `uc ]
-[; ;ir_transmitter.c: 36: }
-"36
+[; ;ir_transmitter.c: 34: }
+"34
 [e :UE 62 ]
 }
-"38
-[v _transmit_mark `(v ~T0 @X0 1 ef ]
+"36
+[v _transmit_word `(v ~T0 @X0 1 ef2`uc`uc ]
 {
-[; ;ir_transmitter.c: 38: void transmit_mark() {
-[e :U _transmit_mark ]
+[; ;ir_transmitter.c: 36: void transmit_word(uint8_t addr, uint8_t command) {
+[e :U _transmit_word ]
+[v _addr `uc ~T0 @X0 1 r1 ]
+[v _command `uc ~T0 @X0 1 r2 ]
 [f ]
-[; ;ir_transmitter.c: 40: INTCONbits.GIE = 0;
-"40
+"37
+[v _inv_addr `uc ~T0 @X0 1 a ]
+[; ;ir_transmitter.c: 37: uint8_t inv_addr = addr ^ 0xFF;
+[e = _inv_addr -> ^ -> _addr `i -> 255 `i `uc ]
+"38
+[v _inv_command `uc ~T0 @X0 1 a ]
+[; ;ir_transmitter.c: 38: uint8_t inv_command = command ^ 0xFF;
+[e = _inv_command -> ^ -> _command `i -> 255 `i `uc ]
+[; ;ir_transmitter.c: 39: INTCONbits.GIE = 0;
+"39
 [e = . . _INTCONbits 0 7 -> -> 0 `i `uc ]
-"43
+"41
 [v _i `uc ~T0 @X0 1 A ]
-[; ;ir_transmitter.c: 43: register uint8_t i;
-[; ;ir_transmitter.c: 44: for(i=42;i;--i) {
-"44
+[; ;ir_transmitter.c: 41: register uint8_t i;
+[; ;ir_transmitter.c: 42: for(i=16;i;--i)
+"42
 {
-[e = _i -> -> 42 `i `uc ]
+[e = _i -> -> 16 `i `uc ]
 [e $U 67  ]
+"43
 [e :U 64 ]
-{
-[; ;ir_transmitter.c: 45: PORTB ^= 4;
-"45
-[e =^ _PORTB -> -> 4 `i `uc ]
-[; ;ir_transmitter.c: 46: asm("NOP");
-"46
-[; <" NOP ;# ">
-"47
-}
-"44
+[; ;ir_transmitter.c: 43: transmit_mark();
+[e ( _transmit_mark ..  ]
+"42
 [e =- _i -> -> 1 `i `uc ]
 [e :U 67 ]
 [e $ != -> _i `i -> -> -> 0 `i `uc `i 64  ]
 [e :U 65 ]
-"47
+"43
 }
-[; ;ir_transmitter.c: 47: }
-[; ;ir_transmitter.c: 48: INTCONbits.GIE = 1;
+[; ;ir_transmitter.c: 44: _delay((unsigned long)((4500)*(1000000/4000000.0)));
+"44
+[e ( __delay (1 -> * -> -> 4500 `i `d / -> -> 1000000 `l `d .4000000.0 `ul ]
+[; ;ir_transmitter.c: 45: transmit_byte(addr);
+"45
+[e ( _transmit_byte (1 _addr ]
+[; ;ir_transmitter.c: 46: transmit_byte(inv_addr);
+"46
+[e ( _transmit_byte (1 _inv_addr ]
+[; ;ir_transmitter.c: 47: transmit_byte(command);
+"47
+[e ( _transmit_byte (1 _command ]
+[; ;ir_transmitter.c: 48: transmit_byte(inv_command);
 "48
-[e = . . _INTCONbits 0 7 -> -> 1 `i `uc ]
-[; ;ir_transmitter.c: 49: }
+[e ( _transmit_byte (1 _inv_command ]
+[; ;ir_transmitter.c: 49: INTCONbits.GIE = 1;
 "49
+[e = . . _INTCONbits 0 7 -> -> 1 `i `uc ]
+[; ;ir_transmitter.c: 50: }
+"50
 [e :UE 63 ]
 }
-"51
-[v _timer1_interrupt_transmitter `(v ~T0 @X0 1 ef ]
+"52
+[v _transmit_byte `(v ~T0 @X0 1 ef1`uc ]
 {
-[; ;ir_transmitter.c: 51: void timer1_interrupt_transmitter() {
-[e :U _timer1_interrupt_transmitter ]
+[; ;ir_transmitter.c: 52: void transmit_byte(uint8_t data) {
+[e :U _transmit_byte ]
+[v _data `uc ~T0 @X0 1 r1 ]
 [f ]
-[; ;ir_transmitter.c: 53: }
 "53
+[v _i `uc ~T0 @X0 1 A ]
+[; ;ir_transmitter.c: 53: register uint8_t i;
+[; ;ir_transmitter.c: 54: for(i=8;i;--i) {
+"54
+{
+[e = _i -> -> 8 `i `uc ]
+[e $U 72  ]
+[e :U 69 ]
+{
+[; ;ir_transmitter.c: 55: transmit_mark();
+"55
+[e ( _transmit_mark ..  ]
+[; ;ir_transmitter.c: 56: if(data & 1) {
+"56
+[e $ ! != & -> _data `i -> 1 `i -> 0 `i 73  ]
+{
+[; ;ir_transmitter.c: 57: transmit_space_long();
+"57
+[e ( _transmit_space_long ..  ]
+"58
+}
+[; ;ir_transmitter.c: 58: } else {
+[e $U 74  ]
+[e :U 73 ]
+{
+[; ;ir_transmitter.c: 59: transmit_space_short();
+"59
+[e ( _transmit_space_short ..  ]
+"60
+}
+[e :U 74 ]
+[; ;ir_transmitter.c: 60: }
+[; ;ir_transmitter.c: 61: data >>= 1;
+"61
+[e =>> _data -> 1 `i ]
+"62
+}
+"54
+[e =- _i -> -> 1 `i `uc ]
+[e :U 72 ]
+[e $ != -> _i `i -> -> -> 0 `i `uc `i 69  ]
+[e :U 70 ]
+"62
+}
+[; ;ir_transmitter.c: 62: }
+[; ;ir_transmitter.c: 63: }
+"63
 [e :UE 68 ]
+}
+"65
+[v _transmit_mark `(v ~T0 @X0 1 ef ]
+{
+[; ;ir_transmitter.c: 65: void transmit_mark() {
+[e :U _transmit_mark ]
+[f ]
+"69
+[v _i `uc ~T0 @X0 1 A ]
+[; ;ir_transmitter.c: 69: register uint8_t i;
+[; ;ir_transmitter.c: 70: for(i=42;i;--i) {
+"70
+{
+[e = _i -> -> 42 `i `uc ]
+[e $U 79  ]
+[e :U 76 ]
+{
+[; ;ir_transmitter.c: 71: PORTB ^= 4;
+"71
+[e =^ _PORTB -> -> 4 `i `uc ]
+[; ;ir_transmitter.c: 72: asm("NOP");
+"72
+[; <" NOP ;# ">
+"73
+}
+"70
+[e =- _i -> -> 1 `i `uc ]
+[e :U 79 ]
+[e $ != -> _i `i -> -> -> 0 `i `uc `i 76  ]
+[e :U 77 ]
+"73
+}
+[; ;ir_transmitter.c: 73: }
+[; ;ir_transmitter.c: 74: }
+"74
+[e :UE 75 ]
+}
+"76
+[v _transmit_space_short `(v ~T0 @X0 1 ef ]
+{
+[; ;ir_transmitter.c: 76: void transmit_space_short() {
+[e :U _transmit_space_short ]
+[f ]
+[; ;ir_transmitter.c: 77: _delay((unsigned long)((562)*(1000000/4000000.0)));
+"77
+[e ( __delay (1 -> * -> -> 562 `i `d / -> -> 1000000 `l `d .4000000.0 `ul ]
+[; ;ir_transmitter.c: 78: }
+"78
+[e :UE 80 ]
+}
+"80
+[v _transmit_space_long `(v ~T0 @X0 1 ef ]
+{
+[; ;ir_transmitter.c: 80: void transmit_space_long() {
+[e :U _transmit_space_long ]
+[f ]
+[; ;ir_transmitter.c: 81: _delay((unsigned long)((1687)*(1000000/4000000.0)));
+"81
+[e ( __delay (1 -> * -> -> 1687 `i `d / -> -> 1000000 `l `d .4000000.0 `ul ]
+[; ;ir_transmitter.c: 82: }
+"82
+[e :UE 81 ]
 }

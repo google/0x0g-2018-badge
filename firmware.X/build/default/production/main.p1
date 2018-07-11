@@ -24,8 +24,6 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _timer1_interrupt_decoder `(v ~T0 @X0 0 ef ]
 "28
 [v _ir_data_valid `Vuc ~T0 @X0 0 e ]
-"29 ir_transmitter.h
-[v _timer1_interrupt_transmitter `(v ~T0 @X0 0 ef ]
 [p mainexit ]
 "29 leds.h
 [v _timer0_setup `(v ~T0 @X0 0 ef ]
@@ -34,7 +32,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 "27 ir_transmitter.h
 [v _setup_ir_transmitter `(v ~T0 @X0 0 ef ]
 "28
-[v _transmit_mark `(v ~T0 @X0 0 ef ]
+[v _transmit_word `(v ~T0 @X0 0 ef2`uc`uc ]
 "25 main.c
 [p x FOSC=XT ]
 "26
@@ -665,8 +663,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;ir_decoder.h: 27: extern volatile uint32_t ir_data;
 [; ;ir_decoder.h: 28: extern volatile uint8_t ir_data_valid;
 [; ;ir_transmitter.h: 27: void setup_ir_transmitter();
-[; ;ir_transmitter.h: 28: void transmit_mark();
-[; ;ir_transmitter.h: 29: void timer1_interrupt_transmitter();
+[; ;ir_transmitter.h: 28: void transmit_word(uint8_t addr, uint8_t command);
 [; ;leds.h: 27: void exactly_on(uint8_t which);
 [; ;leds.h: 28: void timer0_interrupt(void);
 [; ;leds.h: 29: void timer0_setup(void);
@@ -683,9 +680,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 -> -> 0 `i `uc
 ]
 [; ;main.c: 40: volatile uint8_t ir_transmitting = 0;
-[v F662 `(v ~T0 @X0 1 tf ]
+[v F663 `(v ~T0 @X0 1 tf ]
 "42
-[v _ISR `IF662 ~T0 @X0 1 s ]
+[v _ISR `IF663 ~T0 @X0 1 s ]
 {
 [; ;main.c: 42: static void interrupt ISR(void) {
 [e :U _ISR ]
@@ -743,9 +740,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e $U 69  ]
 [e :U 67 ]
 {
-[; ;main.c: 57: timer1_interrupt_transmitter();
+[; ;main.c: 57: PIR1bits.TMR1IF = 0;
 "57
-[e ( _timer1_interrupt_transmitter ..  ]
+[e = . . _PIR1bits 0 0 -> -> 0 `i `uc ]
 "58
 }
 [e :U 69 ]
@@ -778,9 +775,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 "67
 [e :U 72 ]
 {
-[; ;main.c: 68: transmit_mark();
+[; ;main.c: 68: transmit_word(0x55,0x55);
 "68
-[e ( _transmit_mark ..  ]
+[e ( _transmit_word (2 , -> -> 85 `i `uc -> -> 85 `i `uc ]
 "70
 }
 [e :U 71 ]

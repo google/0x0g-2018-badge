@@ -25,8 +25,7 @@
 #define	IR_TRANSMITTER_H
 
 void setup_ir_transmitter();
-void transmit_mark();
-void timer1_interrupt_transmitter();
+void transmit_word(uint8_t addr, uint8_t command);
 
 #endif	/* IR_TRANSMITTER_H */
 
