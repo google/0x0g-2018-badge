@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define _XTAL_FREQ 1000000
+#define _XTAL_FREQ 4000000
 
 #include <stdint.h>
 #include <xc.h>
@@ -46,7 +46,8 @@ void transmit_word(uint8_t addr, uint8_t command) {
     transmit_byte(inv_addr);
     transmit_byte(command);
     transmit_byte(inv_command);
-    INTCONbits.GIE = 1;    
+    INTCONbits.GIE = 1;
+    __delay_us(4500);
 }
 
 void transmit_byte(uint8_t data) {
@@ -78,5 +79,5 @@ void transmit_space_short() {
 }
 
 void transmit_space_long() {
-    __delay_us(1687);
+    __delay_us(1675);
 }

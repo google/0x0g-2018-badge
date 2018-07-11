@@ -696,9 +696,9 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e :U 65 ]
 "43
 }
-[; ;ir_transmitter.c: 44: _delay((unsigned long)((4500)*(1000000/4000000.0)));
+[; ;ir_transmitter.c: 44: _delay((unsigned long)((4500)*(4000000/4000000.0)));
 "44
-[e ( __delay (1 -> * -> -> 4500 `i `d / -> -> 1000000 `l `d .4000000.0 `ul ]
+[e ( __delay (1 -> * -> -> 4500 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
 [; ;ir_transmitter.c: 45: transmit_byte(addr);
 "45
 [e ( _transmit_byte (1 _addr ]
@@ -714,126 +714,129 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;ir_transmitter.c: 49: INTCONbits.GIE = 1;
 "49
 [e = . . _INTCONbits 0 7 -> -> 1 `i `uc ]
-[; ;ir_transmitter.c: 50: }
+[; ;ir_transmitter.c: 50: _delay((unsigned long)((4500)*(4000000/4000000.0)));
 "50
+[e ( __delay (1 -> * -> -> 4500 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;ir_transmitter.c: 51: }
+"51
 [e :UE 63 ]
 }
-"52
+"53
 [v _transmit_byte `(v ~T0 @X0 1 ef1`uc ]
 {
-[; ;ir_transmitter.c: 52: void transmit_byte(uint8_t data) {
+[; ;ir_transmitter.c: 53: void transmit_byte(uint8_t data) {
 [e :U _transmit_byte ]
 [v _data `uc ~T0 @X0 1 r1 ]
 [f ]
-"53
-[v _i `uc ~T0 @X0 1 A ]
-[; ;ir_transmitter.c: 53: register uint8_t i;
-[; ;ir_transmitter.c: 54: for(i=8;i;--i) {
 "54
+[v _i `uc ~T0 @X0 1 A ]
+[; ;ir_transmitter.c: 54: register uint8_t i;
+[; ;ir_transmitter.c: 55: for(i=8;i;--i) {
+"55
 {
 [e = _i -> -> 8 `i `uc ]
 [e $U 72  ]
 [e :U 69 ]
 {
-[; ;ir_transmitter.c: 55: transmit_mark();
-"55
-[e ( _transmit_mark ..  ]
-[; ;ir_transmitter.c: 56: if(data & 1) {
+[; ;ir_transmitter.c: 56: transmit_mark();
 "56
+[e ( _transmit_mark ..  ]
+[; ;ir_transmitter.c: 57: if(data & 1) {
+"57
 [e $ ! != & -> _data `i -> 1 `i -> 0 `i 73  ]
 {
-[; ;ir_transmitter.c: 57: transmit_space_long();
-"57
-[e ( _transmit_space_long ..  ]
+[; ;ir_transmitter.c: 58: transmit_space_long();
 "58
+[e ( _transmit_space_long ..  ]
+"59
 }
-[; ;ir_transmitter.c: 58: } else {
+[; ;ir_transmitter.c: 59: } else {
 [e $U 74  ]
 [e :U 73 ]
 {
-[; ;ir_transmitter.c: 59: transmit_space_short();
-"59
-[e ( _transmit_space_short ..  ]
+[; ;ir_transmitter.c: 60: transmit_space_short();
 "60
+[e ( _transmit_space_short ..  ]
+"61
 }
 [e :U 74 ]
-[; ;ir_transmitter.c: 60: }
-[; ;ir_transmitter.c: 61: data >>= 1;
-"61
-[e =>> _data -> 1 `i ]
+[; ;ir_transmitter.c: 61: }
+[; ;ir_transmitter.c: 62: data >>= 1;
 "62
+[e =>> _data -> 1 `i ]
+"63
 }
-"54
+"55
 [e =- _i -> -> 1 `i `uc ]
 [e :U 72 ]
 [e $ != -> _i `i -> -> -> 0 `i `uc `i 69  ]
 [e :U 70 ]
-"62
-}
-[; ;ir_transmitter.c: 62: }
-[; ;ir_transmitter.c: 63: }
 "63
+}
+[; ;ir_transmitter.c: 63: }
+[; ;ir_transmitter.c: 64: }
+"64
 [e :UE 68 ]
 }
-"65
+"66
 [v _transmit_mark `(v ~T0 @X0 1 ef ]
 {
-[; ;ir_transmitter.c: 65: void transmit_mark() {
+[; ;ir_transmitter.c: 66: void transmit_mark() {
 [e :U _transmit_mark ]
 [f ]
-"69
-[v _i `uc ~T0 @X0 1 A ]
-[; ;ir_transmitter.c: 69: register uint8_t i;
-[; ;ir_transmitter.c: 70: for(i=42;i;--i) {
 "70
+[v _i `uc ~T0 @X0 1 A ]
+[; ;ir_transmitter.c: 70: register uint8_t i;
+[; ;ir_transmitter.c: 71: for(i=42;i;--i) {
+"71
 {
 [e = _i -> -> 42 `i `uc ]
 [e $U 79  ]
 [e :U 76 ]
 {
-[; ;ir_transmitter.c: 71: PORTB ^= 4;
-"71
-[e =^ _PORTB -> -> 4 `i `uc ]
-[; ;ir_transmitter.c: 72: asm("NOP");
+[; ;ir_transmitter.c: 72: PORTB ^= 4;
 "72
-[; <" NOP ;# ">
+[e =^ _PORTB -> -> 4 `i `uc ]
+[; ;ir_transmitter.c: 73: asm("NOP");
 "73
+[; <" NOP ;# ">
+"74
 }
-"70
+"71
 [e =- _i -> -> 1 `i `uc ]
 [e :U 79 ]
 [e $ != -> _i `i -> -> -> 0 `i `uc `i 76  ]
 [e :U 77 ]
-"73
-}
-[; ;ir_transmitter.c: 73: }
-[; ;ir_transmitter.c: 74: }
 "74
+}
+[; ;ir_transmitter.c: 74: }
+[; ;ir_transmitter.c: 75: }
+"75
 [e :UE 75 ]
 }
-"76
+"77
 [v _transmit_space_short `(v ~T0 @X0 1 ef ]
 {
-[; ;ir_transmitter.c: 76: void transmit_space_short() {
+[; ;ir_transmitter.c: 77: void transmit_space_short() {
 [e :U _transmit_space_short ]
 [f ]
-[; ;ir_transmitter.c: 77: _delay((unsigned long)((562)*(1000000/4000000.0)));
-"77
-[e ( __delay (1 -> * -> -> 562 `i `d / -> -> 1000000 `l `d .4000000.0 `ul ]
-[; ;ir_transmitter.c: 78: }
+[; ;ir_transmitter.c: 78: _delay((unsigned long)((562)*(4000000/4000000.0)));
 "78
+[e ( __delay (1 -> * -> -> 562 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;ir_transmitter.c: 79: }
+"79
 [e :UE 80 ]
 }
-"80
+"81
 [v _transmit_space_long `(v ~T0 @X0 1 ef ]
 {
-[; ;ir_transmitter.c: 80: void transmit_space_long() {
+[; ;ir_transmitter.c: 81: void transmit_space_long() {
 [e :U _transmit_space_long ]
 [f ]
-[; ;ir_transmitter.c: 81: _delay((unsigned long)((1687)*(1000000/4000000.0)));
-"81
-[e ( __delay (1 -> * -> -> 1687 `i `d / -> -> 1000000 `l `d .4000000.0 `ul ]
-[; ;ir_transmitter.c: 82: }
+[; ;ir_transmitter.c: 82: _delay((unsigned long)((1675)*(4000000/4000000.0)));
 "82
+[e ( __delay (1 -> * -> -> 1675 `i `d / -> -> 4000000 `l `d .4000000.0 `ul ]
+[; ;ir_transmitter.c: 83: }
+"83
 [e :UE 81 ]
 }

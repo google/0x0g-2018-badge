@@ -939,12 +939,13 @@ INTCONbits.GIE = 0;
 register uint8_t i;
 for(i=16;i;--i)
 transmit_mark();
-_delay((unsigned long)((4500)*(1000000/4000000.0)));
+_delay((unsigned long)((4500)*(4000000/4000000.0)));
 transmit_byte(addr);
 transmit_byte(inv_addr);
 transmit_byte(command);
 transmit_byte(inv_command);
 INTCONbits.GIE = 1;
+_delay((unsigned long)((4500)*(4000000/4000000.0)));
 }
 
 void transmit_byte(uint8_t data) {
@@ -972,9 +973,9 @@ asm("NOP");
 }
 
 void transmit_space_short() {
-_delay((unsigned long)((562)*(1000000/4000000.0)));
+_delay((unsigned long)((562)*(4000000/4000000.0)));
 }
 
 void transmit_space_long() {
-_delay((unsigned long)((1687)*(1000000/4000000.0)));
+_delay((unsigned long)((1675)*(4000000/4000000.0)));
 }
