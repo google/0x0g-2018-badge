@@ -2,7 +2,7 @@
 # 1 "main.c"
 
 
-# 9
+# 25
 #pragma config FOSC = XT
 #pragma config WDTE = OFF
 #pragma config PWRTE = OFF
@@ -926,7 +926,7 @@ typedef int16_t intptr_t;
 
 typedef uint16_t uintptr_t;
 
-# 7 "ir_decoder.h"
+# 23 "ir_decoder.h"
 void setup_ir_decoder();
 
 void timer1_interrupt_decoder();
@@ -934,29 +934,48 @@ void timer1_interrupt_decoder();
 extern volatile uint32_t ir_data;
 extern volatile uint8_t ir_data_valid;
 
-# 4 "leds.h"
+# 27 "ir_transmitter.h"
+void setup_ir_transmitter();
+void transmit_word(uint8_t addr, uint8_t command);
+
+# 27 "leds.h"
+void exactly_on(uint8_t which);
 void timer0_interrupt(void);
 void timer0_setup(void);
+void service_leds(void);
 
-# 21 "main.c"
+# 38 "main.c"
 volatile uint8_t move_leds = 1;
+
+volatile uint8_t ir_transmitting = 0;
 
 static void interrupt ISR(void) {
 if (INTCONbits.T0IF) {
+if (move_leds)
 timer0_interrupt();
+else
+INTCONbits.T0IF = 0;
 }
+if (PIR1bits.TMR1IF) {
+if (!ir_transmitting) {
+timer1_interrupt_decoder();
 if (ir_data_valid) {
 move_leds ^= 1;
 ir_data_valid = 0;
 }
-if (PIR1bits.TMR1IF && PIE1bits.TMR1IE) {
-timer1_interrupt_decoder();
+} else {
+PIR1bits.TMR1IF = 0;
+}
 }
 }
 
 void main(void) {
 timer0_setup();
+setup_ir_decoder();
+setup_ir_transmitter();
 
+while (1){
+transmit_word(0x55,0x55);
 
-for(;;){}
+}
 }

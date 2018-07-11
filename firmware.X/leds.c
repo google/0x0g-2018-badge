@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #include <stdint.h>
 
 #include <xc.h>
@@ -7,14 +23,58 @@
 volatile uint16_t led_pos = 0;
 volatile uint8_t led_mode = LMODE_BLUE_TEAM; // default mode
 
+#define LED_RED_LEFT()          leda_on(0, 0)
+#define LED_RED_RIGHT()         leda_on(0, 1)
+#define LED_YELLOW_LEFT()       leda_on(2, 0)
+#define LED_YELLOW_RIGHT()      leda_on(2, 1)
+#define LED_GREEN_LEFT()        ledb_on(3, 0)
+#define LED_GREEN_RIGHT()       leda_on(3, 0)
+#define LED_BLUE_LEFT()         ledb_on(3, 1)
+#define LED_BLUE_RIGHT()        leda_on(3, 1)
+
+static inline void all_off();
+static inline void leda_on(uint8_t pos, uint8_t dir);
+static inline void ledb_on(uint8_t pos, uint8_t dir);
+
+/*
+ * Turn on exactly one LED
+ */
+void exactly_on(uint8_t which) {
+    all_off();
+    switch (which) {
+        case 0:
+            LED_RED_LEFT();
+            break;
+        case 1:
+            LED_YELLOW_LEFT();
+            break;
+        case 2:
+            LED_GREEN_LEFT();
+            break;
+        case 3:
+            LED_BLUE_LEFT();
+            break;
+        case 4:
+            LED_RED_RIGHT();
+            break;
+        case 5:
+            LED_YELLOW_RIGHT();
+            break;
+        case 6:
+            LED_GREEN_RIGHT();
+            break;
+        case 7:
+            LED_BLUE_RIGHT();
+            break;
+    }
+}
+
 /*
  * Turn all LEDs off
  */
 static inline void all_off() {
-    TRISAbits.TRISA0 = 1;
-    TRISAbits.TRISA2 = 1;
-    TRISAbits.TRISA3 = 1;
-    TRISBbits.TRISB3 = 1;
+    TRISA |= 1 | (1 << 2) | (1 << 3);
+    TRISB |= (1 << 3);
 }
 
 /*
@@ -25,7 +85,7 @@ static inline void leda_on(uint8_t pos, uint8_t dir) {
         PORTA |= (1u<<pos);
     else
         PORTA &= ~(1u<<pos);
-    TRISA &= ~(1u<<pos);   
+    TRISA &= ~(1u<<pos);
 }
 
 /*
@@ -38,15 +98,6 @@ static inline void ledb_on(uint8_t pos, uint8_t dir) {
         PORTB &= ~(1u<<pos);
     TRISB &= ~(1u<<pos);
 }
-
-#define LED_RED_LEFT()          leda_on(0, 0)
-#define LED_RED_RIGHT()         leda_on(0, 1)
-#define LED_YELLOW_LEFT()       leda_on(2, 0)
-#define LED_YELLOW_RIGHT()      leda_on(2, 1)
-#define LED_GREEN_LEFT()        ledb_on(3, 0)
-#define LED_GREEN_RIGHT()       leda_on(3, 0)
-#define LED_BLUE_LEFT()         ledb_on(3, 1)
-#define LED_BLUE_RIGHT()        leda_on(3, 1)
 
 void timer0_interrupt(void) {
     led_pos++;

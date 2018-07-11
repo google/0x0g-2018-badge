@@ -917,41 +917,25 @@ extern __bank0 unsigned char __resetbits;
 extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 
-# 4 "leds.h"
+# 27 "leds.h"
+void exactly_on(uint8_t which);
 void timer0_interrupt(void);
 void timer0_setup(void);
+void service_leds(void);
 
-# 10 "leds.c"
-static inline void all_off() {
-TRISA |= TRISA0 | TRISA2 | TRISA3;
-TRISB |= TRISB3;
-}
+# 23 "leds.c"
+volatile uint16_t led_pos = 0;
+volatile uint8_t led_mode = 4;
 
-# 18
-static inline void leda_on(uint8_t pos, uint8_t dir) {
-if (dir)
-PORTA |= (1u<<pos);
-else
-PORTA &= ~(1u<<pos);
-TRISA &= ~(1u<<pos);
-}
+# 35
+static inline void all_off();
+static inline void leda_on(uint8_t pos, uint8_t dir);
+static inline void ledb_on(uint8_t pos, uint8_t dir);
 
-# 29
-static inline void ledb_on(uint8_t pos, uint8_t dir) {
-if (dir)
-PORTB |= (1u<<pos);
-else
-PORTB &= ~(1u<<pos);
-TRISB &= ~(1u<<pos);
-}
-
-# 46
-void timer0_interrupt(void) {
-static volatile uint8_t pos = 0;
-pos++;
-pos &= 7;
+# 42
+void exactly_on(uint8_t which) {
 all_off();
-switch (pos) {
+switch (which) {
 case 0:
 leda_on(0, 0);
 break;
@@ -977,12 +961,150 @@ case 7:
 leda_on(3, 1);
 break;
 }
+}
+
+# 75
+static inline void all_off() {
+TRISA |= 1 | (1 << 2) | (1 << 3);
+TRISB |= (1 << 3);
+}
+
+# 83
+static inline void leda_on(uint8_t pos, uint8_t dir) {
+if (dir)
+PORTA |= (1u<<pos);
+else
+PORTA &= ~(1u<<pos);
+TRISA &= ~(1u<<pos);
+}
+
+# 94
+static inline void ledb_on(uint8_t pos, uint8_t dir) {
+if (dir)
+PORTB |= (1u<<pos);
+else
+PORTB &= ~(1u<<pos);
+TRISB &= ~(1u<<pos);
+}
+
+void timer0_interrupt(void) {
+led_pos++;
+led_pos &= 0b1111111111;
 INTCONbits.T0IF = 0;
+}
+
+void bits3_chase(uint8_t pos) {
+switch (pos) {
+default:
+case 0:
+leda_on(0, 0);
+break;
+case 1:
+leda_on(2, 0);
+break;
+case 2:
+ledb_on(3, 0);
+break;
+case 3:
+ledb_on(3, 1);
+break;
+case 4:
+leda_on(0, 1);
+break;
+case 5:
+leda_on(2, 1);
+break;
+case 6:
+leda_on(3, 0);
+break;
+case 7:
+leda_on(3, 1);
+break;
+}
+}
+
+void bits2_double_chase(uint8_t pos, uint8_t side) {
+switch (pos) {
+default:
+case 0:
+if (side)
+leda_on(0, 0);
+else
+leda_on(0, 1);
+break;
+case 1:
+if (side)
+leda_on(2, 0);
+else
+leda_on(2, 1);
+break;
+case 2:
+if (side)
+ledb_on(3, 0);
+else
+leda_on(3, 0);
+break;
+case 3:
+if (side)
+ledb_on(3, 1);
+else
+leda_on(3, 1);
+break;
+}
+}
+
+void inline blue_team_led(uint16_t pos) {
+if (pos < 512) {
+if ((pos%2) == 0)
+leda_on(3, 1);
+else
+ledb_on(3, 1);
+} else {
+bits2_double_chase((pos - 512) / 128, pos%2);
+}
+}
+
+void inline red_team_led(uint16_t pos) {
+if (pos < 512) {
+if ((pos%2) == 0)
+leda_on(0, 1);
+else
+leda_on(0, 0);
+} else {
+bits2_double_chase((pos - 512) / 128, pos%2);
+}
+}
+
+
+void service_leds(void) {
+uint16_t temp_pos = led_pos;
+
+switch (led_mode) {
+case 0:
+all_off();
+break;
+case 1:
+all_off();
+bits3_chase((temp_pos & 0b11111111) / 32);
+break;
+case 3:
+all_off();
+bits3_chase(((temp_pos & 0b11111111) / 16) % 8);
+break;
+case 4:
+all_off();
+blue_team_led(temp_pos);
+break;
+case 5:
+all_off();
+red_team_led(temp_pos);
+break;
+}
 }
 
 void timer0_setup() {
 OPTION_REGbits.PSA = 0;
-OPTION_REGbits.PS = 0b111;
+OPTION_REGbits.PS = 0b010;
 OPTION_REGbits.T0CS = 0;
 INTCONbits.T0IF = 0;
 INTCONbits.T0IE = 1;
