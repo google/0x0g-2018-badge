@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name 0gbadge-2018)(type KiCad)(uri /Users/jsonp/0gbadge-2018)(options "")(descr ""))
+  (lib (name entryflasher)(type KiCad)(uri "$(KIPRJMOD)")(options "")(descr ""))
+)
