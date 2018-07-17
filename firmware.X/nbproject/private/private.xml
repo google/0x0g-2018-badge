@@ -5,6 +5,7 @@
         <group>
             <file>file:/firmware.X/ir_decoder.c</file>
             <file>file:/firmware.X/leds.c</file>
+            <file>file:/firmware.X/disassembly/listing.disasm</file>
             <file>file:/firmware.X/main.c</file>
             <file>file:/firmware.X/ir_transmitter.h</file>
             <file>file:/firmware.X/ir_transmitter.c</file>

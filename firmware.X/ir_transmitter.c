@@ -46,6 +46,7 @@ void transmit_word(uint8_t addr, uint8_t command) {
     transmit_byte(inv_addr);
     transmit_byte(command);
     transmit_byte(inv_command);
+    transmit_mark(); // EOM
     INTCONbits.GIE = 1;
     __delay_us(4500);
 }
@@ -72,10 +73,11 @@ void transmit_mark() {
       PORTB ^= 4; //rb2
       asm("NOP");
     }
+    PORTB &= ~4;
 }
 
 void transmit_space_short() {
-    __delay_us(562);
+    __delay_us(550);
 }
 
 void transmit_space_long() {
