@@ -106,6 +106,10 @@ void main(void) {
             }
             else if (ird == IR_BITS_ON) {
                 set_led_mode(LMODE_PARTICIPANT_CHASE);
+            } else if (ird == IR_BITS_LIGHTER_PINK) {
+                clear_seen_teams();
+            } else if (ird == IR_BITS_STROBE) {
+                set_led_mode(LMODE_BLUE_RED);
             }
             ir_data_valid = 0;
         }

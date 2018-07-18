@@ -272,6 +272,17 @@ void service_participant_chase(uint16_t pos) {
     }
 }
 
+void bluered_flash(uint16_t pos) {
+    uint8_t v = (pos % 32) / 16;
+    uint8_t side = (pos / 256) % 2;
+    all_off();
+    if (side == 0)
+        bits2_double_chase(0, v);
+    else
+        bits2_double_chase(3, v);
+}
+
+
 void service_leds(void) {
     uint16_t temp_pos = led_pos;
     uint8_t v;
@@ -279,6 +290,21 @@ void service_leds(void) {
     switch (led_mode) {
         case LMODE_OFF:
             all_off();
+            break;
+        case LMODE_PARTICIPANT_CHASE:
+            service_participant_chase(temp_pos);
+            break;
+        case LMODE_BLUE_TEAM:
+            blue_team_led(temp_pos);
+            break;
+        case LMODE_RED_TEAM:
+            red_team_led(temp_pos);
+            break;
+        case LMODE_YELLOW_TEAM:
+            yellow_team_led(temp_pos);
+            break;
+        case LMODE_GREEN_TEAM:
+            green_team_led(temp_pos);
             break;
         case LMODE_CHASE_1:
             v = ((temp_pos & 0b11111111) / 32);
@@ -295,20 +321,8 @@ void service_leds(void) {
             all_off();
             bits3_chase(v);
             break;
-        case LMODE_BLUE_TEAM:
-            blue_team_led(temp_pos);
-            break;
-        case LMODE_RED_TEAM:
-            red_team_led(temp_pos);
-            break;
-        case LMODE_YELLOW_TEAM:
-            yellow_team_led(temp_pos);
-            break;
-        case LMODE_GREEN_TEAM:
-            green_team_led(temp_pos);
-            break;
-        case LMODE_PARTICIPANT_CHASE:
-            service_participant_chase(temp_pos);
+        case LMODE_BLUE_RED:
+            bluered_flash(temp_pos);
             break;
     }
 }
@@ -333,4 +347,7 @@ void seen_green_team(void) {
 }
 void seen_yellow_team(void) {
     seen_teams |= YELLOW_TEAM_BIT;
+}
+void clear_seen_teams(void) {
+    seen_teams = 0;
 }
