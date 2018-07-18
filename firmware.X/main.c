@@ -49,10 +49,6 @@ static void interrupt ISR(void) {
     if (PIR1bits.TMR1IF) {
         if (!ir_transmitting) {
             timer1_interrupt_decoder();
-            if (ir_data_valid) {
-                move_leds ^= 1;
-                ir_data_valid = 0;
-            }
         } else {
             PIR1bits.TMR1IF = 0;
         }
@@ -64,8 +60,30 @@ void main(void) {
     setup_ir_decoder();
     setup_ir_transmitter();
     
-    while (1){
-        transmit_word(0x55,0x55);
-        //service_leds();
+    while (1) {
+        service_leds();
+        if (ir_data_valid > 0) {
+            if ((ir_data & 0xFFFF) == 0b0101000010101111) {
+                set_led_mode(LMODE_BLUE_TEAM);
+            }
+            if ((ir_data & 0xFFFF) == 0b1001000001101111) {
+                set_led_mode(LMODE_RED_TEAM);
+            }
+            if ((ir_data & 0xFFFF) == 0b1110000000011111) { //on
+                set_led_mode(LMODE_CHASE_FAST);
+            }
+            if ((ir_data & 0xFFFF) == 0b0110000010011111) {
+                set_led_mode(LMODE_OFF);
+            }
+            if ((ir_data & 0xFFFF) == 0b1101000000101111) { //white
+                set_led_mode(LMODE_PARTICIPANT_CHASE);
+            }
+            ir_data_valid = 0;
+        }
     }
+
+//    while (1){
+//        transmit_word(0x55,0x55);
+//        //service_leds();
+//    }
 }
