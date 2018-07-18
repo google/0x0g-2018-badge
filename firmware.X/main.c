@@ -64,15 +64,19 @@ void main(void) {
         service_leds();
         if (ir_data_valid > 0) {
             if ((ir_data & 0xFFFF) == IR_BITS_BLUE) {
+                disable_ir_decoder();
                 set_led_mode(LMODE_BLUE_TEAM);
             }
             if ((ir_data & 0xFFFF) == IR_BITS_RED) {
+                disable_ir_decoder();
                 set_led_mode(LMODE_RED_TEAM);
             }
             if ((ir_data & 0xFFFF) == IR_BITS_GREEN) {
+                disable_ir_decoder();
                 set_led_mode(LMODE_GREEN_TEAM);
             }
             if ((ir_data & 0xFFFF) == IR_BITS_WHITE) {
+                disable_ir_decoder();
                 set_led_mode(LMODE_YELLOW_TEAM);
             }
             if ((ir_data & 0xFFFF) == IR_BITS_BRIGHTNESS_UP) {

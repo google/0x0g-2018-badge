@@ -183,3 +183,6 @@ void setup_ir_decoder() {
     TRISBbits.TRISB2 = 0;
 }
 
+void disable_ir_decoder() {
+    T1CONbits.TMR1ON = 0;
+}
