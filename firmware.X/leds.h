@@ -23,11 +23,16 @@
 #define LMODE_CHASE_FAST 3
 #define LMODE_BLUE_TEAM 4
 #define LMODE_RED_TEAM 5
+#define LMODE_YELLOW_TEAM 6
+#define LMODE_GREEN_TEAM 7
+
+#define LMODE_PARTICIPANT_CHASE 8
 
 void exactly_on(uint8_t which);
 void timer0_interrupt(void);
 void timer0_setup(void);
 void service_leds(void);
+void set_led_mode(uint8_t mode);
 
 #endif	/* LEDS_H */
 
