@@ -46,6 +46,10 @@
 #define IR_BITS_LIGHTER_YELLOW      0b1000100001110111
 #define IR_BITS_LIGHTER_YELLOW_R    0b1110111000010001
 
+#define RED_TEAM_BIT        1
+#define BLUE_TEAM_BIT       8
+#define YELLOW_TEAM_BIT     4
+#define GREEN_TEAM_BIT      2
 
 void exactly_on(uint8_t which);
 void timer0_interrupt(void);

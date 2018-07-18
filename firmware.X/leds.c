@@ -259,14 +259,14 @@ void service_participant_chase(uint16_t pos) {
         uint8_t v = (pos % 32) / 16;
         all_off();
         if (pos < 1536) {
-            if (pos < 1280 && ((seen_teams & 1) != 0))
+            if (pos < 1280 && ((seen_teams & RED_TEAM_BIT) != 0))
                 bits2_double_chase(0, v);
-            else if ((seen_teams & 2) != 0)
+            else if ((seen_teams & GREEN_TEAM_BIT) != 0)
                 bits2_double_chase(2, v);
         } else {
-            if (pos < 1792 && ((seen_teams & 4) != 0))
+            if (pos < 1792 && ((seen_teams & YELLOW_TEAM_BIT) != 0))
                 bits2_double_chase(1, v);
-            else if ((seen_teams & 8) != 0)
+            else if ((seen_teams & BLUE_TEAM_BIT) != 0)
                 bits2_double_chase(3, v);
         }
     }
@@ -323,14 +323,14 @@ void timer0_setup() {
 }
 
 void seen_blue_team(void) {
-    seen_teams |= 8;
+    seen_teams |= BLUE_TEAM_BIT;
 }
 void seen_red_team(void) {
-    seen_teams |= 1;
+    seen_teams |= RED_TEAM_BIT;
 }
 void seen_green_team(void) {
-    seen_teams |= 2;
+    seen_teams |= GREEN_TEAM_BIT;
 }
 void seen_yellow_team(void) {
-    seen_teams |= 4;
+    seen_teams |= YELLOW_TEAM_BIT;
 }

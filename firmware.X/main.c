@@ -110,9 +110,4 @@ void main(void) {
             ir_data_valid = 0;
         }
     }
-
-//    while (1){
-//        transmit_word(0x55,0x55);
-//        //service_leds();
-//    }
 }
