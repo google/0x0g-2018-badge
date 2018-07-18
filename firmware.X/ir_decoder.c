@@ -185,4 +185,5 @@ void setup_ir_decoder() {
 
 void disable_ir_decoder() {
     T1CONbits.TMR1ON = 0;
+    ir_data_valid = 0;
 }

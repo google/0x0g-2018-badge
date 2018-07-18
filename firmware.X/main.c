@@ -63,35 +63,48 @@ void main(void) {
     while (1) {
         service_leds();
         if (ir_data_valid > 0) {
-            if ((ir_data & 0xFFFF) == IR_BITS_BLUE) {
+            uint16_t ird = ir_data & 0xFFFF;
+            if (ird == IR_BITS_LIGHTER_BLUE) {
+                seen_blue_team();
+            }
+            else if (ird == IR_BITS_LIGHTER_RED) {
+                seen_red_team();
+            }
+            else if (ird == IR_BITS_LIGHTER_YELLOW) {
+                seen_yellow_team();
+            }
+            else if (ird == IR_BITS_LIGHTER_GREEN) {
+                seen_green_team();
+            }
+            else if (ird == IR_BITS_BLUE) {
                 disable_ir_decoder();
                 set_led_mode(LMODE_BLUE_TEAM);
             }
-            if ((ir_data & 0xFFFF) == IR_BITS_RED) {
+            else if (ird == IR_BITS_RED) {
                 disable_ir_decoder();
                 set_led_mode(LMODE_RED_TEAM);
             }
-            if ((ir_data & 0xFFFF) == IR_BITS_GREEN) {
+            else if (ird == IR_BITS_GREEN) {
                 disable_ir_decoder();
                 set_led_mode(LMODE_GREEN_TEAM);
             }
-            if ((ir_data & 0xFFFF) == IR_BITS_WHITE) {
+            else if (ird == IR_BITS_WHITE) {
                 disable_ir_decoder();
                 set_led_mode(LMODE_YELLOW_TEAM);
             }
-            if ((ir_data & 0xFFFF) == IR_BITS_BRIGHTNESS_UP) {
+            else if (ird == IR_BITS_BRIGHTNESS_UP) {
                 set_led_mode(LMODE_CHASE_FAST);
             }
-            if ((ir_data & 0xFFFF) == IR_BITS_BRIGHTNESS_DOWN) {
+            else if (ird == IR_BITS_BRIGHTNESS_DOWN) {
                 set_led_mode(LMODE_CHASE_1);
             }
-            if ((ir_data & 0xFFFF) == IR_BITS_FLASH) {
+            else if (ird == IR_BITS_FLASH) {
                 set_led_mode(LMODE_CHASE_2);
             }
-            if ((ir_data & 0xFFFF) == IR_BITS_OFF) {
+            else if (ird == IR_BITS_OFF) {
                 set_led_mode(LMODE_OFF);
             }
-            if ((ir_data & 0xFFFF) == IR_BITS_ON) {
+            else if (ird == IR_BITS_ON) {
                 set_led_mode(LMODE_PARTICIPANT_CHASE);
             }
             ir_data_valid = 0;

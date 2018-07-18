@@ -19,9 +19,10 @@
 #include <xc.h>
 
 #include "leds.h"
+#include "ir_transmitter.h"
 
 volatile uint16_t led_pos = 0;
-volatile uint8_t seen_teams = 0xFF;
+volatile uint8_t seen_teams = 0;
 volatile uint8_t led_mode = LMODE_CHASE_2; // default mode
 
 #define LED_RED_LEFT()          leda_on(0, 0)
@@ -174,10 +175,14 @@ void static inline bits2_double_chase(uint8_t pos, uint8_t side) {
 void static inline blue_team_led(uint16_t pos) {
     if (pos < 1024) {
         all_off();
-        if ((pos%2) == 0)
-            LED_BLUE_RIGHT();
-        else
-            LED_BLUE_LEFT();
+        if (pos == 0) {
+            transmit_word((uint8_t)((IR_BITS_LIGHTER_BLUE_R >> 8) & 0xFF), (uint8_t)(IR_BITS_LIGHTER_BLUE_R & 0xFF));
+        } else {
+            if ((pos%2) == 0)
+                LED_BLUE_RIGHT();
+            else
+                LED_BLUE_LEFT();
+        }
     } else {
         uint8_t v = (((pos - 1024) / 256) + 3) % 4;
         all_off();
@@ -188,10 +193,14 @@ void static inline blue_team_led(uint16_t pos) {
 void static inline red_team_led(uint16_t pos) {
     if (pos < 1024) {
         all_off();
-        if ((pos%2) == 0)
-            LED_RED_RIGHT();
-        else
-            LED_RED_LEFT();
+        if (pos == 0) {
+            transmit_word((uint8_t)((IR_BITS_LIGHTER_RED_R >> 8) & 0xFF), (uint8_t)(IR_BITS_LIGHTER_RED_R & 0xFF));
+        } else {
+            if ((pos%2) == 0)
+                LED_RED_RIGHT();
+            else
+                LED_RED_LEFT();
+        }
     } else {
         uint8_t v = (((pos - 1024) / 256) + 0) % 4;
         all_off();
@@ -202,10 +211,14 @@ void static inline red_team_led(uint16_t pos) {
 void static inline yellow_team_led(uint16_t pos) {
     if (pos < 1024) {
         all_off();
-        if ((pos%2) == 0)
-            LED_YELLOW_RIGHT();
-        else
-            LED_YELLOW_LEFT();
+        if (pos == 0) {
+            transmit_word((uint8_t)((IR_BITS_LIGHTER_YELLOW_R >> 8) & 0xFF), (uint8_t)(IR_BITS_LIGHTER_YELLOW_R & 0xFF));
+        } else {
+            if ((pos%2) == 0)
+                LED_YELLOW_RIGHT();
+            else
+                LED_YELLOW_LEFT();
+        }
     } else {
         uint8_t v = (((pos - 1024) / 256) + 1) % 4;
         all_off();
@@ -216,10 +229,14 @@ void static inline yellow_team_led(uint16_t pos) {
 void static inline green_team_led(uint16_t pos) {
     if (pos < 1024) {
         all_off();
-        if ((pos%2) == 0)
-            LED_GREEN_RIGHT();
-        else
-            LED_GREEN_LEFT();
+        if (pos == 0) {
+            transmit_word((uint8_t)((IR_BITS_LIGHTER_GREEN_R >> 8) & 0xFF), (uint8_t)(IR_BITS_LIGHTER_GREEN_R & 0xFF));
+        } else {
+            if ((pos%2) == 0)
+                LED_GREEN_RIGHT();
+            else
+                LED_GREEN_LEFT();
+        }
     } else {
         uint8_t v = (((pos - 1024) / 256) + 2) % 4;
         all_off();
@@ -242,14 +259,14 @@ void service_participant_chase(uint16_t pos) {
         uint8_t v = (pos % 32) / 16;
         all_off();
         if (pos < 1536) {
-            if (pos < 1280 && (seen_teams & 1 != 0))
+            if (pos < 1280 && ((seen_teams & 1) != 0))
                 bits2_double_chase(0, v);
-            else if (seen_teams & 2 != 0)
+            else if ((seen_teams & 2) != 0)
                 bits2_double_chase(2, v);
         } else {
-            if (pos < 1792 && (seen_teams & 4 != 0))
+            if (pos < 1792 && ((seen_teams & 4) != 0))
                 bits2_double_chase(1, v);
-            else if (seen_teams & 8  != 0)
+            else if ((seen_teams & 8) != 0)
                 bits2_double_chase(3, v);
         }
     }
@@ -303,4 +320,17 @@ void timer0_setup() {
     INTCONbits.T0IF      = 0;      // Clear flag.
     INTCONbits.T0IE      = 1;      // Enable timer0 interrupts
     INTCONbits.GIE       = 1;      // Enable global interrupts
+}
+
+void seen_blue_team(void) {
+    seen_teams |= 8;
+}
+void seen_red_team(void) {
+    seen_teams |= 1;
+}
+void seen_green_team(void) {
+    seen_teams |= 2;
+}
+void seen_yellow_team(void) {
+    seen_teams |= 4;
 }
