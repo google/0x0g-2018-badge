@@ -268,6 +268,11 @@ void service_leds(void) {
             all_off();
             bits3_chase(v);
             break;
+        case LMODE_CHASE_2:
+            v = ((temp_pos & 0b111111111) / 64);
+            all_off();
+            bits3_chase(v);
+            break;
         case LMODE_CHASE_FAST:
             v = ((temp_pos & 0b11111111) / 16) % 8;
             all_off();

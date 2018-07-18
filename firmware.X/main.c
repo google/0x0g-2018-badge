@@ -63,19 +63,31 @@ void main(void) {
     while (1) {
         service_leds();
         if (ir_data_valid > 0) {
-            if ((ir_data & 0xFFFF) == 0b0101000010101111) {
+            if ((ir_data & 0xFFFF) == IR_BITS_BLUE) {
                 set_led_mode(LMODE_BLUE_TEAM);
             }
-            if ((ir_data & 0xFFFF) == 0b1001000001101111) {
+            if ((ir_data & 0xFFFF) == IR_BITS_RED) {
                 set_led_mode(LMODE_RED_TEAM);
             }
-            if ((ir_data & 0xFFFF) == 0b1110000000011111) { //on
+            if ((ir_data & 0xFFFF) == IR_BITS_GREEN) {
+                set_led_mode(LMODE_GREEN_TEAM);
+            }
+            if ((ir_data & 0xFFFF) == IR_BITS_WHITE) {
+                set_led_mode(LMODE_YELLOW_TEAM);
+            }
+            if ((ir_data & 0xFFFF) == IR_BITS_BRIGHTNESS_UP) {
                 set_led_mode(LMODE_CHASE_FAST);
             }
-            if ((ir_data & 0xFFFF) == 0b0110000010011111) {
+            if ((ir_data & 0xFFFF) == IR_BITS_BRIGHTNESS_DOWN) {
+                set_led_mode(LMODE_CHASE_1);
+            }
+            if ((ir_data & 0xFFFF) == IR_BITS_FLASH) {
+                set_led_mode(LMODE_CHASE_2);
+            }
+            if ((ir_data & 0xFFFF) == IR_BITS_OFF) {
                 set_led_mode(LMODE_OFF);
             }
-            if ((ir_data & 0xFFFF) == 0b1101000000101111) { //white
+            if ((ir_data & 0xFFFF) == IR_BITS_ON) {
                 set_led_mode(LMODE_PARTICIPANT_CHASE);
             }
             ir_data_valid = 0;
