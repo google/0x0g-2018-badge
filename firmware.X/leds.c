@@ -22,7 +22,7 @@
 
 volatile uint16_t led_pos = 0;
 volatile uint8_t seen_teams = 0xFF;
-volatile uint8_t led_mode = LMODE_GREEN_TEAM; // default mode
+volatile uint8_t led_mode = LMODE_CHASE_2; // default mode
 
 #define LED_RED_LEFT()          leda_on(0, 0)
 #define LED_RED_RIGHT()         leda_on(0, 1)
