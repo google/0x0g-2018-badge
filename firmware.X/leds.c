@@ -246,15 +246,9 @@ void static inline green_team_led(uint16_t pos) {
 
 void service_participant_chase(uint16_t pos) {
     if (pos < 1024) {
-        if (pos < 512) {
-            uint8_t v = pos / 64;
-            all_off();
-            bits2_double_chase(v, pos%2);
-        } else {
-            uint8_t v = (1024-pos) / 64;
-            all_off();
-            bits2_double_chase(v, pos%2);
-        }
+        uint8_t v = ((pos & 0b111111111) / 64);
+        all_off();
+        bits3_chase(v);
     } else {
         uint8_t v = (pos % 32) / 16;
         all_off();
