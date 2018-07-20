@@ -152,6 +152,7 @@ void timer1_interrupt_decoder() {
             if (bit_count == 32) {
                 T1CONbits.TMR1ON = 0;
                 ir_data_valid = 1;
+#ifdef IRR_DEBUG
                 //debug
                 while(bit_count) {
                     PORTBbits.RB2 = 1;
@@ -161,6 +162,7 @@ void timer1_interrupt_decoder() {
                     for(int k=0;k<100;k++)
                         NOP();
                 }
+#endif
                 T1CONbits.TMR1ON = 1;
                 RESET_STATE();
             } else {
