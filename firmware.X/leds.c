@@ -19,9 +19,11 @@
 #include <xc.h>
 
 #include "leds.h"
+#include "ir_transmitter.h"
 
 volatile uint16_t led_pos = 0;
-volatile uint8_t led_mode = LMODE_BLUE_TEAM; // default mode
+volatile uint8_t seen_teams = 0;
+volatile uint8_t led_mode = LMODE_CHASE_2; // default mode
 
 #define LED_RED_LEFT()          leda_on(0, 0)
 #define LED_RED_RIGHT()         leda_on(0, 1)
@@ -35,6 +37,11 @@ volatile uint8_t led_mode = LMODE_BLUE_TEAM; // default mode
 static inline void all_off();
 static inline void leda_on(uint8_t pos, uint8_t dir);
 static inline void ledb_on(uint8_t pos, uint8_t dir);
+
+void set_led_mode(uint8_t mode){
+    led_mode = mode;
+}
+
 
 /*
  * Turn on exactly one LED
@@ -101,11 +108,11 @@ static inline void ledb_on(uint8_t pos, uint8_t dir) {
 
 void timer0_interrupt(void) {
     led_pos++;
-    led_pos &= 0b1111111111;
+    led_pos &= 0b11111111111;
     INTCONbits.T0IF = 0;  // Clear flag
 }
 
-void bits3_chase(uint8_t pos) {
+void static inline bits3_chase(uint8_t pos) {
     switch (pos) {
      default:
      case 0:
@@ -135,7 +142,7 @@ void bits3_chase(uint8_t pos) {
     }
 }
 
-void bits2_double_chase(uint8_t pos, uint8_t side) {
+void static inline bits2_double_chase(uint8_t pos, uint8_t side) {
     switch (pos) {
      default:
      case 0:
@@ -165,51 +172,157 @@ void bits2_double_chase(uint8_t pos, uint8_t side) {
     }
 }
 
-void inline blue_team_led(uint16_t pos) {
-    if (pos < 512) {
-        if ((pos%2) == 0)
-            LED_BLUE_RIGHT();
-        else
-            LED_BLUE_LEFT();
+void static inline blue_team_led(uint16_t pos) {
+    if (pos < 1024) {
+        all_off();
+        if (pos == 0) {
+            transmit_word((uint8_t)((IR_BITS_LIGHTER_BLUE_R >> 8) & 0xFF), (uint8_t)(IR_BITS_LIGHTER_BLUE_R & 0xFF));
+        } else {
+            if ((pos%2) == 0)
+                LED_BLUE_RIGHT();
+            else
+                LED_BLUE_LEFT();
+        }
     } else {
-        bits2_double_chase((pos - 512) / 128, pos%2);
+        uint8_t v = (((pos - 1024) / 256) + 3) % 4;
+        all_off();
+        bits2_double_chase(v, pos%2);
     }
 }
 
-void inline red_team_led(uint16_t pos) {
-    if (pos < 512) {
-        if ((pos%2) == 0)
-            LED_RED_RIGHT();
-        else
-            LED_RED_LEFT();
+void static inline red_team_led(uint16_t pos) {
+    if (pos < 1024) {
+        all_off();
+        if (pos == 0) {
+            transmit_word((uint8_t)((IR_BITS_LIGHTER_RED_R >> 8) & 0xFF), (uint8_t)(IR_BITS_LIGHTER_RED_R & 0xFF));
+        } else {
+            if ((pos%2) == 0)
+                LED_RED_RIGHT();
+            else
+                LED_RED_LEFT();
+        }
     } else {
-        bits2_double_chase((pos - 512) / 128, pos%2);
+        uint8_t v = (((pos - 1024) / 256) + 0) % 4;
+        all_off();
+        bits2_double_chase(v, pos%2);
     }
+}
+
+void static inline yellow_team_led(uint16_t pos) {
+    if (pos < 1024) {
+        all_off();
+        if (pos == 0) {
+            transmit_word((uint8_t)((IR_BITS_LIGHTER_YELLOW_R >> 8) & 0xFF), (uint8_t)(IR_BITS_LIGHTER_YELLOW_R & 0xFF));
+        } else {
+            if ((pos%2) == 0)
+                LED_YELLOW_RIGHT();
+            else
+                LED_YELLOW_LEFT();
+        }
+    } else {
+        uint8_t v = (((pos - 1024) / 256) + 1) % 4;
+        all_off();
+        bits2_double_chase(v, pos%2);
+    }
+}
+
+void static inline green_team_led(uint16_t pos) {
+    if (pos < 1024) {
+        all_off();
+        if (pos == 0) {
+            transmit_word((uint8_t)((IR_BITS_LIGHTER_GREEN_R >> 8) & 0xFF), (uint8_t)(IR_BITS_LIGHTER_GREEN_R & 0xFF));
+        } else {
+            if ((pos%2) == 0)
+                LED_GREEN_RIGHT();
+            else
+                LED_GREEN_LEFT();
+        }
+    } else {
+        uint8_t v = (((pos - 1024) / 256) + 2) % 4;
+        all_off();
+        bits2_double_chase(v, pos%2);
+    }
+}
+
+void service_participant_chase(uint16_t pos) {
+    if (pos < 1024) {
+        if (pos < 512) {
+            uint8_t v = pos / 64;
+            all_off();
+            bits2_double_chase(v, pos%2);
+        } else {
+            uint8_t v = (1024-pos) / 64;
+            all_off();
+            bits2_double_chase(v, pos%2);
+        }
+    } else {
+        uint8_t v = (pos % 32) / 16;
+        all_off();
+        if (pos < 1536) {
+            if (pos < 1280 && ((seen_teams & RED_TEAM_BIT) != 0))
+                bits2_double_chase(0, v);
+            else if ((seen_teams & GREEN_TEAM_BIT) != 0)
+                bits2_double_chase(2, v);
+        } else {
+            if (pos < 1792 && ((seen_teams & YELLOW_TEAM_BIT) != 0))
+                bits2_double_chase(1, v);
+            else if ((seen_teams & BLUE_TEAM_BIT) != 0)
+                bits2_double_chase(3, v);
+        }
+    }
+}
+
+void bluered_flash(uint16_t pos) {
+    uint8_t v = (pos % 32) / 16;
+    uint8_t side = (pos / 256) % 2;
+    all_off();
+    if (side == 0)
+        bits2_double_chase(0, v);
+    else
+        bits2_double_chase(3, v);
 }
 
 
 void service_leds(void) {
     uint16_t temp_pos = led_pos;
+    uint8_t v;
     
     switch (led_mode) {
         case LMODE_OFF:
             all_off();
             break;
-        case LMODE_CHASE_1:
-            all_off();
-            bits3_chase((temp_pos & 0b11111111) / 32);
-            break;
-        case LMODE_CHASE_FAST:
-            all_off();
-            bits3_chase(((temp_pos & 0b11111111) / 16) % 8);
+        case LMODE_PARTICIPANT_CHASE:
+            service_participant_chase(temp_pos);
             break;
         case LMODE_BLUE_TEAM:
-            all_off();
             blue_team_led(temp_pos);
             break;
         case LMODE_RED_TEAM:
-            all_off();
             red_team_led(temp_pos);
+            break;
+        case LMODE_YELLOW_TEAM:
+            yellow_team_led(temp_pos);
+            break;
+        case LMODE_GREEN_TEAM:
+            green_team_led(temp_pos);
+            break;
+        case LMODE_CHASE_1:
+            v = ((temp_pos & 0b11111111) / 32);
+            all_off();
+            bits3_chase(v);
+            break;
+        case LMODE_CHASE_2:
+            v = ((temp_pos & 0b111111111) / 64);
+            all_off();
+            bits3_chase(v);
+            break;
+        case LMODE_CHASE_FAST:
+            v = ((temp_pos & 0b11111111) / 16) % 8;
+            all_off();
+            bits3_chase(v);
+            break;
+        case LMODE_BLUE_RED:
+            bluered_flash(temp_pos);
             break;
     }
 }
@@ -221,4 +334,20 @@ void timer0_setup() {
     INTCONbits.T0IF      = 0;      // Clear flag.
     INTCONbits.T0IE      = 1;      // Enable timer0 interrupts
     INTCONbits.GIE       = 1;      // Enable global interrupts
+}
+
+void seen_blue_team(void) {
+    seen_teams |= BLUE_TEAM_BIT;
+}
+void seen_red_team(void) {
+    seen_teams |= RED_TEAM_BIT;
+}
+void seen_green_team(void) {
+    seen_teams |= GREEN_TEAM_BIT;
+}
+void seen_yellow_team(void) {
+    seen_teams |= YELLOW_TEAM_BIT;
+}
+void clear_seen_teams(void) {
+    seen_teams = 0;
 }

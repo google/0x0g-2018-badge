@@ -49,10 +49,6 @@ static void interrupt ISR(void) {
     if (PIR1bits.TMR1IF) {
         if (!ir_transmitting) {
             timer1_interrupt_decoder();
-            if (ir_data_valid) {
-                move_leds ^= 1;
-                ir_data_valid = 0;
-            }
         } else {
             PIR1bits.TMR1IF = 0;
         }
@@ -64,8 +60,58 @@ void main(void) {
     setup_ir_decoder();
     setup_ir_transmitter();
     
-    while (1){
-        transmit_word(0x55,0x55);
-        //service_leds();
+    while (1) {
+        service_leds();
+        if (ir_data_valid > 0) {
+            uint16_t ird = ir_data & 0xFFFF;
+            if (ird == IR_BITS_LIGHTER_BLUE) {
+                seen_blue_team();
+            }
+            else if (ird == IR_BITS_LIGHTER_RED) {
+                seen_red_team();
+            }
+            else if (ird == IR_BITS_LIGHTER_YELLOW) {
+                seen_yellow_team();
+            }
+            else if (ird == IR_BITS_LIGHTER_GREEN) {
+                seen_green_team();
+            }
+            else if (ird == IR_BITS_BLUE) {
+                disable_ir_decoder();
+                set_led_mode(LMODE_BLUE_TEAM);
+            }
+            else if (ird == IR_BITS_RED) {
+                disable_ir_decoder();
+                set_led_mode(LMODE_RED_TEAM);
+            }
+            else if (ird == IR_BITS_GREEN) {
+                disable_ir_decoder();
+                set_led_mode(LMODE_GREEN_TEAM);
+            }
+            else if (ird == IR_BITS_WHITE) {
+                disable_ir_decoder();
+                set_led_mode(LMODE_YELLOW_TEAM);
+            }
+            else if (ird == IR_BITS_BRIGHTNESS_UP) {
+                set_led_mode(LMODE_CHASE_FAST);
+            }
+            else if (ird == IR_BITS_BRIGHTNESS_DOWN) {
+                set_led_mode(LMODE_CHASE_1);
+            }
+            else if (ird == IR_BITS_FLASH) {
+                set_led_mode(LMODE_CHASE_2);
+            }
+            else if (ird == IR_BITS_OFF) {
+                set_led_mode(LMODE_OFF);
+            }
+            else if (ird == IR_BITS_ON) {
+                set_led_mode(LMODE_PARTICIPANT_CHASE);
+            } else if (ird == IR_BITS_LIGHTER_PINK) {
+                clear_seen_teams();
+            } else if (ird == IR_BITS_STROBE) {
+                set_led_mode(LMODE_BLUE_RED);
+            }
+            ir_data_valid = 0;
+        }
     }
 }
