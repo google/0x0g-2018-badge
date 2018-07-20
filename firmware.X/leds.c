@@ -38,10 +38,13 @@ static inline void all_off();
 static inline void leda_on(uint8_t pos, uint8_t dir);
 static inline void ledb_on(uint8_t pos, uint8_t dir);
 
+void sync_led_pos() {
+    led_pos = 248;
+}
+
 void set_led_mode(uint8_t mode){
     led_mode = mode;
 }
-
 
 /*
  * Turn on exactly one LED

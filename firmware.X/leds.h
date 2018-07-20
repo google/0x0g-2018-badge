@@ -59,6 +59,7 @@ void timer0_interrupt(void);
 void timer0_setup(void);
 void service_leds(void);
 void set_led_mode(uint8_t mode);
+void sync_led_pos();
 
 void seen_blue_team(void);
 void seen_red_team(void);
